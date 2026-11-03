@@ -1,38 +1,38 @@
-# ADR 001 — Rust + Bevy, moteur indépendant
+# ADR 001 — Rust + Bevy independent engine
 
-Date : 2026-11-03. Statut : adopté à la demande de l'utilisateur.
+Date: 2026-11-03. Status: adopted at the user's request.
 
-## Choix
+## Decision
 
-Rust pour le moteur original, Bevy 0.20.1 pour ECS/rendu/entrées.
-Le moteur ne charge ni n'exécute le programme MIPS et ne lie pas sa traduction.
-Les données seront lues depuis l'ISO fournie par l'utilisateur.
+Use Rust for the original engine and Bevy 0.20.1 for ECS, rendering and input.
+The engine does not load or execute the MIPS program or link its translation.
+Game data will be read from the user's own ISO.
 
-PS2Recomp et ps2-native-recomp restent des références de recherche locales.
-Ils ne sont pas des dépendances du moteur public. Leur compatibilité God Hand
-ne représente pas notre avancement.
+PS2Recomp and ps2-native-recomp remain local research references, not public-engine
+dependencies. Their God Hand compatibility is not progress in our independent engine.
 
-| Couche | Responsabilité | Socle |
+| Layer | Responsibility | Foundation |
 | --- | --- | --- |
-| godhand-disc | ISO 9660 en lecture seule, contrôle des bornes | Racine, SYSTEM.CNF, identification |
-| Formats | AFS/FST, géométrie, textures, squelette, audio | À spécifier |
-| godhand-engine | Simulation originale testable sans GPU | Déplacement générique sur X/Z |
-| Application Bevy | Fenêtre, rendu, caméra, entrées | Sandbox optionnel sol/capsule |
-| Jeu | Scènes et comportements observables | Non implémenté |
+| godhand-disc | Read-only ISO 9660 access, bounds checks | Root directory, SYSTEM.CNF, identification |
+| Formats | AFS/FST, geometry, textures, skeletons, audio | To be specified |
+| godhand-engine | Original GPU-free testable simulation | Generic X/Z movement |
+| Bevy application | Window, rendering, camera, input | Optional floor/capsule sandbox |
+| Game | Scenes and observable behavior | Not implemented |
 
-Le pas de 60 Hz et la vitesse du sandbox sont des choix techniques provisoires,
-pas des mesures du jeu. Y = hauteur. Les intentions sont lues à chaque image puis
-consommées au pas fixe. Les événements ponctuels devront être tamponnés.
+The 60 Hz step and sandbox speed are provisional engineering choices, not measurements
+of the game. Y is height. Sample input intent per rendered frame and consume it on
+the fixed step. Future input edges must be buffered.
 
-## Travaux nécessaires
+## Work required
 
-Formats et scripts, scènes, rendu, animations, collisions, combat, IA, progression,
-audio, sauvegardes et validation de tous les niveaux. Bevy ne fournit pas la logique
-de God Hand. Aucune date de fin ou couverture de gameplay n'est annoncée.
+Formats and scripts, scenes, rendering, animation, collisions, combat, AI, progression,
+audio, saves and full-level validation. Bevy does not supply God Hand's logic.
+No completion date or gameplay coverage is promised.
 
 ## Alternatives
 
-PS2Recomp (GPL-3.0) : traduction et handlers spécifiques, runtime expérimental.
-ps2-native-recomp (MIT) : piste pratique de recompilation avec test God Hand rapporté.
-PCSX2 : référence de comportement pour observer, pas moteur Bevy.
-Voir research-2026-11-03.md pour les sources et limites.
+PS2Recomp (GPL-3.0): translation and game-specific handlers; experimental runtime.
+ps2-native-recomp (MIT): practical recompilation route, locally tested through the
+first fight. PCSX2: behavioral reference, not the Bevy engine.
+See research-2026-11-03.md, native-evaluation-2026-11-03.md and
+native-backend-outputs.md for evidence, outputs and boundaries.

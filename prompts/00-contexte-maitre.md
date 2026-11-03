@@ -1,22 +1,22 @@
-# Contexte maître — moteur indépendant
+# Session context — independent engine
 
-Répondre en français. God Hand USA / SLUS_215.03 : **moteur indépendant Rust + Bevy
-0.20.1**, MIT pour le code original. Décision utilisateur du 2026-11-03 : code public
-original, aucune traduction du binaire PS2. L'ISO personnelle est requise au lancement.
+Reply to the owner in French; maintain public resources in English.
+God Hand USA / SLUS_215.03: **independent Rust + Bevy 0.20.1 engine**, MIT for
+original code. The user's 2026-11-03 decision is original public source without
+translated PS2 code. A personal ISO is required to launch.
 
-Lire AGENTS.md, docs/workflow.md, docs/clean-room.md, docs/architecture.md et ROADMAP.md.
-Les prompts 01–05 sont des références historiques de recherche locale uniquement.
+Read AGENTS.md, docs/workflow.md, docs/clean-room.md, docs/architecture.md and ROADMAP.md.
+Historical prompts 01–05 concern local research only.
 
-Un essai tiers ps2-native-recomp a atteint le premier combat et repris un snapshot
-du runtime. Voir docs/native-evaluation-2026-11-03.md. Les artefacts et captures du
-jeu restent locaux ; ce résultat ne constitue pas une avancée du moteur Bevy.
+A third-party ps2-native-recomp trial reached the first fight and resumed a runtime
+snapshot. See docs/native-evaluation-2026-11-03.md and docs/native-backend-outputs.md.
+Game artifacts and captures stay local; this is not Bevy-engine progress.
 
-Socle : crates/disc (ISO en lecture seule), crates/engine (simulation originale),
-crates/app (CLI et sandbox Bevy optionnel). Le jeu n'est pas jouable. Y = hauteur.
-Tests synthétiques seulement en CI. Ne pas importer de code décompilé ou traduit.
+Foundation: crates/disc (read-only ISO), crates/engine (original simulation),
+crates/app (CLI and optional Bevy sandbox). The game is not playable in this engine.
+Y is height. CI fixtures are synthetic only. Never import decompiled or translated code.
 
-Chaque session met à jour docs/dashboard/data.json : tâches, modifications, tests
-réels et limites. Régénérer la roadmap avec python scripts/dashboard.py.
-Capturer le dashboard après modifications visuelles. Vérifier l'index avec
-python scripts/check_public_tree.py. Le dashboard se publie sur Pages gratuit
-depuis main:/docs, sans hébergement externe payant.
+After each session, update docs/dashboard/data.json with actual changes, checks
+and limitations. Run python scripts/dashboard.py. Capture visual journal changes.
+Check staged files with python scripts/check_public_tree.py.
+Publish through free Pages from main:/docs without paid external hosting.

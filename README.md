@@ -1,62 +1,61 @@
 # God Hand · Independent Engine Lab
 
-Réimplémentation indépendante du moteur de **God Hand (USA, PS2)** en **Rust + Bevy**.
-Notre code original est public sous MIT. Chaque utilisateur doit fournir son ISO.
-Aucun code, modèle, texture, son ou niveau du jeu n'est distribué.
+An independent **Rust + Bevy** engine reimplementation for **God Hand (USA, PS2)**.
+Original code is public under MIT. Each user must provide their own ISO.
+No game code, models, textures, audio or levels are distributed.
 
-**État : fondations techniques. Le jeu n'est pas jouable dans ce moteur.**
-Le lecteur ISO est en lecture seule. Le sandbox utilise uniquement des primitives originales.
+**Status: early foundations. The game is not playable in this engine.**
+The ISO reader is read-only. The sandbox contains original geometric primitives only.
 
-- [Dashboard et journal](https://YYoudi.github.io/God-Hand-Recomp/)
+- [Development journal](https://yyoudi.github.io/God-Hand-Recomp/)
 - [Roadmap](ROADMAP.md) · [Workflow](docs/workflow.md)
-- [Méthode clean room](docs/clean-room.md) · [Architecture](docs/architecture.md)
-- [État de l'art au 3 novembre 2026](docs/research-2026-11-03.md)
-- [Contribuer](CONTRIBUTING.md) · [Licences et périmètre](NOTICE.md)
+- [Clean-room method](docs/clean-room.md) · [Architecture](docs/architecture.md)
+- [PS2 recompilation research](docs/research-2026-11-03.md)
+- [Contributing](CONTRIBUTING.md) · [Licensing and scope](NOTICE.md)
+- [Native backend outputs and their use](docs/native-backend-outputs.md)
 
-## Démarrer
+## Getting started
 
-Installer Rust **1.98+** et les [prérequis Bevy](https://bevy.org/learn/quick-start/getting-started/setup/).
-Bevy est épinglé à **0.20.1**, les dépendances dans Cargo.lock.
-Les tests ne nécessitent ni GPU ni données du jeu.
+Install Rust **1.98+** and the [Bevy prerequisites](https://bevy.org/learn/quick-start/getting-started/setup/).
+Bevy is pinned to **0.20.1**; Cargo.lock pins its dependencies.
+Tests require neither a GPU nor game data.
 
 ```sh
 cargo test --workspace --locked
-cargo run -p godhand-lab -- --iso "/chemin/God Hand (USA).iso"
-cargo run -p godhand-lab --features viewer -- --iso "/chemin/God Hand (USA).iso" --sandbox
+cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso"
+cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --sandbox
 ```
 
-Le lancement exige une ISO dont SYSTEM.CNF référence SLUS_215.03. Ce contrôle
-reconnaît une structure et un numéro de série ; il ne certifie pas l'authenticité.
-Le sandbox affiche un sol et une capsule, déplaçable avec WASD ou les flèches.
-Ce n'est pas une scène du jeu.
+Startup requires an ISO whose SYSTEM.CNF references SLUS_215.03.
+This recognizes a structure and serial number; it does not certify authenticity.
+The sandbox displays a floor and a capsule, controlled with WASD or arrow keys.
+It is not a scene from the game.
 
-Windows : une toolchain GNU peut être utilisée avec
-`cargo +stable-x86_64-pc-windows-gnu ...` et MinGW sur le PATH.
-MSVC nécessite Visual C++ Build Tools et le SDK Windows.
+Windows: use a GNU toolchain with `cargo +stable-x86_64-pc-windows-gnu ...`
+and MinGW on PATH, or install Visual C++ Build Tools and the Windows SDK for MSVC.
 
-## Sources publiques et données locales
+## Public source and local data
 
-| Public | Exclus de Git |
+| Public | Excluded from Git |
 | --- | --- |
-| crates/ : lecteur, logique originale, application Bevy | ISO, BIOS, ELF, IRX, AFS |
-| specs/ : contrats avec provenance | Code recompilé, binaires du jeu, dumps |
-| docs/ : architecture, roadmap, dashboard | Extractions, Ghidra, sauvegardes |
-| scripts/ : outils de suivi et vérification | Backends de recherche, captures du jeu |
+| crates/: reader, original logic, Bevy application | ISO, BIOS, ELF, IRX, AFS |
+| specs/: contracts with provenance | Translated game code, game binaries, dumps |
+| docs/: architecture, roadmap, journal | Extracted data, Ghidra projects, saves |
+| scripts/: tracking and validation tools | Research backends, gameplay captures |
 
-L'ancienne piste de recompilation reste **locale pour la recherche**. Elle n'alimente
-pas le moteur public. Une traduction MIPS vers C++ n'est pas du code clean room.
+Static recompilation remains **local research**. Its generated code does not feed
+the public engine. Translating MIPS into C++ does not establish a clean-room implementation.
 
-Un [premier essai local de ps2-native-recomp](docs/native-evaluation-2026-11-03.md)
-a atteint le premier combat, avec reprise d'un snapshot du runtime. Ce résultat
-concerne ce backend tiers ; notre moteur indépendant reste au stade des fondations.
+A [local ps2-native-recomp trial](docs/native-evaluation-2026-11-03.md) reached the
+first fight and resumed a runtime snapshot. This is a third-party backend result;
+our independent engine remains at the foundation stage.
 
-## Suivi public gratuit
+## Free public journal
 
-GitHub Pages publie **main:/docs** sur le domaine gratuit github.io. Le dashboard
-statique ne dépend ni d'une API payante ni d'un hébergement externe. Les contrôles CI
-utilisent des runners Ubuntu standards publics, sans cache ni artefact persistant.
+GitHub Pages publishes **main:/docs** on the free github.io domain.
+The static journal uses no paid API or external hosting service.
+CI uses standard public Ubuntu runners without caches or custom artifact uploads.
 
-Après chaque modification : actualiser docs/dashboard/data.json, régénérer
-ROADMAP.md avec `python scripts/dashboard.py`, ajouter une vraie capture du
-dashboard en cas de changement visuel, puis contrôler l'index avec
-`python scripts/check_public_tree.py`.
+Update docs/dashboard/data.json, run `python scripts/dashboard.py`, capture visual
+journal changes, then check staged files with `python scripts/check_public_tree.py`.
+Public resources are in English; conversations with the project owner remain in French.

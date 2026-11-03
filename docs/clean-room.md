@@ -1,40 +1,39 @@
-# Méthode d'implémentation indépendante
+# Independent implementation method
 
-La décision est une réimplémentation du moteur, pas une conversion du programme PS2.
-L'ISO reste nécessaire comme source de données personnelles au lancement.
-Cela demande de spécifier puis reconstruire logique, formats et interprétation.
+The decision is to reimplement the engine, not convert the PS2 program.
+A personal ISO remains necessary as the source of game data.
+This requires specifying and rebuilding logic, formats and their interpretation.
 
-Une traduction MIPS → C++, même nettoyée, renommée ou réécrite ligne par ligne en Rust,
-n'est pas une implémentation indépendante. Ne pas l'importer dans le moteur.
+Translating MIPS to C++, then cleaning, renaming or rewriting it line by line in Rust,
+does not establish an independent implementation. Do not import it into the engine.
 
-## Observation → spécification → implémentation
+## Observation → specification → implementation
 
-1. **Observer** entrées, sorties et comportement sur sa propre copie. Garder captures
-   du jeu, dumps et notes sensibles localement.
-2. **Spécifier** le contrat dans specs/ : provenance, méthode, unités, tolérances et
-   incertitudes. Aucun code original, pseudo-code décompilé ou adresse de fonction.
-3. **Implémenter** à partir du contrat et des standards publics, en code original,
-   avec des tests et échantillons synthétiques.
-4. **Valider** les résultats observables et publier conclusions/mesures agrégées,
-   sans données propriétaires.
+1. **Observe** inputs, outputs and behavior using a copy owned by the observer.
+   Keep gameplay captures, dumps and sensitive research notes local.
+2. **Specify** contracts in specs/: provenance, method, units, tolerances and uncertainty.
+   No original code, decompiled pseudocode or function addresses.
+3. **Implement** from contracts and public standards, using original code and
+   synthetic tests and samples.
+4. **Validate** observable results; publish conclusions or aggregate measurements
+   without proprietary data.
 
-Pour un composant dont le contrat provient d'une analyse interne du jeu, privilégier
-des personnes distinctes pour observer/spécifier et implémenter. Une session exposée
-au désassemblage d'un composant ne doit pas prétendre à une séparation stricte pour
-son implémentation. Consigner l'exposition et prévoir une revue indépendante.
+Where a contract depends on internal game analysis, prefer separate people for
+observation/specification and implementation. A session exposed to a component's
+disassembly must not claim strict separation for its implementation.
+Record the exposure and arrange independent review.
 
-Le projet adopte un protocole de provenance ; il ne prétend pas à une clean room
-formelle déjà accomplie ou à une certification juridique. Les fondations actuelles
-reposent sur ISO 9660 et des mécaniques génériques originales.
+The project adopts a provenance protocol. It does not claim an already completed
+formal clean room or legal certification. Current foundations use ISO 9660 and
+original generic mechanics.
 
 ## Publication
 
-Public : code original, fixtures créées de toutes pièces, contrats fonctionnels,
-documentation originale et captures du dashboard. Les images du sandbox original
-nécessitent une vérification de provenance avant ajout.
+Public: original code, fixtures created from scratch, functional contracts, original
+documentation and journal captures. Original sandbox images require provenance review.
 
-Local uniquement : ISO, BIOS, ELF, IRX, AFS, traductions du jeu, projets Ghidra, dumps,
-sauvegardes et captures du jeu. Ne pas les joindre aux issues, releases ou artefacts CI.
+Local only: ISO, BIOS, ELF, IRX, AFS, translated game code, Ghidra projects, dumps,
+saves and gameplay captures. Never attach them to issues, releases or CI artifacts.
 
-La CI réduit le risque de fuite ; elle ne détermine pas la titularité d'un code.
-Toute contribution déclare sa provenance et conserve les notices. Voir NOTICE.md.
+CI reduces disclosure risk; it does not determine code ownership.
+Every contribution declares provenance and preserves notices. See NOTICE.md.

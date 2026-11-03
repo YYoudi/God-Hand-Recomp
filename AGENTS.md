@@ -1,64 +1,62 @@
 # AGENTS.md — God Hand independent engine lab
 
-Répondre en français. Lire docs/workflow.md, docs/clean-room.md et docs/architecture.md
-avant de modifier le moteur. La décision utilisateur du 2026-11-03 remplace le
-pipeline initial : **réimplémentation indépendante en Rust + Bevy**, code original
-public sous MIT, ISO personnelle requise au lancement.
+Reply to the user in French. Maintain public resources and the journal in English.
+Read docs/workflow.md, docs/clean-room.md and docs/architecture.md before changing
+the engine. The user's 2026-11-03 decision supersedes the initial pipeline:
+**independent Rust + Bevy reimplementation**, original public MIT code, personal ISO required.
 
-## Périmètre
+## Scope
 
-- crates/disc : lecteur ISO 9660 en lecture seule, sans exécution du jeu.
-- crates/engine : logique originale testable sans disque ni GPU.
-- crates/app : CLI et sandbox Bevy optionnel (--features viewer).
-- specs/ : contrats de comportement avec provenance, sans désassemblage.
-- docs/dashboard/data.json : source unique de roadmap et journal.
-- scripts/dashboard.py : génère ROADMAP.md ; --check détecte les écarts.
-- scripts/check_public_tree.py : contrôle l'index Git avant publication.
+- crates/disc: read-only ISO 9660 reader, without game-code execution.
+- crates/engine: original logic testable without a disc or GPU.
+- crates/app: CLI and optional Bevy sandbox (--features viewer).
+- specs/: behavioral contracts with provenance, without disassembly.
+- docs/dashboard/data.json: single source of truth for roadmap and journal.
+- scripts/dashboard.py: generates ROADMAP.md and journal HTML; --check detects drift.
+- scripts/check_public_tree.py: validates the Git index before publication.
 
-MIT couvre notre code seulement. Ne copier ni désassemblage, ni pseudo-code du jeu,
-ni C++ recompilé, ni code tiers sous une autre licence dans le moteur. Une traduction
-ou un renommage ne rend pas un code clean room. Ne pas prétendre à une certification
-juridique ou à une séparation formelle non réalisée. Documenter la provenance.
+MIT covers our own code only. Never copy game disassembly, decompiled pseudocode,
+translated C++ or incompatibly licensed code into the engine. Translation or renaming
+does not make code clean room. Do not claim legal certification or a formal separation
+that has not occurred. Document provenance.
 
 ## Workflow
 
-1. Spécifier comportement observable, provenance et critères avant implémentation.
-2. Tests synthétiques uniquement ; aucune donnée du jeu dans la CI.
-3. cargo test --workspace --locked ; pour Bevy, cargo check -p godhand-lab --features viewer --locked.
-4. Actualiser tâches, journal, validations et limites dans docs/dashboard/data.json.
-   Ne marquer « fait » qu'après vérification ; ne pas inventer FPS ou gameplay.
-5. Pour un changement visuel, prendre une vraie capture du dashboard. Captures du
-   jeu locales seulement. Inscrire date et provenance au manifeste avant indexation.
-6. python scripts/dashboard.py ; indexation explicite des sources publiques ;
-   python scripts/check_public_tree.py ; python scripts/dashboard.py --check.
-7. Après push main, vérifier CI et Pages. Pages gratuit depuis main:/docs,
-   domaine github.io, runners standards publics, sans artefacts ou caches persistants.
+1. Specify observable behavior, provenance and acceptance criteria before implementation.
+2. Synthetic fixtures only; never give game data to CI.
+3. cargo test --workspace --locked; for Bevy, cargo check -p godhand-lab --features viewer --locked.
+4. Update tasks, journal, actual validations and limitations in docs/dashboard/data.json.
+   Mark tasks done only after verification; never invent FPS or gameplay results.
+5. Capture the actual journal after visual changes. Gameplay captures stay local.
+   Register date and provenance in the manifest before staging.
+6. python scripts/dashboard.py; explicitly stage public files;
+   python scripts/check_public_tree.py; python scripts/dashboard.py --check.
+7. After pushing main, verify CI and Pages. Free Pages from main:/docs on github.io,
+   standard public runners, no custom persistent artifacts or caches.
 
-## Workspace privé préexistant
+## Existing private workspace
 
 God Hand (USA).iso, extraction/, GH-Prototype/, ghidra/, PS2Recomp/, recomp/, tools/,
-downloads/, pcsx2-v2.8.2-windows-x64-Qt/ et .zcode/ sont ignorés. Ne jamais modifier
-les disques ou extractions originales. Avant un travail prototype/diffing, lire
-docs/prototype-tcrf-notes.md (local, non publié). Garder cette recherche séparée de
-l'implémentation publique. Les anciens prompts 01–05 ne décrivent pas le nouveau moteur.
+downloads/, pcsx2-v2.8.2-windows-x64-Qt/ and .zcode/ are ignored. Never modify original
+discs or extractions. Before prototype/diff work, read unpublished local
+docs/prototype-tcrf-notes.md. Keep that research separate from implementation.
+Historical prompts 01–05 do not describe the public-engine workflow.
 
-God Hand et Bevy utilisent **Y comme hauteur**. Les ELF sont strippés. Une déclaration
-MCP dans .zcode/config.json ne garantit pas sa disponibilité dans Codex : vérifier
-les outils présents avant de l'annoncer.
+God Hand and Bevy use **Y as height**. Both ELFs are stripped. An MCP entry in
+.zcode/config.json does not guarantee availability in Codex; inspect session tools.
 
-Audit machine 2026-11-03 : Rust 1.98, toolchains MSVC et GNU installées ; gcc, CMake et
-Ninja via G:/Tools/WinLibs/mingw64/bin. L'ancien chemin vcvars64 est absent.
-Ghidra 12.1.2 présent. PS2Recomp local propre au commit e5636981 ; binaires présents,
-non revalidés sur cette machine. La piste native épinglée dans docs/toolchains.lock.json
-est une référence de recherche, pas le moteur choisi.
+Machine audit, 2026-11-03: Rust 1.98, MSVC and GNU toolchains installed; gcc, CMake
+and Ninja via G:/Tools/WinLibs/mingw64/bin. Historical vcvars64 path is absent.
+Ghidra 12.1.2 is present. Local PS2Recomp is clean at e5636981; binaries are present
+but not revalidated. Local docs/toolchains.lock.json pins research backends only.
 
-Évaluation locale du 2026-11-03 : ps2-native-recomp au commit cba42f57 construit et
-observé jusqu'au premier combat. Snapshot du runtime enregistré/rechargé ; entrées
-programmées testées. Voir docs/native-evaluation-2026-11-03.md pour les limites.
-Les artefacts restent dans recomp/experiments/native-2026-11-03/ et le backend ignoré.
-Lancement local : recomp/Play-GodHand.cmd (ISO requise). Ce résultat ne décrit pas
-la compatibilité du moteur Rust/Bevy. Aucun code original du jeu n'a été consulté
-pour implémenter une fonctionnalité de ce moteur durant ce test.
+Local evaluation: ps2-native-recomp cba42f57 built and observed through the first
+fight. Runtime snapshot saved/reloaded; scripted inputs tested.
+See docs/native-evaluation-2026-11-03.md and docs/native-backend-outputs.md.
+Artifacts stay in recomp/experiments/native-2026-11-03/ and the ignored backend.
+Local launcher: recomp/Play-GodHand.cmd (ISO required). This does not describe
+Rust/Bevy compatibility. No original game code was consulted to implement an
+independent-engine feature during this trial.
 
-Garder ce fichier, README et prompts/00-contexte-maitre.md cohérents. Rapporter les
-artefacts locaux avec chemins absolus. Ne pas déléguer sans instruction explicite.
+Keep this file, README and prompts/00-contexte-maitre.md consistent.
+Report local artifacts with absolute paths. Do not delegate without explicit instruction.

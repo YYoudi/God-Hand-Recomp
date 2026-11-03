@@ -1,17 +1,17 @@
 ---
-name: Rapport de test
-about: Décrire un problème sans joindre de fichiers du jeu
+name: Test report
+about: Describe a problem without attaching game files
 title: '[Test] '
 labels: bug
 ---
 
-Version du moteur (SHA) :
-Version du disque (numéro de série, pas d'image disque) :
-OS / CPU / GPU / pilote :
-Étapes pour reproduire :
-Résultat attendu / observé :
-Dernier jalon atteint :
-Mesures (FPS, vitesse du jeu, durée) :
-Extrait de log relu et anonymisé :
+Engine version (SHA):
+Disc version (serial number, not an image):
+OS / CPU / GPU / driver:
+Steps to reproduce:
+Expected / observed behavior:
+Last milestone reached:
+Measurements (FPS, game speed, duration):
+Reviewed and anonymized log excerpt:
 
-Ne joindre ni ISO, BIOS, ELF, code généré, dump, sauvegarde ou capture du jeu.
+Do not attach ISO, BIOS, ELF, translated code, dumps, saves or gameplay captures.

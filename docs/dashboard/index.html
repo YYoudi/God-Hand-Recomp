@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Notes de développement d’un moteur indépendant pour God Hand, en Rust et Bevy. Projet au tout début.">
-  <title>God Hand PC — carnet de développement</title>
+  <meta name="description" content="Development notes for an independent God Hand engine in Rust and Bevy. An early project.">
+  <title>God Hand PC — development journal</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,61 +14,70 @@
 </header>
 <main>
   <section class="about">
-    <h1>Carnet de développement</h1>
-    <p>Ce projet explore une réimplémentation indépendante du moteur de God Hand
-    en Rust et Bevy. Le code est ouvert ; les données du jeu devront venir de
-    l’ISO personnelle de chaque utilisateur.</p>
-    <p>On en est au début. Le jeu n’est pas jouable dans ce moteur. Cette page
-    rassemble les choix techniques, les petites avancées et ce qui reste à comprendre.</p>
+    <h1>Development journal</h1>
+    <p>This project explores an independent reimplementation of God Hand’s engine
+    in Rust and Bevy. The source is open; game data must come from each user’s
+    own ISO.</p>
+    <p>It is early. The game is not playable in this engine. This page records
+    technical decisions, small steps and what we still need to understand.</p>
   </section>
-  <section id="journal" aria-label="Entrées du journal">
+  <section id="journal" aria-label="Journal entries">
     <article>
   <time datetime="2026-11-03">2026-11-03</time>
-  <h2>Premier test de ps2-native-recomp</h2>
-  <p>Le backend tiers construit depuis notre ISO atteint le premier combat de God Hand. C’est un résultat de ps2-native-recomp, pas du moteur Rust/Bevy.</p>
-  <ul><li>Construction locale du runner, sans modifier les sources du backend.</li><li>Écran titre, cinématique et premier combat observés.</li><li>État du runtime enregistré puis rechargé ; la session continue avec des commandes programmées.</li></ul>
-<p class="reading"><a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/native-evaluation-2026-11-03.md">Lire le compte rendu de l’essai</a></p>
-  <details><summary>Vérifications et limites</summary>
-    <p>Un essai en fenêtre a parcouru 7 200 frames en 122,44 secondes. Un second a vérifié le mode normal à plusieurs threads et la création d’un état. La reprise a continué jusqu’à la limite prévue. Bilan détaillé dans docs/native-evaluation-2026-11-03.md du dépôt.</p><p>Essai court, sans validation du casino ou du jeu complet. Pause, manette physique et sauvegarde native du jeu restent à tester. Les captures de gameplay, données et traductions restent locales.</p>
+  <h2>Public resources in English</h2>
+  <p>The repository documentation, roadmap and development journal now use English. Conversations with the project owner remain in French.</p>
+  <ul><li>Translated public documentation and existing journal entries without changing task status.</li><li>Added a note explaining native backend outputs and how they can support independent development.</li></ul>
+<p class="reading"><a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/native-backend-outputs.md">What the native backend produces</a></p>
+  <details><summary>Checks and limitations</summary>
+    <p>Regenerated the roadmap and journal; checked the public file boundary and reviewed the English page.</p><p>No engine behavior changed. Earlier French journal captures are retained as labeled historical records.</p>
   </details>
 </article><article>
   <time datetime="2026-11-03">2026-11-03</time>
-  <h2>Mise en ligne du dépôt</h2>
-  <p>Le code et ce carnet sont maintenant publics sur GitHub. La roadmap reste dans le dépôt ; elle décrit les travaux envisagés, pas des fonctionnalités déjà présentes.</p>
-  <ul><li>Sources originales sous MIT, avec les règles de provenance.</li><li>Publication du carnet sur GitHub Pages gratuit, sans statistiques ni éléments du jeu.</li></ul>
-
-  <details><summary>Vérifications et limites</summary>
-    <p>Les contrôles GitHub passent : tests synthétiques, formatage, compilation Bevy sous Ubuntu et contrôle des fichiers publics. La page publiée a été vérifiée dans le navigateur.</p><p>Il n’y a pas encore de résultat de gameplay. Le bac à sable graphique est seulement vérifié à la compilation.</p>
+  <h2>First ps2-native-recomp trial</h2>
+  <p>The third-party backend built from our ISO reaches God Hand’s first fight. This is a ps2-native-recomp result, not a Rust/Bevy engine result.</p>
+  <ul><li>Built the local runner without changing backend sources.</li><li>Observed the title, cinematic and first fight.</li><li>Saved and reloaded a runtime state; continued with scripted input.</li></ul>
+<p class="reading"><a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/native-evaluation-2026-11-03.md">Read the trial report</a></p>
+  <details><summary>Checks and limitations</summary>
+    <p>One windowed trial covered 7,200 frames in 122.44 seconds. A second checked normal multithreaded mode and state creation. Resume continued to its planned frame limit.</p><p>Short trial only; casino and full game unverified. Pause, physical controller and native game saves remain untested. Gameplay captures, data and translations stay local.</p>
   </details>
 </article><article>
   <time datetime="2026-11-03">2026-11-03</time>
-  <h2>Premiers fichiers du moteur</h2>
-  <p>Le dépôt contient un petit lecteur ISO en lecture seule et les premières bases Rust. Rien du jeu ne tourne encore.</p>
-  <ul><li>Lecture de la racine ISO 9660 et reconnaissance du disque USA.</li><li>Tests sur des images synthétiques, sans fichiers du jeu.</li><li>Préparation d’un sandbox Bevy avec un sol et une capsule.</li><li>Carnet de développement sobre, sans statistiques de progression.</li></ul>
+  <h2>Repository published</h2>
+  <p>The code and this journal are public on GitHub. The roadmap describes intended work, not features already available.</p>
+  <ul><li>Original source under MIT with provenance rules.</li><li>Published the journal on free GitHub Pages without progress counters or game assets.</li></ul>
 
-  <details><summary>Vérifications et limites</summary>
-    <p>Tests Rust et compilation du viewer Bevy vérifiés sur Windows GNU. Le lecteur reconnaît aussi l’ISO locale : volume GODHAND, six entrées racine.</p><p>Le viewer n’a pas été exécuté. Aucune scène, animation ou logique du jeu n’est chargée.</p>
+  <details><summary>Checks and limitations</summary>
+    <p>GitHub checks passed: synthetic tests, formatting, Bevy compilation on Ubuntu and public-file validation. Reviewed the published page in the browser.</p><p>There is no independent-engine gameplay result. The graphical sandbox has only been compile-checked.</p>
   </details>
 </article><article>
   <time datetime="2026-11-03">2026-11-03</time>
-  <h2>Choix de la direction</h2>
-  <p>L’idée initiale était un port par recompilation PS2. Après examen des projets existants, le choix est de tenter une réimplémentation indépendante en Rust et Bevy.</p>
-  <ul><li>Le moteur sera du code original public sous MIT.</li><li>Les données du jeu resteront dans l’ISO fournie par chaque utilisateur.</li><li>Les observations et spécifications devront être séparées de l’implémentation.</li></ul>
+  <h2>First engine files</h2>
+  <p>The repository contains a small read-only ISO reader and initial Rust foundations. No game logic runs in it yet.</p>
+  <ul><li>ISO 9660 root access and USA disc recognition.</li><li>Tests using synthetic images without game files.</li><li>Prepared a Bevy sandbox with a floor and capsule.</li><li>Simple development journal without progress statistics.</li></ul>
 
-  <details><summary>Vérifications et limites</summary>
-    <p>Les projets PS2Recomp, ps2-web-recomp et ps2-native-recomp ont été examinés comme références de recherche.</p><p>La compatibilité God Hand rapportée par ps2-native-recomp n’est pas un résultat de notre moteur. La logique et les formats du jeu restent à comprendre.</p>
+  <details><summary>Checks and limitations</summary>
+    <p>Rust tests and Bevy viewer compilation checked on Windows GNU. The reader recognizes the local ISO: GODHAND volume, six root entries.</p><p>The viewer was not run. No game scene, animation or logic is loaded.</p>
+  </details>
+</article><article>
+  <time datetime="2026-11-03">2026-11-03</time>
+  <h2>Choosing the direction</h2>
+  <p>The initial idea was a PS2 recompilation port. After reviewing existing projects, the choice is to try an independent reimplementation in Rust and Bevy.</p>
+  <ul><li>The engine will use original public MIT code.</li><li>Game data stays in each user’s own ISO.</li><li>Observations and specifications must be separated from implementation.</li></ul>
+
+  <details><summary>Checks and limitations</summary>
+    <p>Reviewed PS2Recomp, ps2-web-recomp and ps2-native-recomp as research references.</p><p>God Hand compatibility reported by ps2-native-recomp is not our engine’s result. Game logic and formats still need to be understood.</p>
   </details>
 </article>
   </section>
-  <section><h2>Captures du carnet</h2><ul><li><a href="captures/2026-11-03-essai-natif.jpg">Entrée sur le premier essai du backend natif</a> <small>— 2026-11-03 · Capture navigateur du carnet local, sans images du jeu</small></li><li><a href="captures/2026-11-03-carnet.jpg">Première version du carnet de développement</a> <small>— 2026-11-03 · Capture navigateur de la page locale, sans données du jeu</small></li></ul></section>
+  <section><h2>Journal captures</h2><ul><li><a href="captures/2026-11-03-english-journal.jpg">Development journal in English</a> <small>— 2026-11-03 · Browser capture of the local English journal; no game imagery</small></li><li><a href="captures/2026-11-03-essai-natif.jpg">Historical French journal — native trial entry</a> <small>— 2026-11-03 · Browser capture of the local journal, before the English translation; no game imagery</small></li><li><a href="captures/2026-11-03-carnet.jpg">Historical French journal — first version</a> <small>— 2026-11-03 · Browser capture of the local journal, before the English translation; no game imagery</small></li></ul></section>
   <section class="reading">
-    <h2>Pour situer le projet</h2>
-    <p><a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/research-2026-11-03.md">Notes sur les projets de recompilation PS2</a><br>
-    <a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/clean-room.md">Méthode d’implémentation indépendante</a><br>
-    <a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/ROADMAP.md">Liste des fonctionnalités envisagées</a></p>
+    <h2>Project background</h2>
+    <p><a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/research-2026-11-03.md">PS2 recompilation research notes</a><br>
+    <a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/clean-room.md">Independent implementation method</a><br>
+    <a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/ROADMAP.md">Planned features</a></p>
   </section>
 </main>
-<footer>Projet indépendant, sans affiliation avec les ayants droit.<br>
-Code original sous MIT · Hébergé sur GitHub Pages (offre gratuite).</footer>
+<footer>Independent project, unaffiliated with the rights holders.<br>
+Original code under MIT · Hosted on free GitHub Pages.</footer>
 </body>
 </html>

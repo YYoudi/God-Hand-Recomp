@@ -1,7 +1,7 @@
-# Contexte de session
+# Session context
 
-Lire 00-contexte-maitre.md avec AGENTS.md pour reprendre le travail sur le moteur
-indépendant Rust + Bevy. Consulter ROADMAP.md puis choisir un contrat à spécifier.
+Read 00-contexte-maitre.md with AGENTS.md to resume the independent Rust + Bevy engine.
+Consult ROADMAP.md, then choose a contract to specify.
 
-Les prompts de recompilation de l’ancien workspace restent locaux et ignorés.
-Ils ne décrivent pas le pipeline du moteur public.
+Historical recompilation prompts remain local and ignored.
+They do not describe the public engine workflow.
