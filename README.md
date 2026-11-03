@@ -46,6 +46,10 @@ MSVC nécessite Visual C++ Build Tools et le SDK Windows.
 L'ancienne piste de recompilation reste **locale pour la recherche**. Elle n'alimente
 pas le moteur public. Une traduction MIPS vers C++ n'est pas du code clean room.
 
+Un [premier essai local de ps2-native-recomp](docs/native-evaluation-2026-11-03.md)
+a atteint le premier combat, avec reprise d'un snapshot du runtime. Ce résultat
+concerne ce backend tiers ; notre moteur indépendant reste au stade des fondations.
+
 ## Suivi public gratuit
 
 GitHub Pages publie **main:/docs** sur le domaine gratuit github.io. Le dashboard

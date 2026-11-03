@@ -52,5 +52,13 @@ Ghidra 12.1.2 présent. PS2Recomp local propre au commit e5636981 ; binaires pr�
 non revalidés sur cette machine. La piste native épinglée dans docs/toolchains.lock.json
 est une référence de recherche, pas le moteur choisi.
 
+Évaluation locale du 2026-11-03 : ps2-native-recomp au commit cba42f57 construit et
+observé jusqu'au premier combat. Snapshot du runtime enregistré/rechargé ; entrées
+programmées testées. Voir docs/native-evaluation-2026-11-03.md pour les limites.
+Les artefacts restent dans recomp/experiments/native-2026-11-03/ et le backend ignoré.
+Lancement local : recomp/Play-GodHand.cmd (ISO requise). Ce résultat ne décrit pas
+la compatibilité du moteur Rust/Bevy. Aucun code original du jeu n'a été consulté
+pour implémenter une fonctionnalité de ce moteur durant ce test.
+
 Garder ce fichier, README et prompts/00-contexte-maitre.md cohérents. Rapporter les
 artefacts locaux avec chemins absolus. Ne pas déléguer sans instruction explicite.

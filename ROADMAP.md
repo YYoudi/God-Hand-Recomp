@@ -23,6 +23,7 @@ Dépendances : aucune.
 | F04 | Dépôt public MIT | Fait | Contrôle de l’index et publication des seules sources originales. |
 | F05 | Dashboard Pages gratuit | Fait | URL publique fonctionnelle, petites entrées datées, lien vers la roadmap et vraie capture du carnet. |
 | F06 | Validation continue | Fait | Formatage, tests Rust, compilation Bevy et contrôle public passent sur GitHub. |
+| E01 | Évaluation locale du backend natif tiers | Fait | Build épinglé, premier combat observé, snapshot du runtime rechargé ; bilan textuel avec limites. Ce n’est pas une fonctionnalité du moteur indépendant. |
 
 ## M1 — Du disque aux données
 

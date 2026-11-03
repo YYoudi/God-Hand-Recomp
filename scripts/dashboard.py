@@ -44,6 +44,8 @@ def render(data):
     for update in data['updates']:
         datetime.date.fromisoformat(update['date'])
         assert update['changes'] and update['validation'] and update['limits']
+        if 'link' in update:
+            assert update['link']['url'].startswith(data['repo'] + '/blob/main/'), 'Post link must target repository documentation'
     for name in ('style.css',):
         assert (SITE / name).is_file(), f'Missing dashboard asset {name}'
     lines += ['## Hors périmètre public', '',
@@ -56,11 +58,14 @@ def blog(data):
     posts = []
     for update in data['updates']:
         changes = ''.join('<li>' + escape(change) + '</li>' for change in update['changes'])
+        link = update.get('link')
+        post_link = (f'<p class="reading"><a href="{escape(link["url"], quote=True)}">{escape(link["label"])}</a></p>' if link else '')
         posts.append(f'''<article>
   <time datetime="{escape(update['date'])}">{escape(update['date'])}</time>
   <h2>{escape(update['title'])}</h2>
   <p>{escape(update['summary'])}</p>
   <ul>{changes}</ul>
+  {post_link}
   <details><summary>Vérifications et limites</summary>
     <p>{escape(update['validation'])}</p><p>{escape(update['limits'])}</p>
   </details>

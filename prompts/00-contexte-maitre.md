@@ -7,6 +7,10 @@ original, aucune traduction du binaire PS2. L'ISO personnelle est requise au lan
 Lire AGENTS.md, docs/workflow.md, docs/clean-room.md, docs/architecture.md et ROADMAP.md.
 Les prompts 01–05 sont des références historiques de recherche locale uniquement.
 
+Un essai tiers ps2-native-recomp a atteint le premier combat et repris un snapshot
+du runtime. Voir docs/native-evaluation-2026-11-03.md. Les artefacts et captures du
+jeu restent locaux ; ce résultat ne constitue pas une avancée du moteur Bevy.
+
 Socle : crates/disc (ISO en lecture seule), crates/engine (simulation originale),
 crates/app (CLI et sandbox Bevy optionnel). Le jeu n'est pas jouable. Y = hauteur.
 Tests synthétiques seulement en CI. Ne pas importer de code décompilé ou traduit.

@@ -61,6 +61,13 @@
           "status": "done",
           "area": "tooling",
           "acceptance": "Formatage, tests Rust, compilation Bevy et contrôle public passent sur GitHub."
+        },
+        {
+          "id": "E01",
+          "title": "Évaluation locale du backend natif tiers",
+          "status": "done",
+          "area": "tooling",
+          "acceptance": "Build épinglé, premier combat observé, snapshot du runtime rechargé ; bilan textuel avec limites. Ce n’est pas une fonctionnalité du moteur indépendant."
         }
       ]
     },
@@ -387,6 +394,22 @@
   "updates": [
     {
       "date": "2026-11-03",
+      "title": "Premier test de ps2-native-recomp",
+      "summary": "Le backend tiers construit depuis notre ISO atteint le premier combat de God Hand. C’est un résultat de ps2-native-recomp, pas du moteur Rust/Bevy.",
+      "changes": [
+        "Construction locale du runner, sans modifier les sources du backend.",
+        "Écran titre, cinématique et premier combat observés.",
+        "État du runtime enregistré puis rechargé ; la session continue avec des commandes programmées."
+      ],
+      "validation": "Un essai en fenêtre a parcouru 7 200 frames en 122,44 secondes. Un second a vérifié le mode normal à plusieurs threads et la création d’un état. La reprise a continué jusqu’à la limite prévue. Bilan détaillé dans docs/native-evaluation-2026-11-03.md du dépôt.",
+      "limits": "Essai court, sans validation du casino ou du jeu complet. Pause, manette physique et sauvegarde native du jeu restent à tester. Les captures de gameplay, données et traductions restent locales.",
+      "link": {
+        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/native-evaluation-2026-11-03.md",
+        "label": "Lire le compte rendu de l’essai"
+      }
+    },
+    {
+      "date": "2026-11-03",
       "title": "Mise en ligne du dépôt",
       "summary": "Le code et ce carnet sont maintenant publics sur GitHub. La roadmap reste dans le dépôt ; elle décrit les travaux envisagés, pas des fonctionnalités déjà présentes.",
       "changes": [
@@ -423,6 +446,13 @@
     }
   ],
   "captures": [
+    {
+      "kind": "dashboard",
+      "path": "captures/2026-11-03-essai-natif.jpg",
+      "date": "2026-11-03",
+      "source": "Capture navigateur du carnet local, sans images du jeu",
+      "caption": "Entrée sur le premier essai du backend natif"
+    },
     {
       "kind": "dashboard",
       "path": "captures/2026-11-03-carnet.jpg",
