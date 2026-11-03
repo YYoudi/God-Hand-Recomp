@@ -88,7 +88,7 @@ def blog(data):
   <section class="about">
     <h1>Carnet de développement</h1>
     <p>Ce projet explore une réimplémentation indépendante du moteur de God Hand
-    en Rust et Bevy. Le code sera ouvert ; les données du jeu devront venir de
+    en Rust et Bevy. Le code est ouvert ; les données du jeu devront venir de
     l’ISO personnelle de chaque utilisateur.</p>
     <p>On en est au début. Le jeu n’est pas jouable dans ce moteur. Cette page
     rassemble les choix techniques, les petites avancées et ce qui reste à comprendre.</p>

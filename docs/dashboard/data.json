@@ -44,21 +44,21 @@
         {
           "id": "F04",
           "title": "Dépôt public MIT",
-          "status": "in_progress",
+          "status": "done",
           "area": "core",
           "acceptance": "Contrôle de l’index et publication des seules sources originales."
         },
         {
           "id": "F05",
           "title": "Dashboard Pages gratuit",
-          "status": "in_progress",
+          "status": "done",
           "area": "tooling",
-          "acceptance": "URL publique fonctionnelle, journal, filtres et captures réelles."
+          "acceptance": "URL publique fonctionnelle, petites entrées datées, lien vers la roadmap et vraie capture du carnet."
         },
         {
           "id": "F06",
           "title": "Validation continue",
-          "status": "in_progress",
+          "status": "done",
           "area": "tooling",
           "acceptance": "Formatage, tests Rust, compilation Bevy et contrôle public passent sur GitHub."
         }
@@ -385,6 +385,17 @@
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-03",
+      "title": "Mise en ligne du dépôt",
+      "summary": "Le code et ce carnet sont maintenant publics sur GitHub. La roadmap reste dans le dépôt ; elle décrit les travaux envisagés, pas des fonctionnalités déjà présentes.",
+      "changes": [
+        "Sources originales sous MIT, avec les règles de provenance.",
+        "Publication du carnet sur GitHub Pages gratuit, sans statistiques ni éléments du jeu."
+      ],
+      "validation": "Les contrôles GitHub passent : tests synthétiques, formatage, compilation Bevy sous Ubuntu et contrôle des fichiers publics. La page publiée a été vérifiée dans le navigateur.",
+      "limits": "Il n’y a pas encore de résultat de gameplay. Le bac à sable graphique est seulement vérifié à la compilation."
+    },
     {
       "date": "2026-11-03",
       "title": "Premiers fichiers du moteur",

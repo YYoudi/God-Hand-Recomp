@@ -20,9 +20,9 @@ Dépendances : aucune.
 | F01 | Socle Rust et dépendances figées | Fait | Workspace de trois crates, Bevy 0.20.1 et Cargo.lock. |
 | F02 | Protocole de provenance | Fait | Séparer observation, contrat et code ; règles de contribution documentées. |
 | F03 | Tests sans données du jeu | Fait | Lecteur et simulation vérifiés sur fixtures synthétiques. |
-| F04 | Dépôt public MIT | En cours | Contrôle de l’index et publication des seules sources originales. |
-| F05 | Dashboard Pages gratuit | En cours | URL publique fonctionnelle, journal, filtres et captures réelles. |
-| F06 | Validation continue | En cours | Formatage, tests Rust, compilation Bevy et contrôle public passent sur GitHub. |
+| F04 | Dépôt public MIT | Fait | Contrôle de l’index et publication des seules sources originales. |
+| F05 | Dashboard Pages gratuit | Fait | URL publique fonctionnelle, petites entrées datées, lien vers la roadmap et vraie capture du carnet. |
+| F06 | Validation continue | Fait | Formatage, tests Rust, compilation Bevy et contrôle public passent sur GitHub. |
 
 ## M1 — Du disque aux données
 
