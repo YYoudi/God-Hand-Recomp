@@ -3,6 +3,7 @@ use godhand_disc::afs::AfsCatalog;
 use godhand_disc::{fst::FstCatalog, tim2};
 use std::{env, error::Error, path::PathBuf};
 
+mod room;
 #[cfg(feature = "viewer")]
 mod viewer;
 
@@ -22,6 +23,8 @@ fn run() -> Result<(), Box<dyn Error>> {
     let mut list = false;
     let mut texture = None;
     let mut inspect_textures = false;
+    let mut room_path = None;
+    let mut inspect_rooms = false;
     while let Some(arg) = args.next() {
         if arg == "--iso" {
             iso = Some(PathBuf::from(args.next().ok_or("--iso needs a path")?));
@@ -40,6 +43,15 @@ fn run() -> Result<(), Box<dyn Error>> {
             );
         } else if arg == "--inspect-textures" {
             inspect_textures = true;
+        } else if arg == "--room" {
+            room_path = Some(
+                args.next()
+                    .ok_or("--room needs an exact FST path")?
+                    .into_string()
+                    .map_err(|_| "room path must be UTF-8")?,
+            );
+        } else if arg == "--inspect-rooms" {
+            inspect_rooms = true;
         } else if arg == "--smoke-seconds" {
             let value = args.next().ok_or("--smoke-seconds needs a value")?;
             let seconds: u64 = value.to_str().ok_or("invalid duration")?.parse()?;
@@ -49,7 +61,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             smoke_seconds = Some(seconds);
         } else if arg == "--help" || arg == "-h" {
             println!(
-                "godhand-lab --iso <original USA disc.iso> [--catalog] [--list] [--inspect-textures] [--texture <FST path> | --sandbox] [--smoke-seconds 1..120]\nTexture and synthetic sandbox windows require --features viewer. Game assets stay in your own ISO."
+                "godhand-lab --iso <original USA disc.iso> [--catalog] [--list] [--inspect-textures] [--inspect-rooms] [--room <FST path>] [--texture <FST path> | --sandbox] [--smoke-seconds 1..120]\nRoom options inspect metadata only. Texture and synthetic sandbox windows require --features viewer. Game assets stay in your own ISO."
             );
             return Ok(());
         } else {
@@ -76,7 +88,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             index.archive_size
         );
     }
-    if list || inspect_textures || texture.is_some() {
+    if list || inspect_textures || texture.is_some() || room_path.is_some() || inspect_rooms {
         let fst = FstCatalog::read(disc.open_root_file("GODHAND.FST")?)?;
         let mut archive = disc.open_root_file("_DATA.AFS")?;
         let afs = AfsCatalog::read(&mut archive)?;
@@ -93,6 +105,34 @@ fn run() -> Result<(), Box<dyn Error>> {
                     file.ordinal, afs.entries[file.ordinal as usize].size, file.path
                 );
             }
+        }
+        if inspect_rooms {
+            let mut rooms = 0;
+            let mut nested_catalogs = 0;
+            let mut nested_sections = 0;
+            for file in fst
+                .files
+                .iter()
+                .filter(|f| f.path.starts_with("st") && f.path.ends_with(".dat"))
+            {
+                let mut member = afs.open_entry(&mut archive, file.ordinal as usize)?;
+                let result = room::inspect(&mut member, false, false)?;
+                rooms += 1;
+                nested_catalogs += result.nested_catalogs;
+                nested_sections += result.nested_sections;
+            }
+            println!(
+                "Room-candidate catalogs: {rooms} outer DAT, {nested_catalogs} nonempty nested SCP, {nested_sections} nested storage sections. Metadata only; no scene reconstruction."
+            );
+        }
+        if let Some(path) = room_path {
+            let file = fst.file(&path)?;
+            let mut member = afs.open_entry(&mut archive, file.ordinal as usize)?;
+            let result = room::inspect(&mut member, true, true)?;
+            println!(
+                "Room candidate {path}: {} outer sections, {} nested sections, {} SCR collections, {} nodes; geometry and materials not decoded.",
+                result.outer_sections, result.nested_sections, result.scr_collections, result.nodes
+            );
         }
         if inspect_textures {
             let mut accepted = 0;

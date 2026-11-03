@@ -5,7 +5,9 @@ use std::io::{self, Read, Seek, SeekFrom};
 use std::path::Path;
 
 pub mod afs;
+pub mod dat;
 pub mod fst;
+pub mod scr;
 pub mod tim2;
 
 const SECTOR: u64 = 2048;

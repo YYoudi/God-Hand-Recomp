@@ -30,6 +30,11 @@ real 4/8-bit textures have displayed in Bevy, separate from the sandbox. No game
 scene or in-game visual parity is established. Read docs/game-structure-2026-11-03.md,
 specs/fst-catalog-v1.md and specs/tim2-indexed-v1.md. Do not start subagents until
 the next scene contracts and tests establish meaningful independent work boundaries.
+New room-data boundary: DAT/SCP catalog access covers 94/93 retail containers and
+1,708 nested sections. SCR metadata on three candidates validates 156/232/45 nodes
+and signed MDB references; geometry is not decoded. Continue from
+docs/room-containers-2026-11-03.md and docs/local/overnight-checkpoint.md. Source
+research uses Chihuahua's independent MIT format patterns, not original game code.
 
 After each session, update docs/dashboard/data.json with actual changes, checks
 and limitations. Run python scripts/dashboard.py. Capture visual journal changes.

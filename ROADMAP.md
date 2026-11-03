@@ -7,7 +7,7 @@ Updated: 2026-11-03. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Map one retail room container, identify a static mesh and texture link, and compare against a reference runtime before recreating gameplay.
+Next useful evidence: Validate one MDB vertex/topology boundary and its TM3/TIM3 texture association, then compare a real static element against a reference runtime.
 
 ## M0 — Public foundations
 
@@ -41,6 +41,7 @@ Dependencies: M0.
 | D03 | Independent FST / AFS contract | Done | Original bounded FST namespace and AFS ordinal contract, synthetic malformed cases, complete retail/prototype ordinal coverage; opaque metadata preserved. |
 | D04 | Archive access | Done | Bounded read-only ISO and AFS member windows; rejects invalid ordinals and reads/seeks outside a member. No whole-archive extraction. |
 | D05 | Local conversion pipeline | Planned | Private cache versioned by format and invalidated reliably. |
+| D06 | Tagged room-container and SCR node metadata | Done | Bounded DAT/SCP tables across 94 retail candidates and 93 nonempty SCP catalogs; SCR signed references and finite raw transforms checked on three samples. Mesh decoding remains separate. |
 
 ## M2 — Scenes and rendering
 
@@ -53,7 +54,7 @@ Dependencies: M1.
 | R01 | Bevy viewer foundation | Done | Original primitive viewer compiled and rendered on Windows/Vulkan with bounded smoke exit; not a game scene. |
 | R02 | Window and GPU diagnostics | Done | Verify local execution, readable GPU errors and original sandbox capture. |
 | R03 | Textures and materials | In progress | Narrow indexed TIM2 decoder and ISO-backed inspection verified; alternate palettes, embedded formats and in-game color/blending parity remain open. |
-| R04 | Geometry and scenes | Planned | Load scene hierarchy, meshes, materials and positions from the ISO. |
+| R04 | Geometry and scenes | In progress | Load hierarchy, meshes, materials and positions from ISO. DAT/SCP and SCR metadata are checked; actual mesh topology, texture binding and transform composition remain pending. |
 | R05 | Skeletons and animation | Planned | Poses/transitions match observable contracts; test interpolation. |
 | R06 | Camera and visibility | Planned | Specify and validate camera behavior, camera collisions, framing and occlusion. |
 | R07 | Image quality | Planned | Resolution, aspect ratio, UI scaling and settings preserve simulation behavior. |

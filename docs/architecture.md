@@ -14,7 +14,7 @@ dependencies. Their God Hand compatibility is not progress in our independent en
 | Layer | Responsibility | Foundation |
 | --- | --- | --- |
 | godhand-disc | Read-only ISO 9660/FST/AFS access, bounds checks | Namespace, ordinal binding and bounded payload windows |
-| Formats | Payload decoding, geometry, textures, skeletons, audio | Narrow indexed TIM2 subset; other formats unparsed |
+| Formats | Payload decoding, geometry, textures, skeletons, audio | Indexed TIM2 subset, DAT/SCP section catalogs and SCR node metadata; mesh/material interpretation pending |
 | godhand-engine | Original GPU-free testable simulation | Generic X/Z movement |
 | Bevy application | Window, rendering, camera, input | Separate ISO texture inspection and original sandbox, bounded smoke verified on Windows Vulkan |
 | Game | Scenes and observable behavior | Not implemented |

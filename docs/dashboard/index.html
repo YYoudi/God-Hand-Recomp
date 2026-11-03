@@ -24,6 +24,15 @@
   <section id="journal" aria-label="Journal entries">
     <article>
   <time datetime="2026-11-03">2026-11-03</time>
+  <h2>Reading room containers and node references</h2>
+  <p>The reader can now navigate room-candidate storage and inspect node metadata without extracting the archive. No room is rendered yet.</p>
+  <ul><li>Checked 94 outer DAT catalogs, 93 nonempty SCP children and 1,708 nested storage sections directly from the retail ISO.</li><li>Validated SCR metadata on three candidates: 156, 232 and 45 nodes, including backward MDB references and finite raw transforms.</li><li>Corroborated data-layout observations with Chihuahua’s independent MIT format research; documented failed assumptions about sizes and alignment.</li></ul>
+<p class="reading"><a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/room-containers-2026-11-03.md">Room-data findings, validation and next experiment</a></p>
+  <details><summary>Checks and limitations</summary>
+    <p>29 synthetic Rust tests pass. Python and Rust agree on catalog/node counts. Nested member reads are bounded; signatures, ranges, overlap and malformed metadata are checked.</p><p>An MDB signature does not prove a valid mesh. Geometry, topology, UV/material association and transform composition are still unimplemented. Candidate room identity and prototype transfer remain unverified.</p>
+  </details>
+</article><article>
+  <time datetime="2026-11-03">2026-11-03</time>
   <h2>From archive entries to a first texture</h2>
   <p>The Rust reader now connects file paths to archive entries and displays a small texture directly from the owned ISO. This is an asset-reading step; no game scene is reconstructed yet.</p>
   <ul><li>Mapped all 1,445 retail file records to AFS entries. Checked the prototype separately: 1,078 records, including empty-directory differences.</li><li>Added an original narrow TIM2 decoder: 34 top-level textures decode; one multi-palette font is explicitly refused.</li><li>Displayed 4-bit and 8-bit ISO textures in a separate Bevy inspection window. The interface-like image appears to be a retained mockup, so it is not counted as a recreated retail menu.</li><li>Wrote a first data map and ordered the next experiments around real room data. Parallel work waits for tested component contracts.</li></ul>
@@ -87,7 +96,7 @@
   </details>
 </article>
   </section>
-  <section><h2>Journal captures</h2><ul><li><a href="captures/2026-11-03-data-map.jpg">FST mapping and first ISO texture-reader entry</a> <small>— 2026-11-03 · Browser capture of the local English journal; no game imagery</small></li><li><a href="captures/2026-11-03-rust-foundation.jpg">First Rust foundation workflow entry</a> <small>— 2026-11-03 · Browser capture of the local English journal; no game imagery</small></li><li><a href="captures/2026-11-03-english-journal.jpg">Development journal in English</a> <small>— 2026-11-03 · Browser capture of the local English journal; no game imagery</small></li><li><a href="captures/2026-11-03-essai-natif.jpg">Historical French journal — native trial entry</a> <small>— 2026-11-03 · Browser capture of the local journal, before the English translation; no game imagery</small></li><li><a href="captures/2026-11-03-carnet.jpg">Historical French journal — first version</a> <small>— 2026-11-03 · Browser capture of the local journal, before the English translation; no game imagery</small></li></ul></section>
+  <section><h2>Journal captures</h2><ul><li><a href="captures/2026-11-03-room-containers.jpg">Room-container and node-metadata journal entry</a> <small>— 2026-11-03 · Browser capture of the local English journal; no game imagery</small></li><li><a href="captures/2026-11-03-data-map.jpg">FST mapping and first ISO texture-reader entry</a> <small>— 2026-11-03 · Browser capture of the local English journal; no game imagery</small></li><li><a href="captures/2026-11-03-rust-foundation.jpg">First Rust foundation workflow entry</a> <small>— 2026-11-03 · Browser capture of the local English journal; no game imagery</small></li><li><a href="captures/2026-11-03-english-journal.jpg">Development journal in English</a> <small>— 2026-11-03 · Browser capture of the local English journal; no game imagery</small></li><li><a href="captures/2026-11-03-essai-natif.jpg">Historical French journal — native trial entry</a> <small>— 2026-11-03 · Browser capture of the local journal, before the English translation; no game imagery</small></li><li><a href="captures/2026-11-03-carnet.jpg">Historical French journal — first version</a> <small>— 2026-11-03 · Browser capture of the local journal, before the English translation; no game imagery</small></li></ul></section>
   <section class="reading">
     <h2>Project background</h2>
     <p><a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/research-2026-11-03.md">PS2 recompilation research notes</a><br>

@@ -20,6 +20,7 @@ or copy-protection bypass is provided.
 | [PS2Recomp](https://github.com/ran-j/PS2Recomp) | GPL-3.0 | Historical local research |
 | [wgpu-native](https://github.com/gfx-rs/wgpu-native) | MIT / Apache-2.0 | Native backend rendering |
 | [SDL2](https://github.com/libsdl-org/SDL) | Zlib | Native backend window, audio and controllers |
+| [Chihuahua](https://github.com/anasrar/chihuahua) by Anas Rin | MIT | Independent public DAT/SCR/MDB/TM3/TIM3 format research; pinned local reference d27b3488, no parser source vendored |
 
 Complete notices remain with dependencies. The native IPU decoder includes a BSD
 notice for tables originating in Play!. Portable tools have their own licenses.

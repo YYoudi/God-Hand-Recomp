@@ -4,11 +4,11 @@
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/God-Hand-Recomp",
   "engine": "Rust + Bevy 0.20.1",
-  "phase": "First game-data readers",
+  "phase": "Room-container metadata",
   "playable": false,
-  "next": "Map one retail room container, identify a static mesh and texture link, and compare against a reference runtime before recreating gameplay.",
+  "next": "Validate one MDB vertex/topology boundary and its TM3/TIM3 texture association, then compare a real static element against a reference runtime.",
   "validation": {
-    "tests": 22,
+    "tests": 29,
     "bevy_check": "pass",
     "viewer_runtime": "Real ISO-backed 4-bit and 8-bit TIM2 inspection on Windows/Vulkan; bounded exits",
     "gameplay": "Not implemented"
@@ -134,6 +134,13 @@
           "status": "planned",
           "area": "data",
           "acceptance": "Private cache versioned by format and invalidated reliably."
+        },
+        {
+          "id": "D06",
+          "title": "Tagged room-container and SCR node metadata",
+          "status": "done",
+          "area": "data",
+          "acceptance": "Bounded DAT/SCP tables across 94 retail candidates and 93 nonempty SCP catalogs; SCR signed references and finite raw transforms checked on three samples. Mesh decoding remains separate."
         }
       ]
     },
@@ -169,9 +176,9 @@
         {
           "id": "R04",
           "title": "Geometry and scenes",
-          "status": "planned",
+          "status": "in_progress",
           "area": "graphics",
-          "acceptance": "Load scene hierarchy, meshes, materials and positions from the ISO."
+          "acceptance": "Load hierarchy, meshes, materials and positions from ISO. DAT/SCP and SCR metadata are checked; actual mesh topology, texture binding and transform composition remain pending."
         },
         {
           "id": "R05",
@@ -415,6 +422,22 @@
   "updates": [
     {
       "date": "2026-11-03",
+      "title": "Reading room containers and node references",
+      "summary": "The reader can now navigate room-candidate storage and inspect node metadata without extracting the archive. No room is rendered yet.",
+      "changes": [
+        "Checked 94 outer DAT catalogs, 93 nonempty SCP children and 1,708 nested storage sections directly from the retail ISO.",
+        "Validated SCR metadata on three candidates: 156, 232 and 45 nodes, including backward MDB references and finite raw transforms.",
+        "Corroborated data-layout observations with Chihuahua’s independent MIT format research; documented failed assumptions about sizes and alignment."
+      ],
+      "validation": "29 synthetic Rust tests pass. Python and Rust agree on catalog/node counts. Nested member reads are bounded; signatures, ranges, overlap and malformed metadata are checked.",
+      "limits": "An MDB signature does not prove a valid mesh. Geometry, topology, UV/material association and transform composition are still unimplemented. Candidate room identity and prototype transfer remain unverified.",
+      "link": {
+        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/room-containers-2026-11-03.md",
+        "label": "Room-data findings, validation and next experiment"
+      }
+    },
+    {
+      "date": "2026-11-03",
       "title": "From archive entries to a first texture",
       "summary": "The Rust reader now connects file paths to archive entries and displays a small texture directly from the owned ISO. This is an asset-reading step; no game scene is reconstructed yet.",
       "changes": [
@@ -516,6 +539,13 @@
     }
   ],
   "captures": [
+    {
+      "kind": "dashboard",
+      "path": "captures/2026-11-03-room-containers.jpg",
+      "date": "2026-11-03",
+      "source": "Browser capture of the local English journal; no game imagery",
+      "caption": "Room-container and node-metadata journal entry"
+    },
     {
       "kind": "dashboard",
       "path": "captures/2026-11-03-data-map.jpg",

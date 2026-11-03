@@ -38,6 +38,13 @@ multi-palette font, and displays real ISO-backed images in a separate inspection
 view. No scene/gameplay or reference-renderer parity is established. Read
 docs/game-structure-2026-11-03.md and the FST/TIM2 contracts before extending this.
 Work remains sequential until contracts justify the user's later parallel phase.
+Room data now has bounded DAT/SCP catalogs: 94 retail outer containers and 93
+nonempty SCP children (1,708 sections). SCR metadata validates 156/232/45 nodes
+on candidates r100/r101/r103, including signed backward MDB references. Read
+docs/room-containers-2026-11-03.md, specs/tagged-dat-v1.md and specs/scr-nodes-v1.md.
+Mesh payloads, actual room identities, topology, texture bindings and transform
+composition remain unverified. Public independent Chihuahua patterns are credited;
+do not substitute matching decompilation repositories for independent implementation.
 
 1. Specify observable behavior, provenance and acceptance criteria before implementation.
 2. Synthetic fixtures only; never give game data to CI.

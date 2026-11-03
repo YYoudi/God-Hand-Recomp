@@ -18,6 +18,8 @@ cargo test --workspace --locked
 cargo check -p godhand-lab --features viewer --locked
 cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso"
 cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --inspect-textures
+cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --inspect-rooms
+cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --room "st1/r100.dat"
 cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --texture "etc/subscr/face_hm00.tm2" --smoke-seconds 30
 cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --sandbox
 ```

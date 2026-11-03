@@ -12,6 +12,7 @@ The texture inspection view reads your ISO; the sandbox contains original primit
 - [Roadmap](ROADMAP.md) · [Workflow](docs/workflow.md)
 - [First Rust milestone and adaptive workflow](docs/initialization-plan.md)
 - [First game-data map and next fidelity experiments](docs/game-structure-2026-11-03.md)
+- [Room-container and node metadata findings](docs/room-containers-2026-11-03.md)
 - [Clean-room method](docs/clean-room.md) · [Architecture](docs/architecture.md)
 - [PS2 recompilation research](docs/research-2026-11-03.md)
 - [Contributing](CONTRIBUTING.md) · [Licensing and scope](NOTICE.md)
@@ -28,6 +29,8 @@ cargo test --workspace --locked
 cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso"
 cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --catalog
 cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --inspect-textures
+cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --inspect-rooms
+cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --room "st1/r100.dat"
 cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --texture "etc/subscr/face_hm00.tm2"
 cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --sandbox
 ```
@@ -39,6 +42,9 @@ It is not a scene from the game.
 The separate texture view supports single-picture 4/8-bit indexed TIM2 with one
 RGBA32 palette. Other layouts are refused. Rendering an isolated asset does not
 establish a faithful game screen; reference-runtime comparison remains open.
+Room inspection validates storage sections and SCR node/MDB references. It does
+not yet decode geometry or reconstruct a room. Candidate paths still need to be
+associated with a repeatable in-game reference scenario.
 
 Windows: use a GNU toolchain with `cargo +stable-x86_64-pc-windows-gnu ...`
 and MinGW on PATH, or install Visual C++ Build Tools and the Windows SDK for MSVC.
