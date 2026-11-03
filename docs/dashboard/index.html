@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Notes de développement d’un moteur indépendant pour God Hand, en Rust et Bevy. Projet au tout début.">
+  <title>God Hand PC — carnet de développement</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <a class="site-name" href="./">God Hand PC</a>
+  <nav aria-label="Navigation"><a href="#journal">Journal</a><a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/ROADMAP.md">Roadmap</a><a href="https://github.com/YYoudi/God-Hand-Recomp">Code</a></nav>
+</header>
+<main>
+  <section class="about">
+    <h1>Carnet de développement</h1>
+    <p>Ce projet explore une réimplémentation indépendante du moteur de God Hand
+    en Rust et Bevy. Le code sera ouvert ; les données du jeu devront venir de
+    l’ISO personnelle de chaque utilisateur.</p>
+    <p>On en est au début. Le jeu n’est pas jouable dans ce moteur. Cette page
+    rassemble les choix techniques, les petites avancées et ce qui reste à comprendre.</p>
+  </section>
+  <section id="journal" aria-label="Entrées du journal">
+    <article>
+  <time datetime="2026-11-03">2026-11-03</time>
+  <h2>Premiers fichiers du moteur</h2>
+  <p>Le dépôt contient un petit lecteur ISO en lecture seule et les premières bases Rust. Rien du jeu ne tourne encore.</p>
+  <ul><li>Lecture de la racine ISO 9660 et reconnaissance du disque USA.</li><li>Tests sur des images synthétiques, sans fichiers du jeu.</li><li>Préparation d’un sandbox Bevy avec un sol et une capsule.</li><li>Carnet de développement sobre, sans statistiques de progression.</li></ul>
+  <details><summary>Vérifications et limites</summary>
+    <p>Tests Rust et compilation du viewer Bevy vérifiés sur Windows GNU. Le lecteur reconnaît aussi l’ISO locale : volume GODHAND, six entrées racine.</p><p>Le viewer n’a pas été exécuté. Aucune scène, animation ou logique du jeu n’est chargée.</p>
+  </details>
+</article><article>
+  <time datetime="2026-11-03">2026-11-03</time>
+  <h2>Choix de la direction</h2>
+  <p>L’idée initiale était un port par recompilation PS2. Après examen des projets existants, le choix est de tenter une réimplémentation indépendante en Rust et Bevy.</p>
+  <ul><li>Le moteur sera du code original public sous MIT.</li><li>Les données du jeu resteront dans l’ISO fournie par chaque utilisateur.</li><li>Les observations et spécifications devront être séparées de l’implémentation.</li></ul>
+  <details><summary>Vérifications et limites</summary>
+    <p>Les projets PS2Recomp, ps2-web-recomp et ps2-native-recomp ont été examinés comme références de recherche.</p><p>La compatibilité God Hand rapportée par ps2-native-recomp n’est pas un résultat de notre moteur. La logique et les formats du jeu restent à comprendre.</p>
+  </details>
+</article>
+  </section>
+  <section><h2>Captures du carnet</h2><ul><li><a href="captures/2026-11-03-carnet.jpg">Première version du carnet de développement</a> <small>— 2026-11-03 · Capture navigateur de la page locale, sans données du jeu</small></li></ul></section>
+  <section class="reading">
+    <h2>Pour situer le projet</h2>
+    <p><a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/research-2026-11-03.md">Notes sur les projets de recompilation PS2</a><br>
+    <a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/clean-room.md">Méthode d’implémentation indépendante</a><br>
+    <a href="https://github.com/YYoudi/God-Hand-Recomp/blob/main/ROADMAP.md">Liste des fonctionnalités envisagées</a></p>
+  </section>
+</main>
+<footer>Projet indépendant, sans affiliation avec les ayants droit.<br>
+Code original sous MIT · Hébergé sur GitHub Pages (offre gratuite).</footer>
+</body>
+</html>

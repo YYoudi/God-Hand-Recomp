@@ -1,0 +1,19 @@
+[workspace]
+members = ["crates/disc", "crates/engine", "crates/app"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+rust-version = "1.98"
+
+[workspace.dependencies]
+godhand-disc = { path = "crates/disc" }
+godhand-engine = { path = "crates/engine" }
+bevy = { version = "=0.20.1", default-features = false, features = [
+    "std", "async_executor", "multi_threaded", "bevy_log", "bevy_asset",
+    "bevy_window", "bevy_winit", "bevy_render", "bevy_mesh", "bevy_color",
+    "bevy_camera", "bevy_light", "bevy_shader", "bevy_core_pipeline", "bevy_pbr",
+    "keyboard", "x11"
+] }

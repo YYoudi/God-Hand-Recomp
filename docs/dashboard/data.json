@@ -1,0 +1,440 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-03",
+  "title": "God Hand PC — carnet de développement",
+  "repo": "https://github.com/YYoudi/God-Hand-Recomp",
+  "engine": "Rust + Bevy 0.20.1",
+  "phase": "Fondations techniques",
+  "playable": false,
+  "next": "Spécifier le chemin de données FST / AFS indépendamment, puis charger une première donnée du disque.",
+  "validation": {
+    "tests": 7,
+    "bevy_check": "pass",
+    "viewer_runtime": "Non exécuté",
+    "gameplay": "Non implémenté"
+  },
+  "milestones": [
+    {
+      "id": "M0",
+      "title": "Fondations publiques",
+      "goal": "Rendre le travail reproductible et traçable.",
+      "depends_on": [],
+      "tasks": [
+        {
+          "id": "F01",
+          "title": "Socle Rust et dépendances figées",
+          "status": "done",
+          "area": "core",
+          "acceptance": "Workspace de trois crates, Bevy 0.20.1 et Cargo.lock."
+        },
+        {
+          "id": "F02",
+          "title": "Protocole de provenance",
+          "status": "done",
+          "area": "core",
+          "acceptance": "Séparer observation, contrat et code ; règles de contribution documentées."
+        },
+        {
+          "id": "F03",
+          "title": "Tests sans données du jeu",
+          "status": "done",
+          "area": "core",
+          "acceptance": "Lecteur et simulation vérifiés sur fixtures synthétiques."
+        },
+        {
+          "id": "F04",
+          "title": "Dépôt public MIT",
+          "status": "in_progress",
+          "area": "core",
+          "acceptance": "Contrôle de l’index et publication des seules sources originales."
+        },
+        {
+          "id": "F05",
+          "title": "Dashboard Pages gratuit",
+          "status": "in_progress",
+          "area": "tooling",
+          "acceptance": "URL publique fonctionnelle, journal, filtres et captures réelles."
+        },
+        {
+          "id": "F06",
+          "title": "Validation continue",
+          "status": "in_progress",
+          "area": "tooling",
+          "acceptance": "Formatage, tests Rust, compilation Bevy et contrôle public passent sur GitHub."
+        }
+      ]
+    },
+    {
+      "id": "M1",
+      "title": "Du disque aux données",
+      "goal": "Lire les formats, sans distribuer leur contenu.",
+      "depends_on": [
+        "M0"
+      ],
+      "tasks": [
+        {
+          "id": "D01",
+          "title": "Lecteur ISO en lecture seule",
+          "status": "done",
+          "area": "data",
+          "acceptance": "Racine ISO 9660, SYSTEM.CNF, identification USA, contrôles de bornes."
+        },
+        {
+          "id": "D02",
+          "title": "Empreinte et diagnostic du disque",
+          "status": "planned",
+          "area": "data",
+          "acceptance": "Empreintes locales et messages précis pour disque tronqué ou édition différente."
+        },
+        {
+          "id": "D03",
+          "title": "Contrat FST / AFS indépendant",
+          "status": "planned",
+          "area": "data",
+          "acceptance": "Formats spécifiés avec provenance, inconnues et échantillons synthétiques."
+        },
+        {
+          "id": "D04",
+          "title": "Accès aux archives",
+          "status": "planned",
+          "area": "data",
+          "acceptance": "Index et lectures bornées depuis l’ISO ; tests de tailles et offsets invalides."
+        },
+        {
+          "id": "D05",
+          "title": "Chaîne de conversion locale",
+          "status": "planned",
+          "area": "data",
+          "acceptance": "Cache de données privé, versionné par format et invalidé proprement."
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "Scène et rendu",
+      "goal": "Afficher une première scène issue des données personnelles.",
+      "depends_on": [
+        "M1"
+      ],
+      "tasks": [
+        {
+          "id": "R01",
+          "title": "Socle de viewer Bevy",
+          "status": "done",
+          "area": "graphics",
+          "acceptance": "Viewer à primitives originales compilable ; validation visuelle encore à réaliser."
+        },
+        {
+          "id": "R02",
+          "title": "Fenêtre et diagnostics GPU",
+          "status": "planned",
+          "area": "graphics",
+          "acceptance": "Exécution locale vérifiée, erreurs GPU lisibles et capture du sandbox original."
+        },
+        {
+          "id": "R03",
+          "title": "Textures et matériaux",
+          "status": "planned",
+          "area": "graphics",
+          "acceptance": "Décodage indépendant des formats utilisés, palettes et transparence validées."
+        },
+        {
+          "id": "R04",
+          "title": "Géométrie et scène",
+          "status": "planned",
+          "area": "graphics",
+          "acceptance": "Hiérarchie, maillages, matériaux et positions d’une scène chargés depuis l’ISO."
+        },
+        {
+          "id": "R05",
+          "title": "Squelettes et animations",
+          "status": "planned",
+          "area": "graphics",
+          "acceptance": "Poses et transitions conformes à un contrat observable ; interpolations testées."
+        },
+        {
+          "id": "R06",
+          "title": "Caméra et visibilité",
+          "status": "planned",
+          "area": "graphics",
+          "acceptance": "Caméra, collisions caméra, cadrage et occlusion décrits puis validés."
+        },
+        {
+          "id": "R07",
+          "title": "Qualité d’image",
+          "status": "planned",
+          "area": "graphics",
+          "acceptance": "Résolution, ratio d’image, mise à l’échelle UI et options sans altérer la logique."
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "Déplacement et simulation",
+      "goal": "Définir les sensations avant de reconstruire les combats.",
+      "depends_on": [
+        "M2"
+      ],
+      "tasks": [
+        {
+          "id": "S01",
+          "title": "Conventions et pas fixe",
+          "status": "done",
+          "area": "core",
+          "acceptance": "Y = hauteur, déplacement générique normalisé ; 60 Hz provisoire explicitement documenté."
+        },
+        {
+          "id": "S02",
+          "title": "Entrées et remapping",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Clavier/manette, deadzones, événements tamponnés et commandes configurables."
+        },
+        {
+          "id": "S03",
+          "title": "Locomotion du joueur",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Vitesses, pivots et transitions mesurés par observation indépendante."
+        },
+        {
+          "id": "S04",
+          "title": "Collisions et sol",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Contacts, pentes, marches et obstacles décrits et testés."
+        },
+        {
+          "id": "S05",
+          "title": "Esquive et interactions",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Invulnérabilité, timing et interactions découlent de contrats observables."
+        },
+        {
+          "id": "S06",
+          "title": "Relecture des entrées",
+          "status": "planned",
+          "area": "tooling",
+          "acceptance": "Séquences synthétiques reproductibles, hash d’état et détection des divergences."
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "title": "Combat et adversaires",
+      "goal": "Atteindre une boucle de combat vérifiable.",
+      "depends_on": [
+        "M3"
+      ],
+      "tasks": [
+        {
+          "id": "C01",
+          "title": "Machine de combat",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "États, transitions, priorités et fenêtres d’action documentés."
+        },
+        {
+          "id": "C02",
+          "title": "Coups et enchaînements",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Commandes, timing, annulations et données de techniques interprétés."
+        },
+        {
+          "id": "C03",
+          "title": "Contacts et réactions",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Volumes, portée, dégâts, hitstop, garde et projections testés."
+        },
+        {
+          "id": "C04",
+          "title": "Capacités spéciales",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Jauges, activation et choix d’actions conformes aux contrats."
+        },
+        {
+          "id": "C05",
+          "title": "IA et difficulté",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Décisions, distances, rôles de groupe et adaptation observables spécifiés."
+        },
+        {
+          "id": "C06",
+          "title": "Première rencontre jouable",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Une rencontre complète reproductible, sans blocage ; validation externe."
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "title": "Contenu et progression",
+      "goal": "Relier les systèmes pour parcourir le jeu.",
+      "depends_on": [
+        "M4"
+      ],
+      "tasks": [
+        {
+          "id": "P01",
+          "title": "Scripts et déclencheurs",
+          "status": "planned",
+          "area": "data",
+          "acceptance": "Contrat indépendant pour événements, logique de niveaux et transitions."
+        },
+        {
+          "id": "P02",
+          "title": "Objets et destruction",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Ramassage, accessoires, interactions et destructibles validés."
+        },
+        {
+          "id": "P03",
+          "title": "Menus et configuration des techniques",
+          "status": "planned",
+          "area": "ui",
+          "acceptance": "Navigation, achats, équipement et réglages fonctionnels."
+        },
+        {
+          "id": "P04",
+          "title": "Audio",
+          "status": "planned",
+          "area": "audio",
+          "acceptance": "Musique, bruitages, streaming et synchronisation depuis les données de l’ISO."
+        },
+        {
+          "id": "P05",
+          "title": "Cinématiques et sous-titres",
+          "status": "planned",
+          "area": "graphics",
+          "acceptance": "Décodage, synchronisation, transitions et skip spécifiés."
+        },
+        {
+          "id": "P06",
+          "title": "Sauvegarde et chargement",
+          "status": "planned",
+          "area": "core",
+          "acceptance": "Format original du port, écritures atomiques et migration ; aucune save du jeu distribuée."
+        },
+        {
+          "id": "P07",
+          "title": "Niveaux, boss et activités annexes",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Matrice de couverture explicite, par zone et activité, jusqu’à la fin."
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "title": "Validation et distribution",
+      "goal": "Rendre le moteur utilisable et maintenir les preuves.",
+      "depends_on": [
+        "M5"
+      ],
+      "tasks": [
+        {
+          "id": "Q01",
+          "title": "Comparaison comportementale",
+          "status": "planned",
+          "area": "tooling",
+          "acceptance": "Protocole PCSX2/console, tolérances et résultats textuels sans données propriétaires."
+        },
+        {
+          "id": "Q02",
+          "title": "Parcours intégral",
+          "status": "planned",
+          "area": "gameplay",
+          "acceptance": "Plusieurs parties complètes documentées, sauvegarde/reprise et régressions."
+        },
+        {
+          "id": "Q03",
+          "title": "Performances et accessibilité",
+          "status": "planned",
+          "area": "core",
+          "acceptance": "Mesures CPU/GPU, stabilité, commandes accessibles et options lisibles."
+        },
+        {
+          "id": "Q04",
+          "title": "Windows et Linux",
+          "status": "planned",
+          "area": "core",
+          "acceptance": "Installation et smoke tests sur machines cibles ; aucune promesse de plateforme non testée."
+        },
+        {
+          "id": "Q05",
+          "title": "Distribution du moteur",
+          "status": "planned",
+          "area": "tooling",
+          "acceptance": "Binaires du code original seulement, notices et contrôle ISO au lancement."
+        },
+        {
+          "id": "Q06",
+          "title": "Documentation et contributions",
+          "status": "planned",
+          "area": "tooling",
+          "acceptance": "Guide utilisateur, provenance par composant et procédure de rapport reproductible."
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "date": "2026-11-03",
+      "title": "Premiers fichiers du moteur",
+      "summary": "Le dépôt contient un petit lecteur ISO en lecture seule et les premières bases Rust. Rien du jeu ne tourne encore.",
+      "changes": [
+        "Lecture de la racine ISO 9660 et reconnaissance du disque USA.",
+        "Tests sur des images synthétiques, sans fichiers du jeu.",
+        "Préparation d’un sandbox Bevy avec un sol et une capsule.",
+        "Carnet de développement sobre, sans statistiques de progression."
+      ],
+      "validation": "Tests Rust et compilation du viewer Bevy vérifiés sur Windows GNU. Le lecteur reconnaît aussi l’ISO locale : volume GODHAND, six entrées racine.",
+      "limits": "Le viewer n’a pas été exécuté. Aucune scène, animation ou logique du jeu n’est chargée."
+    },
+    {
+      "date": "2026-11-03",
+      "title": "Choix de la direction",
+      "summary": "L’idée initiale était un port par recompilation PS2. Après examen des projets existants, le choix est de tenter une réimplémentation indépendante en Rust et Bevy.",
+      "changes": [
+        "Le moteur sera du code original public sous MIT.",
+        "Les données du jeu resteront dans l’ISO fournie par chaque utilisateur.",
+        "Les observations et spécifications devront être séparées de l’implémentation."
+      ],
+      "validation": "Les projets PS2Recomp, ps2-web-recomp et ps2-native-recomp ont été examinés comme références de recherche.",
+      "limits": "La compatibilité God Hand rapportée par ps2-native-recomp n’est pas un résultat de notre moteur. La logique et les formats du jeu restent à comprendre."
+    }
+  ],
+  "captures": [
+    {
+      "kind": "dashboard",
+      "path": "captures/2026-11-03-carnet.jpg",
+      "date": "2026-11-03",
+      "source": "Capture navigateur de la page locale, sans données du jeu",
+      "caption": "Première version du carnet de développement"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Recherche PS2 → PC",
+      "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/research-2026-11-03.md",
+      "note": "Sources et limites, 3 novembre 2026"
+    },
+    {
+      "title": "Code et contributions",
+      "url": "https://github.com/YYoudi/God-Hand-Recomp",
+      "note": "Implémentation originale sous MIT"
+    },
+    {
+      "title": "Architecture et provenance",
+      "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/clean-room.md",
+      "note": "Contrats avant implémentation"
+    }
+  ]
+}
