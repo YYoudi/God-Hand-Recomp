@@ -22,6 +22,18 @@ that has not occurred. Document provenance.
 
 ## Workflow
 
+For the first Rust foundation, follow docs/initialization-plan.md and record material
+adjustments in docs/initialization-decisions.md. Use scripts/dev.ps1 for Doctor,
+Check, Build, Inspect, Catalog and bounded Smoke actions. It defaults to one job
+and no dev debug info after a Windows compiler crash; explicit overrides are available.
+Reference profiles are in docs/reference-profiles.json. The prototype debug tools
+are reported leads, not locally verified. Never substitute prototype behavior for retail.
+
+The Windows/Vulkan sandbox has rendered original primitives and exited at its smoke
+deadline. Read-only AFS catalog access is implemented under specs/afs-catalog-v1.md;
+retail inspection reports 1,445 entries without extraction. FST mapping and asset
+decoding remain open. Keep these limits explicit when updating the journal.
+
 1. Specify observable behavior, provenance and acceptance criteria before implementation.
 2. Synthetic fixtures only; never give game data to CI.
 3. cargo test --workspace --locked; for Bevy, cargo check -p godhand-lab --features viewer --locked.

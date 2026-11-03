@@ -7,7 +7,7 @@ Updated: 2026-11-03. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Independently specify FST / AFS access, then load a first item from the personal disc.
+Next useful evidence: Specify FST-to-AFS mapping and choose one bounded asset type; verify prototype debug access separately.
 
 ## M0 — Public foundations
 
@@ -24,6 +24,9 @@ Dependencies: none.
 | F05 | Free Pages journal | Done | Working public URL, short dated entries, roadmap link and actual journal capture. |
 | F06 | Continuous validation | Done | Rust formatting/tests, Bevy compilation and publication checks pass on GitHub. |
 | E01 | Local third-party native backend evaluation | Done | Pinned build, first fight observed and runtime snapshot reloaded; written report with limits. Not an independent-engine feature. |
+| I01 | Versioned reference inventory | Done | Separate retail/prototype profiles, synthetic inventory tests and private corrected CUE; original images untouched. Prototype runtime validation remains separate. |
+| I02 | Adaptive initialization workflow | Done | Executable development commands, bounded G1 criteria, decision log and contract template. |
+| I03 | First bounded AFS catalog slice | Done | Original header/table contract, checked ISO file views, synthetic malformed cases and owned-retail metadata-only smoke. No FST or payload decoding claimed. |
 
 ## M1 — From disc to data
 
@@ -35,8 +38,8 @@ Dependencies: M0.
 | --- | --- | --- | --- |
 | D01 | Read-only ISO reader | Done | ISO 9660 root, SYSTEM.CNF, USA identification and bounds checks. |
 | D02 | Disc fingerprint and diagnostics | Planned | Local fingerprints and precise errors for truncated discs or different editions. |
-| D03 | Independent FST / AFS contract | Planned | Specify formats with provenance, unknowns and synthetic samples. |
-| D04 | Archive access | Planned | Bounded index/data reads from ISO; invalid size and offset tests. |
+| D03 | Independent FST / AFS contract | In progress | Specify formats with provenance, unknowns and synthetic samples. |
+| D04 | Archive access | In progress | Bounded index/data reads from ISO; invalid size and offset tests. |
 | D05 | Local conversion pipeline | Planned | Private cache versioned by format and invalidated reliably. |
 
 ## M2 — Scenes and rendering
@@ -48,7 +51,7 @@ Dependencies: M1.
 | ID | Feature | Status | Acceptance criteria |
 | --- | --- | --- | --- |
 | R01 | Bevy viewer foundation | Done | Original primitive viewer compiles; visual runtime validation still pending. |
-| R02 | Window and GPU diagnostics | Planned | Verify local execution, readable GPU errors and original sandbox capture. |
+| R02 | Window and GPU diagnostics | Done | Verify local execution, readable GPU errors and original sandbox capture. |
 | R03 | Textures and materials | Planned | Independent decoding of used formats; validate palettes and transparency. |
 | R04 | Geometry and scenes | Planned | Load scene hierarchy, meshes, materials and positions from the ISO. |
 | R05 | Skeletons and animation | Planned | Poses/transitions match observable contracts; test interpolation. |

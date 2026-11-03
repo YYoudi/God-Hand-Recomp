@@ -4,13 +4,13 @@
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/God-Hand-Recomp",
   "engine": "Rust + Bevy 0.20.1",
-  "phase": "Early foundations",
+  "phase": "Rust foundation",
   "playable": false,
-  "next": "Independently specify FST / AFS access, then load a first item from the personal disc.",
+  "next": "Specify FST-to-AFS mapping and choose one bounded asset type; verify prototype debug access separately.",
   "validation": {
-    "tests": 7,
+    "tests": 14,
     "bevy_check": "pass",
-    "viewer_runtime": "Not run",
+    "viewer_runtime": "Verified on Windows/Vulkan with original primitives and bounded exit",
     "gameplay": "Not implemented"
   },
   "milestones": [
@@ -68,6 +68,27 @@
           "status": "done",
           "area": "tooling",
           "acceptance": "Pinned build, first fight observed and runtime snapshot reloaded; written report with limits. Not an independent-engine feature."
+        },
+        {
+          "id": "I01",
+          "title": "Versioned reference inventory",
+          "status": "done",
+          "area": "tooling",
+          "acceptance": "Separate retail/prototype profiles, synthetic inventory tests and private corrected CUE; original images untouched. Prototype runtime validation remains separate."
+        },
+        {
+          "id": "I02",
+          "title": "Adaptive initialization workflow",
+          "status": "done",
+          "area": "tooling",
+          "acceptance": "Executable development commands, bounded G1 criteria, decision log and contract template."
+        },
+        {
+          "id": "I03",
+          "title": "First bounded AFS catalog slice",
+          "status": "done",
+          "area": "data",
+          "acceptance": "Original header/table contract, checked ISO file views, synthetic malformed cases and owned-retail metadata-only smoke. No FST or payload decoding claimed."
         }
       ]
     },
@@ -96,14 +117,14 @@
         {
           "id": "D03",
           "title": "Independent FST / AFS contract",
-          "status": "planned",
+          "status": "in_progress",
           "area": "data",
           "acceptance": "Specify formats with provenance, unknowns and synthetic samples."
         },
         {
           "id": "D04",
           "title": "Archive access",
-          "status": "planned",
+          "status": "in_progress",
           "area": "data",
           "acceptance": "Bounded index/data reads from ISO; invalid size and offset tests."
         },
@@ -134,7 +155,7 @@
         {
           "id": "R02",
           "title": "Window and GPU diagnostics",
-          "status": "planned",
+          "status": "done",
           "area": "graphics",
           "acceptance": "Verify local execution, readable GPU errors and original sandbox capture."
         },
@@ -394,6 +415,23 @@
   "updates": [
     {
       "date": "2026-11-03",
+      "title": "Starting the Rust foundation loop",
+      "summary": "The first milestone now has executable steps and a decision log. The Rust sandbox renders original primitives, and read-only archive inspection can list catalog metadata.",
+      "changes": [
+        "Added Doctor, Check, Build, Inspect, Catalog and bounded Smoke commands.",
+        "Verified a native Windows/Vulkan floor-and-capsule scene after fixing its tonemapping configuration.",
+        "Read the retail AFS catalog without extraction; added bounds and malformed-input tests.",
+        "Registered the June prototype as a separate observation profile and prepared an ignored corrected CUE."
+      ],
+      "validation": "14 Rust synthetic tests and 12 Python tests pass locally. The sandbox reached its 45/60-second smoke deadlines and exited normally. Retail catalog inspection reports 1,445 entries; the original ISO hash matches its earlier baseline.",
+      "limits": "Original primitives only: no God Hand scene or game logic. FST/payload decoding and prototype debug-menu validation remain open. A Windows compiler crash was bypassed with one job and debug info disabled; its root cause is unknown.",
+      "link": {
+        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/initialization-plan.md",
+        "label": "Read the first milestone and workflow"
+      }
+    },
+    {
+      "date": "2026-11-03",
       "title": "Public resources in English",
       "summary": "The repository documentation, roadmap and development journal now use English. Conversations with the project owner remain in French.",
       "changes": [
@@ -461,6 +499,13 @@
     }
   ],
   "captures": [
+    {
+      "kind": "dashboard",
+      "path": "captures/2026-11-03-rust-foundation.jpg",
+      "date": "2026-11-03",
+      "source": "Browser capture of the local English journal; no game imagery",
+      "caption": "First Rust foundation workflow entry"
+    },
     {
       "kind": "dashboard",
       "path": "captures/2026-11-03-english-journal.jpg",

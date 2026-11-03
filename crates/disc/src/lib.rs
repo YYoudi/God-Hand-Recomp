@@ -4,6 +4,8 @@ use std::fs::File;
 use std::io::{self, Read, Seek, SeekFrom};
 use std::path::Path;
 
+pub mod afs;
+
 const SECTOR: u64 = 2048;
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;
 
@@ -43,6 +45,9 @@ fn record(bytes: &[u8]) -> io::Result<Entry> {
     if bytes[1] != 0 || bytes[26] != 0 || bytes[27] != 0 {
         return Err(invalid("unsupported ISO extended or interleaved record"));
     }
+    if bytes[25] & 0x80 != 0 {
+        return Err(invalid("multi-extent ISO files are unsupported"));
+    }
     Ok(Entry {
         name: String::from_utf8_lossy(&bytes[33..name_end]).into_owned(),
         sector: both_u32(&bytes[2..10])?,
@@ -56,6 +61,46 @@ pub struct Disc<R> {
     length: u64,
     root: Entry,
     pub volume_id: String,
+}
+
+/// A read-only view whose relative seeks and reads cannot escape an ISO file extent.
+pub struct FileSlice<'a, R> {
+    source: &'a mut R,
+    start: u64,
+    length: u64,
+    position: u64,
+}
+
+impl<R: Read + Seek> Read for FileSlice<'_, R> {
+    fn read(&mut self, output: &mut [u8]) -> io::Result<usize> {
+        let count = (self.length - self.position).min(output.len() as u64) as usize;
+        if count == 0 {
+            return Ok(0);
+        }
+        self.source
+            .seek(SeekFrom::Start(self.start + self.position))?;
+        let read = self.source.read(&mut output[..count])?;
+        self.position += read as u64;
+        Ok(read)
+    }
+}
+
+impl<R> Seek for FileSlice<'_, R> {
+    fn seek(&mut self, origin: SeekFrom) -> io::Result<u64> {
+        let position = match origin {
+            SeekFrom::Start(value) => i128::from(value),
+            SeekFrom::End(delta) => i128::from(self.length) + i128::from(delta),
+            SeekFrom::Current(delta) => i128::from(self.position) + i128::from(delta),
+        };
+        if !(0..=i128::from(self.length)).contains(&position) {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "seek outside ISO file extent",
+            ));
+        }
+        self.position = position as u64;
+        Ok(self.position)
+    }
 }
 
 impl Disc<File> {
@@ -143,7 +188,7 @@ impl<R: Read + Seek> Disc<R> {
         Ok(result)
     }
 
-    pub fn read_root_file(&mut self, name: &str, limit: u64) -> io::Result<Vec<u8>> {
+    fn root_file_entry(&mut self, name: &str) -> io::Result<Entry> {
         // Names are matched as records, never used as output paths.
         let entries = self.root_entries()?;
         let mut matching = entries.iter().filter(|e| {
@@ -160,7 +205,23 @@ impl<R: Read + Seek> Disc<R> {
         if matching.next().is_some() {
             return Err(invalid("ambiguous ISO root filename"));
         }
-        self.contents(entry, limit)
+        Ok(entry.clone())
+    }
+
+    pub fn read_root_file(&mut self, name: &str, limit: u64) -> io::Result<Vec<u8>> {
+        let entry = self.root_file_entry(name)?;
+        self.contents(&entry, limit)
+    }
+
+    pub fn open_root_file(&mut self, name: &str) -> io::Result<FileSlice<'_, R>> {
+        let entry = self.root_file_entry(name)?;
+        self.check_range(&entry)?;
+        Ok(FileSlice {
+            source: &mut self.source,
+            start: u64::from(entry.sector) * SECTOR,
+            length: u64::from(entry.size),
+            position: 0,
+        })
     }
 
     pub fn validate_godhand_usa(&mut self) -> io::Result<()> {
@@ -258,5 +319,30 @@ mod tests {
         let mut disc = Disc::read(Cursor::new(fixture("SLUS_215.03"))).unwrap();
         assert!(disc.read_root_file("SYSTEM.CNF", 1).is_err());
         assert!(disc.read_root_file("../SYSTEM.CNF", 4096).is_err());
+    }
+
+    #[test]
+    fn file_view_caps_reads_and_rejects_outside_seeks() {
+        let mut image = fixture("SLUS_215.03");
+        let start = 22 * SECTOR as usize;
+        image[start..start + 4].copy_from_slice(b"ABCD");
+        let mut disc = Disc::read(Cursor::new(image)).unwrap();
+        let mut view = disc.open_root_file("SLUS_215.03").unwrap();
+        let mut bytes = [0; 8];
+        assert_eq!(view.read(&mut bytes).unwrap(), 4);
+        assert_eq!(&bytes[..4], b"ABCD");
+        assert_eq!(view.read(&mut bytes).unwrap(), 0);
+        assert!(view.seek(SeekFrom::Start(5)).is_err());
+        assert!(view.seek(SeekFrom::End(-5)).is_err());
+        view.seek(SeekFrom::End(-1)).unwrap();
+        assert_eq!(view.read(&mut bytes).unwrap(), 1);
+        assert_eq!(bytes[0], b'D');
+    }
+
+    #[test]
+    fn rejects_multi_extent_records() {
+        let mut bytes = entry(b"TEST;1", 1, 4, false);
+        bytes[25] |= 0x80;
+        assert!(record(&bytes).is_err());
     }
 }

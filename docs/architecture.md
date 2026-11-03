@@ -13,10 +13,10 @@ dependencies. Their God Hand compatibility is not progress in our independent en
 
 | Layer | Responsibility | Foundation |
 | --- | --- | --- |
-| godhand-disc | Read-only ISO 9660 access, bounds checks | Root directory, SYSTEM.CNF, identification |
-| Formats | AFS/FST, geometry, textures, skeletons, audio | To be specified |
+| godhand-disc | Read-only ISO 9660/AFS catalog access, bounds checks | Root directory, SYSTEM.CNF, identification, bounded archive metadata |
+| Formats | FST mapping, payloads, geometry, textures, skeletons, audio | To be specified |
 | godhand-engine | Original GPU-free testable simulation | Generic X/Z movement |
-| Bevy application | Window, rendering, camera, input | Optional floor/capsule sandbox |
+| Bevy application | Window, rendering, camera, input | Native floor/capsule sandbox, bounded smoke verified on Windows Vulkan |
 | Game | Scenes and observable behavior | Not implemented |
 
 The 60 Hz step and sandbox speed are provisional engineering choices, not measurements

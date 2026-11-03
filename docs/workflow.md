@@ -4,6 +4,10 @@ Read clean-room.md and architecture.md. Historical ghidra_analyze_retail.sh and
 prompts 01–05 concern local research; their translations must not enter the engine.
 Keep public resources in English and conversations with the owner in French.
 
+The executable first-milestone plan is [G1 initialization](initialization-plan.md).
+Record evidence-driven adjustments in [the decision log](initialization-decisions.md).
+Keep [reference profiles](reference-profiles.json) separate throughout observations.
+
 ## Specify, then implement
 
 Pick a task in docs/dashboard/data.json. Write its contract in specs/ with provenance

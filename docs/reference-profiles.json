@@ -1,0 +1,24 @@
+{
+  "target": "retail-usa",
+  "axis_up": "Y",
+  "profiles": [
+    {
+      "id": "retail-usa",
+      "role": "Compatibility target and baseline for release behavior",
+      "expected_boot": "SLUS_215.03",
+      "observed_runtime": "Third-party native backend reached the first fight; independent engine not playable"
+    },
+    {
+      "id": "prototype-june-2006",
+      "role": "Observation aid; never silently substituted for retail",
+      "expected_boot": "SLPM_665.50",
+      "date_provenance": "Local research notes identify the June 20, 2006 build; image filename is labeled June 21",
+      "reported_debug_chord": "Hold L2 and press R3",
+      "reported_tools": ["Room Jump", "collision/hitbox flags", "Player Warp"],
+      "debug_tools_locally_verified": false,
+      "coverage": "Partial prototype content; treat mechanics, assets and room mappings as version-specific"
+    }
+  ],
+  "observation_fields": ["profile_id", "image_hash_local", "runtime_version", "scenario", "inputs", "timing_method", "outputs", "uncertainty", "exposure_declaration"],
+  "private_artifacts": ["source images", "states", "memory dumps", "gameplay captures", "translated code"]
+}

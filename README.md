@@ -5,10 +5,11 @@ Original code is public under MIT. Each user must provide their own ISO.
 No game code, models, textures, audio or levels are distributed.
 
 **Status: early foundations. The game is not playable in this engine.**
-The ISO reader is read-only. The sandbox contains original geometric primitives only.
+The ISO/AFS catalog reader is read-only. The sandbox contains original geometric primitives only.
 
 - [Development journal](https://yyoudi.github.io/God-Hand-Recomp/)
 - [Roadmap](ROADMAP.md) · [Workflow](docs/workflow.md)
+- [First Rust milestone and adaptive workflow](docs/initialization-plan.md)
 - [Clean-room method](docs/clean-room.md) · [Architecture](docs/architecture.md)
 - [PS2 recompilation research](docs/research-2026-11-03.md)
 - [Contributing](CONTRIBUTING.md) · [Licensing and scope](NOTICE.md)
@@ -23,6 +24,7 @@ Tests require neither a GPU nor game data.
 ```sh
 cargo test --workspace --locked
 cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso"
+cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --catalog
 cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --sandbox
 ```
 

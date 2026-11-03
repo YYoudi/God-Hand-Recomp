@@ -1,6 +1,13 @@
 //! Synthetic primitives only. No game art, executable, animation or level is loaded.
+use bevy::app::AppExit;
+use bevy::core_pipeline::tonemapping::Tonemapping;
 use bevy::prelude::*;
 use godhand_engine::{Position, TICK_HZ, step};
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+};
+use std::time::{Duration, Instant};
 
 #[derive(Component)]
 struct Actor;
@@ -8,11 +15,24 @@ struct Actor;
 #[derive(Resource, Default)]
 struct Intent([f32; 2]);
 
-pub fn run() {
-    App::new()
+#[derive(Resource)]
+struct SmokeLimit {
+    duration: Option<Duration>,
+    first_update: Option<Instant>,
+    completed: Arc<AtomicBool>,
+}
+
+pub fn run(smoke_seconds: Option<u64>) -> Result<(), Box<dyn std::error::Error>> {
+    let completed = Arc::new(AtomicBool::new(false));
+    let result = App::new()
         .insert_resource(ClearColor(Color::srgb(0.025, 0.035, 0.05)))
         .insert_resource(Time::<Fixed>::from_hz(TICK_HZ as f64))
         .init_resource::<Intent>()
+        .insert_resource(SmokeLimit {
+            duration: smoke_seconds.map(Duration::from_secs),
+            first_update: None,
+            completed: Arc::clone(&completed),
+        })
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "God Hand independent engine lab | synthetic scene | WASD / arrows".into(),
@@ -23,8 +43,33 @@ pub fn run() {
         }))
         .add_systems(Startup, setup)
         .add_systems(Update, sample_input)
+        .add_systems(Update, finish_smoke)
         .add_systems(FixedUpdate, move_actor)
         .run();
+    if smoke_seconds.is_some() && !completed.load(Ordering::SeqCst) {
+        return Err("smoke window closed before the configured deadline".into());
+    }
+    match result {
+        AppExit::Success => Ok(()),
+        AppExit::Error(code) => Err(format!("viewer exited with code {code}").into()),
+    }
+}
+
+fn finish_smoke(mut limit: ResMut<SmokeLimit>, mut exit: MessageWriter<AppExit>) {
+    let Some(duration) = limit.duration else {
+        return;
+    };
+    let started = limit.first_update.get_or_insert_with(Instant::now);
+    if started.elapsed() >= duration {
+        completed_notice(&limit.completed);
+        exit.write(AppExit::Success);
+    }
+}
+
+fn completed_notice(completed: &AtomicBool) {
+    if !completed.swap(true, Ordering::SeqCst) {
+        println!("Synthetic sandbox smoke completed; deadline reached, exiting normally.");
+    }
 }
 
 fn setup(
@@ -52,6 +97,7 @@ fn setup(
     ));
     commands.spawn((
         Camera3d::default(),
+        Tonemapping::None,
         Transform::from_xyz(0.0, 9.0, 13.0).looking_at(Vec3::ZERO, Vec3::Y),
     ));
 }
