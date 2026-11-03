@@ -15,14 +15,23 @@ fn invalid(message: &'static str) -> io::Error {
 pub fn decode(source: impl Read) -> io::Result<RgbaImage> {
     let mut data = Vec::new();
     source.take(16 * 1024 * 1024 + 1).read_to_end(&mut data)?;
+    decode_indexed(&data, false)
+}
+
+pub(crate) fn decode_indexed(data: &[u8], tim3: bool) -> io::Result<RgbaImage> {
     if data.len() > 16 * 1024 * 1024 || data.len() < 64 {
-        return Err(invalid("TIM2 input size invalid"));
+        return Err(invalid("indexed texture input size invalid"));
     }
     let u16_at = |at| u16::from_le_bytes(data[at..at + 2].try_into().unwrap());
     let u32_at = |at| u32::from_le_bytes(data[at..at + 4].try_into().unwrap()) as usize;
-    if &data[..4] != b"TIM2" || data[4] != 4 || data[5] != 0 || u16_at(6) != 1 {
+    let signature = if tim3 { b"TIM3" } else { b"TIM2" };
+    if &data[..4] != signature
+        || data[4] != 4
+        || !(data[5] == 0 || (tim3 && data[5] == 6))
+        || u16_at(6) != 1
+    {
         return Err(invalid(
-            "unsupported TIM2 version, alignment or picture count",
+            "unsupported indexed texture version, storage selector or picture count",
         ));
     }
     let total = u32_at(16);
@@ -33,15 +42,22 @@ pub fn decode(source: impl Read) -> io::Result<RgbaImage> {
     let height = u16_at(38);
     let count = usize::from(width) * usize::from(height);
     if u16_at(28) != 48 || data[32] != 0 || data[33] != 1 || data[34] != 3 {
-        return Err(invalid("unsupported TIM2 header, mipmaps or palette mode"));
+        return Err(invalid(
+            "unsupported indexed texture header, mipmaps or palette mode",
+        ));
     }
     if width == 0 || height == 0 || width > 4096 || height > 4096 || count > 4_194_304 {
-        return Err(invalid("TIM2 dimensions exceed limits"));
+        return Err(invalid("indexed texture dimensions exceed limits"));
+    }
+    if data[5] == 6
+        && (width < 128 || height < 128 || !width.is_power_of_two() || !height.is_power_of_two())
+    {
+        return Err(invalid("unsupported TIM3 transfer dimensions"));
     }
     let expected_colors = match data[35] {
         4 => 16,
         5 => 256,
-        _ => return Err(invalid("unsupported TIM2 index type")),
+        _ => return Err(invalid("unsupported indexed texture index type")),
     };
     let expected_image = if data[35] == 4 {
         count.div_ceil(2)
@@ -54,15 +70,32 @@ pub fn decode(source: impl Read) -> io::Result<RgbaImage> {
         || total != 48 + image_size + palette_size
         || 16 + total > data.len()
     {
-        return Err(invalid("TIM2 picture sizes or palette count inconsistent"));
+        return Err(invalid(
+            "indexed texture picture sizes or palette count inconsistent",
+        ));
     }
     let palette = &data[64 + image_size..64 + image_size + palette_size];
     let mut pixels = Vec::with_capacity(count * 4);
     for i in 0..count {
-        let index = if data[35] == 4 {
-            usize::from((data[64 + i / 2] >> ((i % 2) * 4)) & 15)
+        let (byte, shift) = if data[5] == 6 {
+            crate::tm3::transfer_address(
+                i % usize::from(width),
+                i / usize::from(width),
+                usize::from(width),
+                data[35],
+            )
+        } else if data[35] == 4 {
+            (i / 2, (i % 2) * 4)
         } else {
-            let index = usize::from(data[64 + i]);
+            (i, 0)
+        };
+        if byte >= image_size {
+            return Err(invalid("TIM3 transfer address outside image data"));
+        }
+        let index = if data[35] == 4 {
+            usize::from((data[64 + byte] >> shift) & 15)
+        } else {
+            let index = usize::from(data[64 + byte]);
             (index & !24) | ((index & 8) << 1) | ((index & 16) >> 1)
         };
         let color = &palette[index * 4..index * 4 + 4];
@@ -150,5 +183,38 @@ mod tests {
         for end in 0..original.len() {
             assert!(decode(&original[..end]).is_err());
         }
+    }
+
+    #[test]
+    fn tim3_transfer_image_matches_synthetic_reference_indices() {
+        let indices: Vec<u8> = (0..8192)
+            .map(|at| ((at * 73 + (at / 251) * 19 + 11) % 256) as u8)
+            .collect();
+        let mut bytes = fixture(4, &indices, 128);
+        bytes[..4].copy_from_slice(b"TIM3");
+        bytes[5] = 6;
+        bytes[38..40].copy_from_slice(&128u16.to_le_bytes());
+        let image = crate::tm3::decode(bytes.as_slice()).unwrap();
+        assert_eq!(
+            &image.pixels[(3 * 128 + 17) * 4..(3 * 128 + 17) * 4 + 4],
+            &[6, 17, 29, 255]
+        );
+        let hash = image
+            .pixels
+            .chunks_exact(4)
+            .fold(14695981039346656037u64, |hash, p| {
+                (hash ^ u64::from(p[0])).wrapping_mul(1099511628211)
+            });
+        assert_eq!(hash, 17615709926516263811);
+        bytes[38..40].copy_from_slice(&1u16.to_le_bytes());
+        assert!(crate::tm3::decode(bytes.as_slice()).is_err());
+        bytes[5] = 1;
+        assert!(crate::tm3::decode(bytes.as_slice()).is_err());
+        let mut linear = fixture(5, &[8, 16], 2);
+        linear[..4].copy_from_slice(b"TIM3");
+        assert_eq!(
+            crate::tm3::decode(linear.as_slice()).unwrap().pixels,
+            [16, 17, 29, 255, 8, 17, 29, 255]
+        );
     }
 }

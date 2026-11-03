@@ -7,8 +7,10 @@ use std::path::Path;
 pub mod afs;
 pub mod dat;
 pub mod fst;
+pub mod mdb;
 pub mod scr;
 pub mod tim2;
+pub mod tm3;
 
 const SECTOR: u64 = 2048;
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;

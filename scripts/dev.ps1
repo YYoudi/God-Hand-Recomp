@@ -1,8 +1,11 @@
 param(
-    [ValidateSet('Doctor', 'Check', 'Build', 'Inspect', 'Catalog', 'Textures', 'Texture', 'Smoke')][string]$Action = 'Check',
+    [ValidateSet('Doctor', 'Check', 'Build', 'Inspect', 'Catalog', 'Textures', 'Texture', 'MeshInspect', 'Mesh', 'Smoke')][string]$Action = 'Check',
     [string]$Toolchain = '',
     [string]$Iso = '',
     [string]$AssetPath = 'etc/subscr/face_hm00.tm2',
+    [string]$MeshPath = 'st1/r100.dat',
+    [ValidateRange(0, 4095)][int]$Collection = 23,
+    [ValidateRange(0, 4095)][int]$Node = 0,
     [ValidateRange(1, 120)][int]$Seconds = 20,
     [ValidateRange(1, 16)][int]$Jobs = 1,
     [ValidateRange(0, 2)][int]$DebugInfo = 0
@@ -63,6 +66,12 @@ try {
         }
         'Texture' {
             Run-Cargo @('run', '-p', 'godhand-lab', '--features', 'viewer', '--locked', '--jobs', "$Jobs", '--', '--iso', $Iso, '--texture', $AssetPath, '--smoke-seconds', "$Seconds")
+        }
+        'MeshInspect' {
+            Run-Cargo @('run', '-p', 'godhand-lab', '--locked', '--', '--iso', $Iso, '--inspect-meshes', $MeshPath)
+        }
+        'Mesh' {
+            Run-Cargo @('run', '-p', 'godhand-lab', '--features', 'viewer', '--locked', '--jobs', "$Jobs", '--', '--iso', $Iso, '--mesh', $MeshPath, '--collection', "$Collection", '--node', "$Node", '--smoke-seconds', "$Seconds")
         }
     }
 } finally { $env:CARGO_PROFILE_DEV_DEBUG = $oldDebug; Pop-Location }

@@ -25,6 +25,10 @@ fn run() -> Result<(), Box<dyn Error>> {
     let mut inspect_textures = false;
     let mut room_path = None;
     let mut inspect_rooms = false;
+    let mut inspect_mesh_path = None;
+    let mut mesh_path = None;
+    let mut collection = 1usize;
+    let mut node = 0usize;
     while let Some(arg) = args.next() {
         if arg == "--iso" {
             iso = Some(PathBuf::from(args.next().ok_or("--iso needs a path")?));
@@ -52,6 +56,29 @@ fn run() -> Result<(), Box<dyn Error>> {
             );
         } else if arg == "--inspect-rooms" {
             inspect_rooms = true;
+        } else if arg == "--inspect-meshes" || arg == "--mesh" {
+            let value = args
+                .next()
+                .ok_or("mesh option needs an exact FST path")?
+                .into_string()
+                .map_err(|_| "mesh path must be UTF-8")?;
+            if arg == "--mesh" {
+                mesh_path = Some(value);
+            } else {
+                inspect_mesh_path = Some(value);
+            }
+        } else if arg == "--collection" || arg == "--node" {
+            let value: usize = args
+                .next()
+                .ok_or("selection needs an ordinal")?
+                .to_str()
+                .ok_or("invalid selection")?
+                .parse()?;
+            if arg == "--collection" {
+                collection = value;
+            } else {
+                node = value;
+            }
         } else if arg == "--smoke-seconds" {
             let value = args.next().ok_or("--smoke-seconds needs a value")?;
             let seconds: u64 = value.to_str().ok_or("invalid duration")?.parse()?;
@@ -61,18 +88,19 @@ fn run() -> Result<(), Box<dyn Error>> {
             smoke_seconds = Some(seconds);
         } else if arg == "--help" || arg == "-h" {
             println!(
-                "godhand-lab --iso <original USA disc.iso> [--catalog] [--list] [--inspect-textures] [--inspect-rooms] [--room <FST path>] [--texture <FST path> | --sandbox] [--smoke-seconds 1..120]\nRoom options inspect metadata only. Texture and synthetic sandbox windows require --features viewer. Game assets stay in your own ISO."
+                "godhand-lab --iso <original USA disc.iso> [--catalog] [--list] [--inspect-textures] [--inspect-rooms] [--room <FST path>] [--inspect-meshes <FST path>] [--texture <FST path> | --mesh <FST path> [--collection N --node N] | --sandbox] [--smoke-seconds 1..120]\nViews require --features viewer. Mesh view is an isolated asset inspection, without runtime lighting or scene transforms. Game assets stay in your own ISO."
             );
             return Ok(());
         } else {
             return Err(format!("unknown argument: {}", arg.to_string_lossy()).into());
         }
     }
-    if sandbox && texture.is_some() {
-        return Err("choose either --sandbox or --texture".into());
+    if usize::from(sandbox) + usize::from(texture.is_some()) + usize::from(mesh_path.is_some()) > 1
+    {
+        return Err("choose one viewer mode: --sandbox, --texture or --mesh".into());
     }
-    if smoke_seconds.is_some() && !sandbox && texture.is_none() {
-        return Err("--smoke-seconds requires --sandbox or --texture".into());
+    if smoke_seconds.is_some() && !sandbox && texture.is_none() && mesh_path.is_none() {
+        return Err("--smoke-seconds requires a viewer mode".into());
     }
     let path = iso.ok_or("original ISO required: use --iso <path>")?;
     let mut disc = Disc::open(path)?;
@@ -88,7 +116,14 @@ fn run() -> Result<(), Box<dyn Error>> {
             index.archive_size
         );
     }
-    if list || inspect_textures || texture.is_some() || room_path.is_some() || inspect_rooms {
+    if list
+        || inspect_textures
+        || texture.is_some()
+        || room_path.is_some()
+        || inspect_rooms
+        || inspect_mesh_path.is_some()
+        || mesh_path.is_some()
+    {
         let fst = FstCatalog::read(disc.open_root_file("GODHAND.FST")?)?;
         let mut archive = disc.open_root_file("_DATA.AFS")?;
         let afs = AfsCatalog::read(&mut archive)?;
@@ -134,6 +169,25 @@ fn run() -> Result<(), Box<dyn Error>> {
                 result.outer_sections, result.nested_sections, result.scr_collections, result.nodes
             );
         }
+        if let Some(path) = inspect_mesh_path {
+            let file = fst.file(&path)?;
+            let mut member = afs.open_entry(&mut archive, file.ordinal as usize)?;
+            room::inspect_meshes(&mut member)?;
+        }
+        if let Some(path) = mesh_path {
+            let file = fst.file(&path)?;
+            let mut member = afs.open_entry(&mut archive, file.ordinal as usize)?;
+            let view = room::load_mesh(&mut member, collection, node)?;
+            println!(
+                "Isolated mesh: {path}, SCP collection {collection}, node {node}, {} buffers, {} referenced textures; no scene transforms or game lighting.",
+                view.mesh.primitives.len(),
+                view.textures.len()
+            );
+            #[cfg(feature = "viewer")]
+            viewer::run(smoke_seconds, None, Some(view))?;
+            #[cfg(not(feature = "viewer"))]
+            return Err("rebuild with --features viewer to display the decoded mesh".into());
+        }
         if inspect_textures {
             let mut accepted = 0;
             let mut refused = 0;
@@ -164,14 +218,14 @@ fn run() -> Result<(), Box<dyn Error>> {
                 image.width, image.height
             );
             #[cfg(feature = "viewer")]
-            viewer::run(smoke_seconds, Some(image))?;
+            viewer::run(smoke_seconds, Some(image), None)?;
             #[cfg(not(feature = "viewer"))]
             return Err("rebuild with --features viewer to display the decoded texture".into());
         }
     }
     if sandbox {
         #[cfg(feature = "viewer")]
-        viewer::run(smoke_seconds, None)?;
+        viewer::run(smoke_seconds, None, None)?;
         #[cfg(not(feature = "viewer"))]
         return Err("rebuild with --features viewer to open the synthetic sandbox".into());
     }

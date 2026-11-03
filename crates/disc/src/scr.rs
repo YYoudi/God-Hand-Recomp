@@ -4,6 +4,7 @@ use std::io::{self, Read, Seek, SeekFrom};
 
 #[derive(Debug)]
 pub struct ScrNode {
+    pub record_offset: u64,
     pub name: [u8; 8],
     pub mdb_offset: u64,
     pub scale: [f32; 3],
@@ -16,6 +17,8 @@ pub struct ScrNode {
 pub struct ScrCatalog {
     pub opaque_header_word: u32,
     pub nodes: Vec<ScrNode>,
+    source_length: u64,
+    mdb_spans: Vec<(u64, u64)>,
 }
 
 fn invalid(message: &'static str) -> io::Error {
@@ -83,6 +86,7 @@ impl ScrCatalog {
                 }
             }
             nodes.push(ScrNode {
+                record_offset: at,
                 name: bytes[8..16].try_into().unwrap(),
                 mdb_offset: target,
                 scale: transform[..3].try_into().unwrap(),
@@ -90,9 +94,44 @@ impl ScrCatalog {
                 translation: transform[6..9].try_into().unwrap(),
             });
         }
+        let mdb_spans = nodes
+            .iter()
+            .map(|node| {
+                let start = node.mdb_offset;
+                let end = nodes
+                    .iter()
+                    .flat_map(|n| [n.record_offset, n.mdb_offset])
+                    .filter(|v| *v > start)
+                    .min()
+                    .unwrap_or(length);
+                (start, end - start)
+            })
+            .collect();
         Ok(Self {
             opaque_header_word: u32::from_le_bytes(header[4..8].try_into().unwrap()),
             nodes,
+            source_length: length,
+            mdb_spans,
+        })
+    }
+
+    pub fn open_mdb<'a, R: Read + Seek>(
+        &self,
+        source: &'a mut R,
+        ordinal: usize,
+    ) -> io::Result<crate::FileSlice<'a, R>> {
+        let &(start, length) = self
+            .mdb_spans
+            .get(ordinal)
+            .ok_or_else(|| invalid("SCR node ordinal out of range"))?;
+        if source.seek(SeekFrom::End(0))? != self.source_length {
+            return Err(invalid("SCR source length changed"));
+        }
+        Ok(crate::FileSlice {
+            source,
+            start,
+            length,
+            position: 0,
         })
     }
 }
@@ -122,6 +161,23 @@ mod tests {
         assert_eq!(catalog.nodes[0].scale, [1.0; 3]);
         assert_eq!(catalog.nodes[0].translation, [0.0; 3]);
         assert_eq!(&catalog.nodes[0].name, b"original");
+    }
+
+    #[test]
+    fn mesh_window_stops_before_node_metadata_and_checks_backing_length() {
+        let mut source = Cursor::new(fixture());
+        let mut catalog = ScrCatalog::read(&mut source).unwrap();
+        // Public diagnostic metadata cannot change the validated window.
+        catalog.nodes[0].mdb_offset = u64::MAX;
+        let mut window = catalog.open_mdb(&mut source, 0).unwrap();
+        let mut bytes = Vec::new();
+        window.read_to_end(&mut bytes).unwrap();
+        assert_eq!(bytes.len(), 32);
+        assert_eq!(&bytes[..4], b"mdb\0");
+        assert!(window.seek(SeekFrom::Start(33)).is_err());
+        assert!(catalog.open_mdb(&mut source, 1).is_err());
+        source.get_mut().push(0);
+        assert!(catalog.open_mdb(&mut source, 0).is_err());
     }
     #[test]
     fn rejects_bad_table_node_and_target_ranges() {

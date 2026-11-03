@@ -45,6 +45,14 @@ docs/room-containers-2026-11-03.md, specs/tagged-dat-v1.md and specs/scr-nodes-v
 Mesh payloads, actual room identities, topology, texture bindings and transform
 composition remain unverified. Public independent Chihuahua patterns are credited;
 do not substitute matching decompilation repositories for independent implementation.
+Static MDB flag-zero decoding and TM3/TIM3 banks now pass on the three candidates:
+433 meshes, 1,155 buffers, 102,570 vertices, 56,070 triangles and 158 bank images.
+An actual well-like prop (r100, SCP ordinal 23, node 0; five buffers/five textures)
+has displayed in Bevy with a normal 60-second smoke exit. Read
+docs/static-mesh-2026-11-03.md and the static MDB / TM3-TIM3 contracts. This is
+unlit local-coordinate inspection, not scene reconstruction or runtime fidelity.
+GS transfer addressing has independent synthetic table-oracle checks. Geometry
+exposure includes independent MIT tool source for format semantics, no game code.
 
 1. Specify observable behavior, provenance and acceptance criteria before implementation.
 2. Synthetic fixtures only; never give game data to CI.

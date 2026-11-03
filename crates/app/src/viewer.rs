@@ -2,7 +2,8 @@
 use bevy::app::AppExit;
 use bevy::asset::RenderAssetUsages;
 use bevy::core_pipeline::tonemapping::{DebandDither, Tonemapping};
-use bevy::image::ImageSampler;
+use bevy::image::{ImageAddressMode, ImageSampler, ImageSamplerDescriptor};
+use bevy::mesh::{Indices, PrimitiveTopology};
 use bevy::prelude::*;
 use bevy::render::render_resource::{Extent3d, TextureDimension, TextureFormat};
 use godhand_disc::tim2::RgbaImage;
@@ -28,13 +29,24 @@ struct SmokeLimit {
 
 #[derive(Resource)]
 struct TextureInput(Option<RgbaImage>);
+#[derive(Resource)]
+struct MeshInput(Option<crate::room::MeshView>);
 
 pub fn run(
     smoke_seconds: Option<u64>,
     texture: Option<RgbaImage>,
+    mesh: Option<crate::room::MeshView>,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    if mesh
+        .as_ref()
+        .is_some_and(|m| m.mesh.primitives.iter().all(|p| p.indices.is_empty()))
+    {
+        return Err("selected mesh has no emitted faces".into());
+    }
     let completed = Arc::new(AtomicBool::new(false));
-    let title = if texture.is_some() {
+    let title = if mesh.is_some() {
+        "God Hand | ISO static mesh inspection | unlit, local coordinates"
+    } else if texture.is_some() {
         "God Hand | ISO texture inspection | not a game scene"
     } else {
         "God Hand independent engine lab | synthetic scene | WASD / arrows"
@@ -44,6 +56,7 @@ pub fn run(
         .insert_resource(Time::<Fixed>::from_hz(TICK_HZ as f64))
         .init_resource::<Intent>()
         .insert_resource(TextureInput(texture))
+        .insert_resource(MeshInput(mesh))
         .insert_resource(SmokeLimit {
             duration: smoke_seconds.map(Duration::from_secs),
             first_update: None,
@@ -94,7 +107,78 @@ fn setup(
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut images: ResMut<Assets<Image>>,
     mut input: ResMut<TextureInput>,
+    mut mesh_input: ResMut<MeshInput>,
 ) {
+    if let Some(view) = mesh_input.0.take() {
+        let mut handles = std::collections::BTreeMap::new();
+        for (ordinal, texture) in view.textures {
+            let mut image = Image::new(
+                Extent3d {
+                    width: u32::from(texture.width),
+                    height: u32::from(texture.height),
+                    depth_or_array_layers: 1,
+                },
+                TextureDimension::D2,
+                texture.pixels,
+                TextureFormat::Rgba8UnormSrgb,
+                RenderAssetUsages::default(),
+            );
+            let mut sampler = ImageSamplerDescriptor::nearest();
+            sampler.address_mode_u = ImageAddressMode::Repeat;
+            sampler.address_mode_v = ImageAddressMode::Repeat;
+            image.sampler = ImageSampler::Descriptor(sampler);
+            handles.insert(ordinal, images.add(image));
+        }
+        let mut minimum = Vec3::splat(f32::INFINITY);
+        let mut maximum = Vec3::splat(f32::NEG_INFINITY);
+        for primitive in view.mesh.primitives {
+            for &position in &primitive.positions {
+                minimum = minimum.min(Vec3::from_array(position));
+                maximum = maximum.max(Vec3::from_array(position));
+            }
+            if primitive.indices.is_empty() {
+                continue;
+            }
+            let mesh = Mesh::new(
+                PrimitiveTopology::TriangleList,
+                RenderAssetUsages::default(),
+            )
+            .with_inserted_attribute(Mesh::ATTRIBUTE_POSITION, primitive.positions)
+            .with_inserted_attribute(Mesh::ATTRIBUTE_UV_0, primitive.uvs)
+            .with_inserted_indices(Indices::U32(primitive.indices))
+            .with_computed_normals();
+            commands.spawn((
+                Mesh3d(meshes.add(mesh)),
+                MeshMaterial3d(materials.add(StandardMaterial {
+                    base_color_texture: Some(handles[&primitive.material].clone()),
+                    unlit: true,
+                    alpha_mode: AlphaMode::Blend,
+                    cull_mode: None,
+                    double_sided: true,
+                    ..default()
+                })),
+                Transform::default(),
+            ));
+        }
+        let center = (minimum + maximum) * 0.5;
+        let radius = ((maximum - minimum).length() * 0.5).max(0.1);
+        commands.spawn((
+            Camera3d::default(),
+            Tonemapping::None,
+            DebandDither::Disabled,
+            Projection::Perspective(PerspectiveProjection {
+                fov: std::f32::consts::FRAC_PI_4,
+                near: radius * 0.01,
+                far: radius * 20.0,
+                ..default()
+            }),
+            Transform::from_translation(
+                center + Vec3::new(2.0, 1.2, 2.0).normalize() * radius * 3.3,
+            )
+            .looking_at(center, Vec3::Y),
+        ));
+        return;
+    }
     if let Some(texture) = input.0.take() {
         let width = f32::from(texture.width);
         let height = f32::from(texture.height);

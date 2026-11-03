@@ -35,6 +35,10 @@ New room-data boundary: DAT/SCP catalog access covers 94/93 retail containers an
 and signed MDB references; geometry is not decoded. Continue from
 docs/room-containers-2026-11-03.md and docs/local/overnight-checkpoint.md. Source
 research uses Chihuahua's independent MIT format patterns, not original game code.
+Static MDB and TM3/TIM3 decoding now validate 433 meshes / 158 bank images on the
+same three candidates. A real textured well-like prop has rendered in Bevy from
+the ISO. See docs/static-mesh-2026-11-03.md. Scene placement, lighting, runtime
+parity and prototype debug access remain open; the mesh view is unlit/local.
 
 After each session, update docs/dashboard/data.json with actual changes, checks
 and limitations. Run python scripts/dashboard.py. Capture visual journal changes.
