@@ -65,7 +65,7 @@ def blog(data):
   <h2>{escape(update['title'])}</h2>
   <p>{escape(update['summary'])}</p>
   <ul>{changes}</ul>
-  {post_link}
+{post_link}
   <details><summary>Vérifications et limites</summary>
     <p>{escape(update['validation'])}</p><p>{escape(update['limits'])}</p>
   </details>

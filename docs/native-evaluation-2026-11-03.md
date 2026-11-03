@@ -87,3 +87,6 @@ L'ISO, les modules extraits, le C++ généré, le runner lié au jeu, les états
 les journaux bruts et les images de gameplay restent exclus de Git. Le carnet
 public ne reçoit que ce bilan textuel. Les captures publiques restent celles du
 carnet lui-même.
+
+L'empreinte SHA-256 de l'ISO est identique avant et après les essais : le disque
+source n'a pas été modifié.
