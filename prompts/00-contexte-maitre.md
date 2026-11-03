@@ -24,7 +24,12 @@ Y is height. CI fixtures are synthetic only. Never import decompiled or translat
 
 The original floor/capsule scene has now rendered on Windows/Vulkan with a bounded
 smoke exit. The bounded AFS catalog reader reports 1,445 entries on the local retail
-ISO; FST and payload decoding remain unimplemented. Read specs/afs-catalog-v1.md.
+ISO. FST ordinals now map all retail entries (49 directories) and all 1,078 prototype
+entries (62 directories). Narrow TIM2 decoding accepts 34 of 35 top-level textures;
+real 4/8-bit textures have displayed in Bevy, separate from the sandbox. No game
+scene or in-game visual parity is established. Read docs/game-structure-2026-11-03.md,
+specs/fst-catalog-v1.md and specs/tim2-indexed-v1.md. Do not start subagents until
+the next scene contracts and tests establish meaningful independent work boundaries.
 
 After each session, update docs/dashboard/data.json with actual changes, checks
 and limitations. Run python scripts/dashboard.py. Capture visual journal changes.

@@ -5,11 +5,13 @@ Original code is public under MIT. Each user must provide their own ISO.
 No game code, models, textures, audio or levels are distributed.
 
 **Status: early foundations. The game is not playable in this engine.**
-The ISO/AFS catalog reader is read-only. The sandbox contains original geometric primitives only.
+The read-only ISO/FST/AFS readers can locate and decode a narrow TIM2 texture subset.
+The texture inspection view reads your ISO; the sandbox contains original primitives only.
 
 - [Development journal](https://yyoudi.github.io/God-Hand-Recomp/)
 - [Roadmap](ROADMAP.md) · [Workflow](docs/workflow.md)
 - [First Rust milestone and adaptive workflow](docs/initialization-plan.md)
+- [First game-data map and next fidelity experiments](docs/game-structure-2026-11-03.md)
 - [Clean-room method](docs/clean-room.md) · [Architecture](docs/architecture.md)
 - [PS2 recompilation research](docs/research-2026-11-03.md)
 - [Contributing](CONTRIBUTING.md) · [Licensing and scope](NOTICE.md)
@@ -25,6 +27,8 @@ Tests require neither a GPU nor game data.
 cargo test --workspace --locked
 cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso"
 cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --catalog
+cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --inspect-textures
+cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --texture "etc/subscr/face_hm00.tm2"
 cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --sandbox
 ```
 
@@ -32,6 +36,9 @@ Startup requires an ISO whose SYSTEM.CNF references SLUS_215.03.
 This recognizes a structure and serial number; it does not certify authenticity.
 The sandbox displays a floor and a capsule, controlled with WASD or arrow keys.
 It is not a scene from the game.
+The separate texture view supports single-picture 4/8-bit indexed TIM2 with one
+RGBA32 palette. Other layouts are refused. Rendering an isolated asset does not
+establish a faithful game screen; reference-runtime comparison remains open.
 
 Windows: use a GNU toolchain with `cargo +stable-x86_64-pc-windows-gnu ...`
 and MinGW on PATH, or install Visual C++ Build Tools and the Windows SDK for MSVC.

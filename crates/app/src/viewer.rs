@@ -1,7 +1,11 @@
-//! Synthetic primitives only. No game art, executable, animation or level is loaded.
+//! Separate synthetic build check and ISO-backed texture inspection modes.
 use bevy::app::AppExit;
-use bevy::core_pipeline::tonemapping::Tonemapping;
+use bevy::asset::RenderAssetUsages;
+use bevy::core_pipeline::tonemapping::{DebandDither, Tonemapping};
+use bevy::image::ImageSampler;
 use bevy::prelude::*;
+use bevy::render::render_resource::{Extent3d, TextureDimension, TextureFormat};
+use godhand_disc::tim2::RgbaImage;
 use godhand_engine::{Position, TICK_HZ, step};
 use std::sync::{
     Arc,
@@ -22,12 +26,24 @@ struct SmokeLimit {
     completed: Arc<AtomicBool>,
 }
 
-pub fn run(smoke_seconds: Option<u64>) -> Result<(), Box<dyn std::error::Error>> {
+#[derive(Resource)]
+struct TextureInput(Option<RgbaImage>);
+
+pub fn run(
+    smoke_seconds: Option<u64>,
+    texture: Option<RgbaImage>,
+) -> Result<(), Box<dyn std::error::Error>> {
     let completed = Arc::new(AtomicBool::new(false));
+    let title = if texture.is_some() {
+        "God Hand | ISO texture inspection | not a game scene"
+    } else {
+        "God Hand independent engine lab | synthetic scene | WASD / arrows"
+    };
     let result = App::new()
         .insert_resource(ClearColor(Color::srgb(0.025, 0.035, 0.05)))
         .insert_resource(Time::<Fixed>::from_hz(TICK_HZ as f64))
         .init_resource::<Intent>()
+        .insert_resource(TextureInput(texture))
         .insert_resource(SmokeLimit {
             duration: smoke_seconds.map(Duration::from_secs),
             first_update: None,
@@ -35,7 +51,7 @@ pub fn run(smoke_seconds: Option<u64>) -> Result<(), Box<dyn std::error::Error>>
         })
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
-                title: "God Hand independent engine lab | synthetic scene | WASD / arrows".into(),
+                title: title.into(),
                 resolution: (1280, 720).into(),
                 ..default()
             }),
@@ -68,7 +84,7 @@ fn finish_smoke(mut limit: ResMut<SmokeLimit>, mut exit: MessageWriter<AppExit>)
 
 fn completed_notice(completed: &AtomicBool) {
     if !completed.swap(true, Ordering::SeqCst) {
-        println!("Synthetic sandbox smoke completed; deadline reached, exiting normally.");
+        println!("Viewer smoke completed; deadline reached, exiting normally.");
     }
 }
 
@@ -76,7 +92,48 @@ fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    mut images: ResMut<Assets<Image>>,
+    mut input: ResMut<TextureInput>,
 ) {
+    if let Some(texture) = input.0.take() {
+        let width = f32::from(texture.width);
+        let height = f32::from(texture.height);
+        let mut image = Image::new(
+            Extent3d {
+                width: u32::from(texture.width),
+                height: u32::from(texture.height),
+                depth_or_array_layers: 1,
+            },
+            TextureDimension::D2,
+            texture.pixels,
+            TextureFormat::Rgba8UnormSrgb,
+            RenderAssetUsages::default(),
+        );
+        image.sampler = ImageSampler::nearest();
+        commands.spawn((
+            Mesh3d(meshes.add(Rectangle::new(width, height))),
+            MeshMaterial3d(materials.add(StandardMaterial {
+                base_color_texture: Some(images.add(image)),
+                unlit: true,
+                alpha_mode: AlphaMode::Blend,
+                ..default()
+            })),
+            Transform::default(),
+        ));
+        commands.spawn((
+            Camera3d::default(),
+            Tonemapping::None,
+            DebandDither::Disabled,
+            Projection::Orthographic(OrthographicProjection {
+                scaling_mode: bevy::camera::ScalingMode::FixedVertical {
+                    viewport_height: 720.0,
+                },
+                ..OrthographicProjection::default_3d()
+            }),
+            Transform::from_xyz(0.0, 0.0, 100.0).looking_at(Vec3::ZERO, Vec3::Y),
+        ));
+        return;
+    }
     commands.spawn((
         Mesh3d(meshes.add(Cuboid::new(24.0, 0.2, 24.0))),
         MeshMaterial3d(materials.add(Color::srgb(0.1, 0.14, 0.18))),
@@ -98,6 +155,7 @@ fn setup(
     commands.spawn((
         Camera3d::default(),
         Tonemapping::None,
+        DebandDither::Disabled,
         Transform::from_xyz(0.0, 9.0, 13.0).looking_at(Vec3::ZERO, Vec3::Y),
     ));
 }

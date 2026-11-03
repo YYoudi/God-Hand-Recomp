@@ -1,7 +1,8 @@
 param(
-    [ValidateSet('Doctor', 'Check', 'Build', 'Inspect', 'Catalog', 'Smoke')][string]$Action = 'Check',
+    [ValidateSet('Doctor', 'Check', 'Build', 'Inspect', 'Catalog', 'Textures', 'Texture', 'Smoke')][string]$Action = 'Check',
     [string]$Toolchain = '',
     [string]$Iso = '',
+    [string]$AssetPath = 'etc/subscr/face_hm00.tm2',
     [ValidateRange(1, 120)][int]$Seconds = 20,
     [ValidateRange(1, 16)][int]$Jobs = 1,
     [ValidateRange(0, 2)][int]$DebugInfo = 0
@@ -56,6 +57,12 @@ try {
         }
         'Smoke' {
             Run-Cargo @('run', '-p', 'godhand-lab', '--features', 'viewer', '--locked', '--jobs', "$Jobs", '--', '--iso', $Iso, '--sandbox', '--smoke-seconds', "$Seconds")
+        }
+        'Textures' {
+            Run-Cargo @('run', '-p', 'godhand-lab', '--locked', '--', '--iso', $Iso, '--inspect-textures')
+        }
+        'Texture' {
+            Run-Cargo @('run', '-p', 'godhand-lab', '--features', 'viewer', '--locked', '--jobs', "$Jobs", '--', '--iso', $Iso, '--texture', $AssetPath, '--smoke-seconds', "$Seconds")
         }
     }
 } finally { $env:CARGO_PROFILE_DEV_DEBUG = $oldDebug; Pop-Location }

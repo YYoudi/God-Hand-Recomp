@@ -17,11 +17,15 @@ and acceptance criteria. Do not transmit game code to the implementer.
 cargo test --workspace --locked
 cargo check -p godhand-lab --features viewer --locked
 cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso"
+cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --inspect-textures
+cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --texture "etc/subscr/face_hm00.tm2" --smoke-seconds 30
 cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --sandbox
 ```
 
 Tests are synthetic only. Startup reads the ISO without modifying it, recognizes
 the USA serial and does not execute the ELF. The sandbox uses original primitives only.
+The separate texture view loads only a bounded supported TIM2 from the user's ISO.
+Read the [data map](game-structure-2026-11-03.md) for measured progress and limits.
 
 On this machine, use cargo +stable-x86_64-pc-windows-gnu with MinGW on PATH.
 The historical MSVC path is absent. Local toolchains.lock.json pins research backends;

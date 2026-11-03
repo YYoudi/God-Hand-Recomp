@@ -7,7 +7,7 @@ Updated: 2026-11-03. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Specify FST-to-AFS mapping and choose one bounded asset type; verify prototype debug access separately.
+Next useful evidence: Map one retail room container, identify a static mesh and texture link, and compare against a reference runtime before recreating gameplay.
 
 ## M0 — Public foundations
 
@@ -38,8 +38,8 @@ Dependencies: M0.
 | --- | --- | --- | --- |
 | D01 | Read-only ISO reader | Done | ISO 9660 root, SYSTEM.CNF, USA identification and bounds checks. |
 | D02 | Disc fingerprint and diagnostics | Planned | Local fingerprints and precise errors for truncated discs or different editions. |
-| D03 | Independent FST / AFS contract | In progress | Specify formats with provenance, unknowns and synthetic samples. |
-| D04 | Archive access | In progress | Bounded index/data reads from ISO; invalid size and offset tests. |
+| D03 | Independent FST / AFS contract | Done | Original bounded FST namespace and AFS ordinal contract, synthetic malformed cases, complete retail/prototype ordinal coverage; opaque metadata preserved. |
+| D04 | Archive access | Done | Bounded read-only ISO and AFS member windows; rejects invalid ordinals and reads/seeks outside a member. No whole-archive extraction. |
 | D05 | Local conversion pipeline | Planned | Private cache versioned by format and invalidated reliably. |
 
 ## M2 — Scenes and rendering
@@ -50,9 +50,9 @@ Dependencies: M1.
 
 | ID | Feature | Status | Acceptance criteria |
 | --- | --- | --- | --- |
-| R01 | Bevy viewer foundation | Done | Original primitive viewer compiles; visual runtime validation still pending. |
+| R01 | Bevy viewer foundation | Done | Original primitive viewer compiled and rendered on Windows/Vulkan with bounded smoke exit; not a game scene. |
 | R02 | Window and GPU diagnostics | Done | Verify local execution, readable GPU errors and original sandbox capture. |
-| R03 | Textures and materials | Planned | Independent decoding of used formats; validate palettes and transparency. |
+| R03 | Textures and materials | In progress | Narrow indexed TIM2 decoder and ISO-backed inspection verified; alternate palettes, embedded formats and in-game color/blending parity remain open. |
 | R04 | Geometry and scenes | Planned | Load scene hierarchy, meshes, materials and positions from the ISO. |
 | R05 | Skeletons and animation | Planned | Poses/transitions match observable contracts; test interpolation. |
 | R06 | Camera and visibility | Planned | Specify and validate camera behavior, camera collisions, framing and occlusion. |

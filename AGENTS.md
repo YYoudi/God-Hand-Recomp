@@ -31,8 +31,13 @@ are reported leads, not locally verified. Never substitute prototype behavior fo
 
 The Windows/Vulkan sandbox has rendered original primitives and exited at its smoke
 deadline. Read-only AFS catalog access is implemented under specs/afs-catalog-v1.md;
-retail inspection reports 1,445 entries without extraction. FST mapping and asset
-decoding remain open. Keep these limits explicit when updating the journal.
+retail inspection reports 1,445 entries without extraction. FST mapping is now
+validated on retail (1,445 files/49 directories) and prototype (1,078/62).
+A bounded TIM2 subset decodes 34 of 35 top-level retail textures, refuses the
+multi-palette font, and displays real ISO-backed images in a separate inspection
+view. No scene/gameplay or reference-renderer parity is established. Read
+docs/game-structure-2026-11-03.md and the FST/TIM2 contracts before extending this.
+Work remains sequential until contracts justify the user's later parallel phase.
 
 1. Specify observable behavior, provenance and acceptance criteria before implementation.
 2. Synthetic fixtures only; never give game data to CI.

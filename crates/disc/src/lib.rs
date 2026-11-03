@@ -5,6 +5,8 @@ use std::io::{self, Read, Seek, SeekFrom};
 use std::path::Path;
 
 pub mod afs;
+pub mod fst;
+pub mod tim2;
 
 const SECTOR: u64 = 2048;
 const MAX_DIRECTORY: u64 = 16 * 1024 * 1024;

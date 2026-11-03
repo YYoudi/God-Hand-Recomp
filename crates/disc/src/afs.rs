@@ -20,6 +20,30 @@ fn invalid(message: &'static str) -> io::Error {
 }
 
 impl AfsCatalog {
+    pub fn open_entry<'a, R: Read + Seek>(
+        &self,
+        source: &'a mut R,
+        ordinal: usize,
+    ) -> io::Result<crate::FileSlice<'a, R>> {
+        let entry = self
+            .entries
+            .get(ordinal)
+            .ok_or_else(|| invalid("AFS ordinal out of range"))?;
+        let length = source.seek(SeekFrom::End(0))?;
+        if length != self.archive_size
+            || u64::from(entry.offset) + u64::from(entry.size) > length
+            || (entry.size != 0 && u64::from(entry.offset) < 8 + self.entries.len() as u64 * 8)
+        {
+            return Err(invalid("AFS entry or backing source bounds changed"));
+        }
+        Ok(crate::FileSlice {
+            source,
+            start: u64::from(entry.offset),
+            length: u64::from(entry.size),
+            position: 0,
+        })
+    }
+
     pub fn read(mut source: impl Read + Seek) -> io::Result<Self> {
         let archive_size = source.seek(SeekFrom::End(0))?;
         source.seek(SeekFrom::Start(0))?;
@@ -130,5 +154,21 @@ mod tests {
         };
         AfsCatalog::read(&mut source).unwrap();
         assert_eq!(source.read_bytes, 16);
+    }
+
+    #[test]
+    fn member_view_cannot_read_or_seek_into_its_neighbor() {
+        let mut bytes = fixture(&[(32, 2), (34, 2)], 36);
+        bytes[32..].copy_from_slice(&[11, 22, 33, 44]);
+        let mut source = Cursor::new(bytes);
+        let catalog = AfsCatalog::read(&mut source).unwrap();
+        let mut member = catalog.open_entry(&mut source, 0).unwrap();
+        let mut data = Vec::new();
+        member.read_to_end(&mut data).unwrap();
+        assert_eq!(data, [11, 22]);
+        assert!(member.seek(SeekFrom::Start(3)).is_err());
+        assert!(catalog.open_entry(&mut source, 2).is_err());
+        source.get_mut().truncate(35);
+        assert!(catalog.open_entry(&mut source, 0).is_err());
     }
 }

@@ -44,3 +44,21 @@ Append material evidence-driven changes here. Keep private dumps and raw logs ou
 - Decision: expose checked ISO file views and parse only the AFS header/table.
 - Outcome: catalog access reads metadata without whole-archive allocation or extraction.
 - Limit: no filenames, FST mapping, payload decoding or prototype/retail equivalence established.
+
+## 2026-11-03 — follow real asset data rather than expand a placeholder scene
+
+- Evidence: retail FST records cover all 1,445 AFS ordinals; prototype covers 1,078
+  and introduces zero-pointer empty directories. REA refuses FST as unsupported.
+- Decision: specify an original bounded namespace reader, then a narrow TIM2
+  decoder from public format research and local header observations. No game
+  executable, translated C++ or decompiler output is implementation input.
+- Outcome: both profile catalogs validate in Rust; 34 of 35 retail top-level TIM2
+  textures decode. A 4-bit portrait and an 8-bit interface-like image display in
+  a separate ISO-backed Bevy inspection view. Full captures stay local.
+- Adjustment: the interface-like texture appears to be a retained mockup. Count
+  this as format validation, not an active retail screen or faithful menu recreation.
+- Next evidence: bounded room-container sections, a measured static mesh and its
+  texture association; reference-runtime comparisons before gameplay.
+- Limit: one multi-palette font remains unsupported. Scene semantics, GS-rendering
+  parity and prototype debug access remain unverified. Parallel agents wait for
+  explicit contracts grounded by these experiments.

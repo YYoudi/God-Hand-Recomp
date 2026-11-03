@@ -4,13 +4,13 @@
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/God-Hand-Recomp",
   "engine": "Rust + Bevy 0.20.1",
-  "phase": "Rust foundation",
+  "phase": "First game-data readers",
   "playable": false,
-  "next": "Specify FST-to-AFS mapping and choose one bounded asset type; verify prototype debug access separately.",
+  "next": "Map one retail room container, identify a static mesh and texture link, and compare against a reference runtime before recreating gameplay.",
   "validation": {
-    "tests": 14,
+    "tests": 22,
     "bevy_check": "pass",
-    "viewer_runtime": "Verified on Windows/Vulkan with original primitives and bounded exit",
+    "viewer_runtime": "Real ISO-backed 4-bit and 8-bit TIM2 inspection on Windows/Vulkan; bounded exits",
     "gameplay": "Not implemented"
   },
   "milestones": [
@@ -117,16 +117,16 @@
         {
           "id": "D03",
           "title": "Independent FST / AFS contract",
-          "status": "in_progress",
+          "status": "done",
           "area": "data",
-          "acceptance": "Specify formats with provenance, unknowns and synthetic samples."
+          "acceptance": "Original bounded FST namespace and AFS ordinal contract, synthetic malformed cases, complete retail/prototype ordinal coverage; opaque metadata preserved."
         },
         {
           "id": "D04",
           "title": "Archive access",
-          "status": "in_progress",
+          "status": "done",
           "area": "data",
-          "acceptance": "Bounded index/data reads from ISO; invalid size and offset tests."
+          "acceptance": "Bounded read-only ISO and AFS member windows; rejects invalid ordinals and reads/seeks outside a member. No whole-archive extraction."
         },
         {
           "id": "D05",
@@ -150,7 +150,7 @@
           "title": "Bevy viewer foundation",
           "status": "done",
           "area": "graphics",
-          "acceptance": "Original primitive viewer compiles; visual runtime validation still pending."
+          "acceptance": "Original primitive viewer compiled and rendered on Windows/Vulkan with bounded smoke exit; not a game scene."
         },
         {
           "id": "R02",
@@ -162,9 +162,9 @@
         {
           "id": "R03",
           "title": "Textures and materials",
-          "status": "planned",
+          "status": "in_progress",
           "area": "graphics",
-          "acceptance": "Independent decoding of used formats; validate palettes and transparency."
+          "acceptance": "Narrow indexed TIM2 decoder and ISO-backed inspection verified; alternate palettes, embedded formats and in-game color/blending parity remain open."
         },
         {
           "id": "R04",
@@ -415,6 +415,23 @@
   "updates": [
     {
       "date": "2026-11-03",
+      "title": "From archive entries to a first texture",
+      "summary": "The Rust reader now connects file paths to archive entries and displays a small texture directly from the owned ISO. This is an asset-reading step; no game scene is reconstructed yet.",
+      "changes": [
+        "Mapped all 1,445 retail file records to AFS entries. Checked the prototype separately: 1,078 records, including empty-directory differences.",
+        "Added an original narrow TIM2 decoder: 34 top-level textures decode; one multi-palette font is explicitly refused.",
+        "Displayed 4-bit and 8-bit ISO textures in a separate Bevy inspection window. The interface-like image appears to be a retained mockup, so it is not counted as a recreated retail menu.",
+        "Wrote a first data map and ordered the next experiments around real room data. Parallel work waits for tested component contracts."
+      ],
+      "validation": "22 synthetic Rust tests pass. Both reference catalogs validate. Real 4-bit/8-bit Bevy windows were visually inspected and exited at their 30/60-second deadlines. Game images and full inventories remain private.",
+      "limits": "No room geometry, animation, collision or gameplay is implemented. Reference-runtime palette/blending parity and prototype debug access remain unverified. REA rejected FST as unsupported; format observations came from a read-only local probe, not successful REA analysis.",
+      "link": {
+        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/game-structure-2026-11-03.md",
+        "label": "Data map, evidence and next fidelity experiments"
+      }
+    },
+    {
+      "date": "2026-11-03",
       "title": "Starting the Rust foundation loop",
       "summary": "The first milestone now has executable steps and a decision log. The Rust sandbox renders original primitives, and read-only archive inspection can list catalog metadata.",
       "changes": [
@@ -499,6 +516,13 @@
     }
   ],
   "captures": [
+    {
+      "kind": "dashboard",
+      "path": "captures/2026-11-03-data-map.jpg",
+      "date": "2026-11-03",
+      "source": "Browser capture of the local English journal; no game imagery",
+      "caption": "FST mapping and first ISO texture-reader entry"
+    },
     {
       "kind": "dashboard",
       "path": "captures/2026-11-03-rust-foundation.jpg",
