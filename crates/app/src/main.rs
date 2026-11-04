@@ -37,8 +37,10 @@ fn run() -> Result<(), Box<dyn Error>> {
     let mut camera_eye = None;
     let mut camera_target = None;
     let mut camera_fov = None;
+    let mut camera_aspect = None;
     let mut view_size = [1280, 720];
     let mut static_colors = false;
+    let mut backface_culling = false;
     let mut collection = 1usize;
     let mut node = 0usize;
     while let Some(arg) = args.next() {
@@ -120,9 +122,12 @@ fn run() -> Result<(), Box<dyn Error>> {
             } else {
                 node = value;
             }
+        } else if arg == "--backface-culling" {
+            backface_culling = true;
         } else if arg == "--camera-eye"
             || arg == "--camera-target"
             || arg == "--camera-fov"
+            || arg == "--camera-aspect"
             || arg == "--view-size"
         {
             let value = args.next().ok_or("camera/view option needs a value")?;
@@ -135,6 +140,7 @@ fn run() -> Result<(), Box<dyn Error>> {
                     camera_target = Some(godhand_engine::inspection_camera::parse_vec3(value)?)
                 }
                 "--camera-fov" => camera_fov = Some(value.parse::<f32>()?),
+                "--camera-aspect" => camera_aspect = Some(value.parse::<f32>()?),
                 _ => view_size = godhand_engine::inspection_camera::parse_view_size(value)?,
             }
         } else if arg == "--capture-png" {
@@ -150,7 +156,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             smoke_seconds = Some(seconds);
         } else if arg == "--help" || arg == "-h" {
             println!(
-                "godhand-lab --iso <original USA disc.iso> [--catalog] [--list] [--inspect-textures] [--inspect-rooms] [--room <FST path>] [--inspect-meshes <FST path>] [--inspect-layout <FST path>] [--exclude-collection N]... [--rotation-order xyz/xzy/yxz/yzx/zxy/zyx] [--layout <FST path> | --texture <FST path> | --mesh <FST path> [--collection N --node N] | --sandbox] [--smoke-seconds 1..120] [--capture-png <new PNG path>] [--camera-eye X,Y,Z --camera-target X,Y,Z [--camera-fov 10..120]] [--view-size W,H] [--static-colors]\nViews require --features viewer. Mesh view is local; layout view applies explicit placement hypotheses, not verified runtime scene activation. No game lighting. Multiaxis placement requires an explicit rotation order. Game assets stay in your own ISO."
+                "godhand-lab --iso <original USA disc.iso> [--catalog] [--list] [--inspect-textures] [--inspect-rooms] [--room <FST path>] [--inspect-meshes <FST path>] [--inspect-layout <FST path>] [--exclude-collection N]... [--rotation-order xyz/xzy/yxz/yzx/zxy/zyx] [--layout <FST path> | --texture <FST path> | --mesh <FST path> [--collection N --node N] | --sandbox] [--smoke-seconds 1..120] [--capture-png <new PNG path>] [--camera-eye X,Y,Z --camera-target X,Y,Z [--camera-fov 10..120] [--camera-aspect 0.25..4]] [--view-size W,H] [--static-colors] [--backface-culling]\nViews require --features viewer. Mesh view is local; layout view applies explicit placement hypotheses, not verified runtime scene activation. No game lighting. Multiaxis placement requires an explicit rotation order. Game assets stay in your own ISO."
             );
             return Ok(());
         } else {
@@ -185,24 +191,28 @@ fn run() -> Result<(), Box<dyn Error>> {
     if capture_png.is_some() && smoke_seconds.is_none_or(|v| v < 10) {
         return Err("--capture-png requires --smoke-seconds 10..120 and a viewer mode".into());
     }
-    if static_colors && mesh_path.is_none() && layout_path.is_none() {
-        return Err("--static-colors requires --mesh or --layout".into());
+    if (static_colors || backface_culling) && mesh_path.is_none() && layout_path.is_none() {
+        return Err("--static-colors / --backface-culling require --mesh or --layout".into());
     }
     let camera_pose = match (camera_eye, camera_target) {
         (Some(eye), Some(target)) => {
             if mesh_path.is_none() && layout_path.is_none() {
                 return Err("explicit camera requires --mesh or --layout".into());
             }
-            Some(godhand_engine::inspection_camera::InspectionCamera::new(
+            let mut camera = godhand_engine::inspection_camera::InspectionCamera::new(
                 eye,
                 target,
                 camera_fov.unwrap_or(45.),
-            )?)
+            )?;
+            if let Some(aspect) = camera_aspect {
+                camera = camera.with_projection_aspect(aspect)?;
+            }
+            Some(camera)
         }
-        (None, None) if camera_fov.is_none() => None,
+        (None, None) if camera_fov.is_none() && camera_aspect.is_none() => None,
         _ => {
             return Err(
-                "camera eye and target must be provided together; FOV requires a pose".into(),
+                "camera eye and target must be provided together; FOV/aspect require a pose".into(),
             );
         }
     };
@@ -316,6 +326,7 @@ fn run() -> Result<(), Box<dyn Error>> {
                     camera_pose,
                     view_size,
                     static_colors,
+                    backface_culling,
                 )?;
                 #[cfg(not(feature = "viewer"))]
                 return Err(
@@ -341,6 +352,7 @@ fn run() -> Result<(), Box<dyn Error>> {
                 camera_pose,
                 view_size,
                 static_colors,
+                backface_culling,
             )?;
             #[cfg(not(feature = "viewer"))]
             return Err("rebuild with --features viewer to display the decoded mesh".into());
@@ -383,6 +395,7 @@ fn run() -> Result<(), Box<dyn Error>> {
                 camera_pose,
                 view_size,
                 static_colors,
+                backface_culling,
             )?;
             #[cfg(not(feature = "viewer"))]
             return Err("rebuild with --features viewer to display the decoded texture".into());
@@ -398,6 +411,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             camera_pose,
             view_size,
             static_colors,
+            backface_culling,
         )?;
         #[cfg(not(feature = "viewer"))]
         return Err("rebuild with --features viewer to open the synthetic sandbox".into());

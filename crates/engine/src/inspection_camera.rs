@@ -61,6 +61,7 @@ pub struct InspectionCamera {
     right: [f64; 3],
     up: [f64; 3],
     fov: f32,
+    projection_aspect: Option<f32>,
 }
 
 impl InspectionCamera {
@@ -93,7 +94,23 @@ impl InspectionCamera {
             right,
             up: cross(right, forward),
             fov,
+            projection_aspect: None,
         })
+    }
+
+    /// Explicit diagnostic projection aspect, independent of framebuffer dimensions.
+    pub fn with_projection_aspect(mut self, aspect: f32) -> Result<Self, PlacementError> {
+        if !aspect.is_finite() || !(0.25..=4.0).contains(&aspect) {
+            return Err(PlacementError(
+                "camera aspect must be finite within 0.25..4.0",
+            ));
+        }
+        self.projection_aspect = Some(aspect);
+        Ok(self)
+    }
+
+    pub fn projection_aspect(self) -> Option<f32> {
+        self.projection_aspect
     }
 
     pub fn eye(self) -> [f32; 3] {
@@ -116,7 +133,11 @@ impl InspectionCamera {
             return None;
         }
         let half_y = (f64::from(self.fov) * std::f64::consts::PI / 360.).tan() * depth;
-        let half_x = half_y * f64::from(size[0]) / f64::from(size[1]);
+        let aspect = self
+            .projection_aspect
+            .map(f64::from)
+            .unwrap_or(f64::from(size[0]) / f64::from(size[1]));
+        let half_x = half_y * aspect;
         Some([
             (dot(relative, self.right) / half_x + 1.) * f64::from(size[0]) * 0.5,
             (1. - dot(relative, self.up) / half_y) * f64::from(size[1]) * 0.5,
@@ -175,6 +196,26 @@ mod tests {
         assert!(c.project([0., 0., -2001.], [512, 448]).is_none());
         assert!(c.project([f32::INFINITY, 0., -10.], [512, 448]).is_none());
     }
+    #[test]
+    fn explicit_aspect_is_bounded_and_independent_of_framebuffer() {
+        let automatic = InspectionCamera::new([0.; 3], [0., 0., -1.], 90.).unwrap();
+        assert_eq!(automatic.projection_aspect(), None);
+        for invalid in [0., -1., 0.249, 4.001, f32::NAN, f32::INFINITY] {
+            assert!(automatic.with_projection_aspect(invalid).is_err());
+        }
+        for valid in [0.25, 4.] {
+            assert!(automatic.with_projection_aspect(valid).is_ok());
+        }
+        let explicit = automatic.with_projection_aspect(2.).unwrap();
+        assert_eq!(explicit.projection_aspect(), Some(2.));
+        for size in [[512, 448], [1024, 448], [448, 512]] {
+            let p = explicit.project([10., 0., -10.], size).unwrap();
+            assert!((p[0] / f64::from(size[0]) - 0.75).abs() < 1e-7);
+            assert!((p[1] / f64::from(size[1]) - 0.5).abs() < 1e-7);
+        }
+        assert!((automatic.project([10., 0., -10.], [512, 448]).unwrap()[0] - 480.).abs() < 1e-7);
+    }
+
     #[test]
     fn opposite_heading_flips_world_x_not_screen_right() {
         let c = InspectionCamera::new([1., 2., 3.], [1., 2., 4.], 90.).unwrap();

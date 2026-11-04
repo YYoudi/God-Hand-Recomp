@@ -5,16 +5,30 @@ use bevy::{
     pbr::{MaterialPipeline, MaterialPipelineKey},
     prelude::*,
     render::render_resource::{
-        AsBindGroup, RenderPipelineDescriptor, SpecializedMeshPipelineError,
+        AsBindGroup, Face, RenderPipelineDescriptor, SpecializedMeshPipelineError,
     },
     shader::ShaderRef,
 };
 
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone)]
+#[bind_group_data(SourceColorKey)]
 pub struct SourceColorMaterial {
     #[texture(0)]
     #[sampler(1)]
     pub texture: Handle<Image>,
+    pub backface_culling: bool,
+}
+
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
+pub struct SourceColorKey {
+    backface_culling: bool,
+}
+impl From<&SourceColorMaterial> for SourceColorKey {
+    fn from(material: &SourceColorMaterial) -> Self {
+        Self {
+            backface_culling: material.backface_culling,
+        }
+    }
 }
 
 fn shader() -> ShaderRef {
@@ -37,9 +51,9 @@ impl Material for SourceColorMaterial {
         _pipeline: &MaterialPipeline,
         descriptor: &mut RenderPipelineDescriptor,
         _layout: &MeshVertexBufferLayoutRef,
-        _key: MaterialPipelineKey<Self>,
+        key: MaterialPipelineKey<Self>,
     ) -> Result<(), SpecializedMeshPipelineError> {
-        descriptor.primitive.cull_mode = None;
+        descriptor.primitive.cull_mode = key.bind_group_data.backface_culling.then_some(Face::Back);
         Ok(())
     }
 }
@@ -49,5 +63,28 @@ impl Plugin for SourceColorPlugin {
     fn build(&self, app: &mut App) {
         embedded_asset!(app, "source_color.wesl");
         app.add_plugins(MaterialPlugin::<SourceColorMaterial>::default());
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn culling_is_in_pipeline_key_without_changing_shader_bindings() {
+        let texture = Handle::default();
+        let off = SourceColorMaterial {
+            texture,
+            backface_culling: false,
+        };
+        let on = SourceColorMaterial {
+            backface_culling: true,
+            ..off.clone()
+        };
+        let off_key = SourceColorKey::from(&off);
+        let on_key = SourceColorKey::from(&on);
+        assert_ne!(off_key, on_key);
+        assert!(!off_key.backface_culling);
+        assert!(on_key.backface_culling);
+        assert_eq!(off.texture, on.texture);
     }
 }

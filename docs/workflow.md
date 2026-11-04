@@ -91,3 +91,11 @@ Source-color investigation: read specs/static-colors-v1.md. Use Layout
 -StaticColors only as an explicit experiment and hold the previous camera fixed.
 Default/off output, RGB component conformance and full game fidelity are separate
 checks. Never publish texture inspection extracts or raw draw/state traces.
+
+
+For observation-derived static views, read observed-projection-2026-11-04.md.
+Layout accepts -CameraAspect and -BackfaceCulling explicitly; neither changes the
+default. Distinguish common geometry holdout residuals from image fidelity.
+Check also runs `cargo test -p godhand-lab --features viewer --locked` for synthetic
+projection/resize/material-key tests without opening a disc or GPU. These tests
+are also enabled on the standard free public runner; no new cache/artifact service.

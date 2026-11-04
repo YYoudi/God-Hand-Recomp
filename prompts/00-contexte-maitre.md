@@ -99,3 +99,21 @@ program labels, texture extracts and synthetic probe images remain PRIVATE.
 Some color-mode shadows are excessively dark; never mark rendering parity done
 or silently switch the default based on this experiment. Camera/placement and
 original runtime material/light/fog/alpha/filter/pass semantics remain open.
+
+
+Observation-backed projection increment, 2026-11-04: read
+specs/inspection-camera-v1.md and docs/observed-projection-2026-11-04.md.
+The earlier one-facade manually fitted camera is historical, not a validated pose.
+Passive GS UV-candidate matching now supports one common projection across
+whole-resource holdouts (862/865 points within1px; geometric residual, NOT image
+fidelity). All86 matched resources have unit scales and ZERO rotations: this
+cannot verify general Euler order or nonuniform scaling. --camera-aspect separates
+projection aspect from framebuffer aspect; --backface-culling is explicit only.
+The first new-pose two-sided captures were fully occluded; retain them privately.
+A texture-mirror identity attempt failed and must not be used as binding evidence.
+Defaults stay unchanged, including two-sided inspection. Source colors, sky,
+lighting/fog/alpha/filter/passes, scene activation, camera motion and gameplay
+remain incomplete. 57 base Rust +3 additional viewer-only tests;25 Python tests.
+Run viewer-only synthetic adapter tests as well as locked base tests/checks.
+Next validate a second retail viewpoint without per-object fitting. Private
+raw data and opaque trace program labels remain excluded from publication.

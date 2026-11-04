@@ -50,3 +50,38 @@ Identify a repeatable landmark against the retail reference. Manual pose matchin
 is an observation aid: do not call it the recovered game camera, general runtime
 transform order or pixel-perfect material/lighting parity. Keep unmatched/partial
 comparisons labeled and keep the prototype separate.
+
+
+## Explicit projection aspect (4 November observation increment)
+
+Add optional `--camera-aspect RATIO` with a complete explicit pose. It means
+projection width/height, not physical viewport width/height. Accept finite
+0.25..4.0 only; absent preserves existing viewport-driven projection exactly.
+`InspectionCamera::with_projection_aspect` validates the override. CPU projection
+uses half-width = half-height * projection aspect; output pixels keep the actual
+viewport dimensions. Do not resize, crop or warp screenshots after rendering.
+
+The Bevy adapter must retain the selected aspect through automatic projection
+updates, including resizing. Delegate normal perspective matrix, subview and
+frustum calculations to the pinned Bevy API; only the automatic aspect update
+is overridden. Check projected synthetic world points against the GPU-free oracle
+at multiple viewport sizes. No state is inferred or silently enabled for a game.
+
+Provenance: passive GS vertex output and UV correspondence, followed by a private
+robust projective fit with whole resources withheld. It suggests approximately
+4:3 projection on a 512x448 framebuffer for one first-fight snapshot, not a universal
+video mode, display pixel aspect, all-scene camera model or gameplay camera logic.
+All raw UV/vertex correspondences, matrices and game texture dumps stay private.
+Document candidate collisions/outliers; do not describe fitted-point residuals
+as image-fidelity scores or independent camera-motion validation.
+
+
+The first observation-derived pose exposed a separate failure: the unchanged
+two-sided inspection rendered an occluding surface from its rear. Retain those
+failed original PNGs locally. Add explicit `--backface-culling` for mesh/layout
+inspection only, default off; this is not an inferred per-resource visibility
+rule. Use conventional Bevy CCW front faces and reject back faces in both texture-
+only and source-color materials. Keep the same geometry, indices and camera.
+Do not skip an offending collection to improve the image. Test pipeline choice,
+repeat baseline/off output, and actually inspect a new bounded capture. Observed
+emitted triangle winding supports testing this, not global one-sided materials.

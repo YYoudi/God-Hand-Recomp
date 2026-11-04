@@ -113,3 +113,9 @@ An optional `--static-colors` mode for mesh/layout inspection consumes raw sourc
 vertex colors using a byte-domain modulation experiment. It is **not complete
 game lighting or GS state replay** and remains disabled by default. See the
 [source-color evidence and before/after limits](docs/source-colors-2026-11-04.md).
+
+
+The [latest static-projection observation](docs/observed-projection-2026-11-04.md)
+compares whole-resource holdouts and renders the street with explicit inspection
+aspect/culling. It does not establish camera motion, general SCR composition or
+full rendering fidelity; previous original comparisons are retained.

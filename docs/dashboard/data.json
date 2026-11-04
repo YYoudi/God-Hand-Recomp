@@ -4,13 +4,13 @@
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/God-Hand-Recomp",
   "engine": "Rust + Bevy 0.20.1",
-  "phase": "Source-color and render-state investigation",
+  "phase": "Observation-backed static placement and projection",
   "playable": false,
-  "next": "Use fixed-camera, depth-separated landmarks and observed per-draw state to distinguish placement errors from missing dynamic lighting, fog, alpha/filtering and postprocessing. Do not refit each object or make experimental colors the default.",
+  "next": "Validate a second retail viewpoint with whole-resource holdouts. Separate camera motion, general transforms, scene activation and missing material/light/fog/alpha/filter/pass state.",
   "validation": {
-    "tests": 56,
+    "tests": 60,
     "bevy_check": "pass",
-    "viewer_runtime": "Opt-in source-color mode captured with the previous camera fixed. Default output is byte-identical to its earlier baseline. Two private synthetic GPU probes validate RGB arithmetic and screen-linear interpolation, not game fidelity.",
+    "viewer_runtime": "57 base Rust tests plus 3 additional viewer-only tests pass. An observation-derived inspection pose, explicit 4:3 projection and back-face culling render the static street. Previous default/off and new workflow replay are byte-repeatable. No gameplay or complete renderer.",
     "gameplay": "Not implemented"
   },
   "milestones": [
@@ -192,7 +192,7 @@
           "title": "Geometry and scenes",
           "status": "in_progress",
           "area": "graphics",
-          "acceptance": "Load hierarchy, meshes, materials and positions from ISO. Diagnostic S/R/T placement and explicit resource selection now render a candidate overview. Actual scene association, runtime transform order, active-resource selection and reference-camera fidelity remain pending."
+          "acceptance": "Load hierarchy, meshes, materials and positions from ISO. One first-fight observation now supports static zero-rotation/unit-scale placement across depths, with whole-resource holdouts. General transforms, active resources, hierarchy, other viewpoints and runtime camera behavior remain pending."
         },
         {
           "id": "R05",
@@ -443,6 +443,23 @@
   "updates": [
     {
       "date": "2026-11-04",
+      "title": "One projection for several street landmarks",
+      "summary": "Passive vertex observations give a shared inspection pose across near and distant static resources. The street renders without moving individual objects; camera behavior and the renderer are still incomplete.",
+      "changes": [
+        "Compared bounded source UV candidates to passive GS output, with a common projective fit and whole resources withheld.",
+        "Separated projection aspect from framebuffer dimensions; added explicit back-face culling after a rear surface blocked the first two-sided render.",
+        "Captured the real street without moving objects. Retained every earlier comparison and the failed originals locally.",
+        "Added CPU/Bevy matrix and resize tests; free public CI also runs viewer-only synthetic tests without a disc or GPU."
+      ],
+      "validation": "57 base Rust tests plus 3 additional viewer-only tests, 25 Python tests, fmt, locked build/check and five pre-ISO CLI error cases pass. A shared fit predicts 862/865 held-out candidate points within one pixel (median 0.024 px); this is geometric observation consistency, not image fidelity. Traced/control native output and new workflow replay remain byte-identical; default/off output is preserved.",
+      "limits": "Only one snapshot and unit-scale/zero-rotation matched resources. No general Euler order, camera motion, complete rendering or game logic. The first two-sided render was occluded; a texture-mirror identity test failed and was not used. Sky, actors/HUD, some props and exact lighting/fog/alpha/filter/passes remain missing or wrong.",
+      "link": {
+        "label": "Projection evidence, holdouts and failed trials",
+        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/observed-projection-2026-11-04.md"
+      }
+    },
+    {
+      "date": "2026-11-04",
       "title": "Reading source colors, not yet full game lighting",
       "summary": "The viewer can now read the mesh color stream and use an explicit modulation experiment. The camera stays fixed; some facades darken, but shadow regions expose remaining rendering errors.",
       "changes": [
@@ -646,6 +663,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-04-observed-projection.jpg",
+      "date": "2026-11-04",
+      "source": "Unretouched browser screenshot of the actual local journal; thumbnails show reviewed registered reference/Bevy originals",
+      "caption": "Shared static projection with explicit aspect and back-face culling"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-04-source-colors.jpg",
       "date": "2026-11-04",
       "source": "Unretouched browser screenshot of the actual local journal; thumbnails use reviewed registered reference/Bevy originals",
@@ -741,16 +765,62 @@
   ],
   "progress": {
     "goal": "Establish SCR transform composition and compare actual retail room placement in the independent Rust/Bevy engine.",
-    "baseline_revision": "c667fd2124ee8ef1a533a5b900eeb0cf61a3e78d",
-    "last_verified": "Development worktree: 56 Rust / 25 Python synthetic tests; native source-color scene captured at unchanged pose. Seven synthetic GPU samples match the CPU oracle exactly. Default-off output and explicit color-mode replay are byte-repeatable. Complete r100 SCP span matches snapshot data; whole DAT does not. Newly rendered traced/control reference frames match byte-for-byte.",
+    "baseline_revision": "3e42c668cfb65fdb96cbcb05e4ed7b2eeb85f996",
+    "last_verified": "Development worktree: 57 base Rust + 3 additional viewer-only tests, 25 Python tests, locked build/check. Passive GS observer leaves newly rendered control frame unchanged. Shared projective fit predicts 862/865 held-out UV-candidate points within one pixel; held median 0.024 px. This measures GS geometry consistency, not image fidelity. Explicit aspect/culling render the street; old default and new workflow repeat are byte-identical.",
     "open_questions": [
-      "Asset residency is not proof every SCR child is active or drawn. General SCR runtime composition and other-depth placement are unverified.",
-      "Source colors are not the final lit GS colors. Dynamic lighting, fog, alpha state, filtering, multiple texture functions and passes remain incomplete.",
-      "The opt-in color view has excessively dark shadow regions. Original camera, gameplay and prototype debug tools remain unimplemented/unverified."
+      "All 86 matched resources have unit scales and zero rotations: general Euler order, nonuniform scales, hierarchy, activation and other scenes remain unresolved.",
+      "The inferred projection explains one snapshot, not camera-follow behavior or all PS2 video modes. Global back-face culling is not a proven per-material rule.",
+      "Sky, actors, HUD, some props and full light/fog/alpha/filter/pass behavior remain missing or wrong. No gameplay."
     ],
-    "next_experiment": "Use fixed-camera, depth-separated landmarks and observed per-draw state to distinguish placement errors from missing dynamic lighting, fog, alpha/filtering and postprocessing. Do not refit each object or make experimental colors the default."
+    "next_experiment": "Validate a second retail viewpoint with whole-resource holdouts. Separate camera motion, general transforms, scene activation and missing material/light/fog/alpha/filter/pass state."
   },
   "comparisons": [
+    {
+      "id": "2026-11-04-observed-projection",
+      "date": "2026-11-04",
+      "title": "A shared projection across several depths",
+      "feature": "R04",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "scenario": "One observation-derived inspection pose and a 4:3 projection on an unchanged 512 × 448 framebuffer. All objects retain their previous positions. Explicit back-face culling and experimental source colors are enabled; collections 27/28 remain manually excluded.",
+      "reference": {
+        "caption": "Retail first fight, newly rendered capture frame 4503; traced/control pixels identical",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T20:18:44.359477+00:00",
+        "original": {
+          "path": "media/033e25087ed4fe723f77b608804cb4af404c25c6e8671f4a743cbf18ad355dad.ppm",
+          "sha256": "033e25087ed4fe723f77b608804cb4af404c25c6e8671f4a743cbf18ad355dad"
+        },
+        "path": "media/edace008cb069c5c1a80cb803c1bf71aab90a7740ad57ee2cb3f91d3941cc9f5.png",
+        "sha256": "edace008cb069c5c1a80cb803c1bf71aab90a7740ad57ee2cb3f91d3941cc9f5",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "Observed projection and source colors; incomplete renderer",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / Windows Vulkan",
+        "revision": "uncommitted",
+        "captured_at": "2026-11-04T20:26:57.529504+00:00",
+        "path": "media/981495f27c6ca827cb235386310fba305b8d5101ca5aea669eaf70443102fd92.png",
+        "sha256": "981495f27c6ca827cb235386310fba305b8d5101ca5aea669eaf70443102fd92",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "The saloon, left foreground facade and right storefront now share a single inferred projection rather than a pose fitted only to the saloon. No individual object or image was moved or warped.",
+        "The first run at this pose was blocked by the back of an inspection surface. Those failed originals remain local; explicit back-face culling exposes the street without deleting a collection.",
+        "Whole-resource held-out GS geometry supports the placement/projection hypothesis in this snapshot. This is not an image-fidelity score or recovered camera-follow logic."
+      ],
+      "limits": [
+        "Native draw observation is labeled frame 4502; the captured newly rendered framebuffer is labeled 4503. This is a third-party backend reference, not a console capture.",
+        "The 86 UV-matched resources have unit scales and zero rotations. This does not validate general Euler order, nonuniform scales, parent transforms or other scenes.",
+        "Source colors are not final lighting. Sky, dynamic actors, HUD, some props, alpha/filter/fog/light and pass semantics remain missing or incorrect. Global back-face culling is diagnostic, not proven per-material behavior.",
+        "The earlier manually fitted comparisons remain unchanged. Projection aspect is explicit, not a new default or universal PS2 display/pixel-aspect claim."
+      ]
+    },
     {
       "id": "2026-11-04-source-colors",
       "date": "2026-11-04",

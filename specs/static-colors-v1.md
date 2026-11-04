@@ -61,3 +61,9 @@ must check actual output bytes against the CPU oracle; it is not a game scene
 or a public fidelity result. Build and capture the real retail scene with the
 previous camera fixed, preserve earlier originals, and compare against the same
 reference. Record improvements and regressions, not an invented quality score.
+
+
+The later explicit `--backface-culling` inspection option changes only pipeline
+culling in this material and the texture-only material. It is part of pipeline
+specialization identity, not a shader texture-binding change or an inferred
+per-material game rule. Default remains two-sided. See inspection-camera-v1.md.

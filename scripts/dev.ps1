@@ -8,8 +8,10 @@ param(
     [string]$CameraEye = '',
     [string]$CameraTarget = '',
     [double]$CameraFov = 45.0,
+    [string]$CameraAspect = '',
     [string]$ViewSize = '1280,720',
     [switch]$StaticColors,
+    [switch]$BackfaceCulling,
     [string]$AssetPath = 'etc/subscr/face_hm00.tm2',
     [string]$MeshPath = 'st1/r100.dat',
     [ValidateRange(0, 4095)][int]$Collection = 23,
@@ -54,6 +56,7 @@ try {
             Run-Cargo @('fmt', '--all', '--', '--check')
             Run-Cargo @('test', '--workspace', '--locked', '--jobs', "$Jobs")
             Run-Cargo @('check', '-p', 'godhand-lab', '--features', 'viewer', '--locked', '--jobs', "$Jobs")
+            Run-Cargo @('test', '-p', 'godhand-lab', '--features', 'viewer', '--locked', '--jobs', "$Jobs")
             Run-Tool python @('scripts/dashboard.py', '--check')
             Run-Tool python @('-m', 'unittest', 'discover', '-s', 'scripts', '-p', 'test_*.py')
         }
@@ -86,6 +89,8 @@ try {
             if ($RotationOrder) { $options += @('--rotation-order', $RotationOrder) }
             foreach ($ordinal in $ExcludeCollections) { $options += @('--exclude-collection', "$ordinal") }
             if ($CapturePng) { $options += @('--capture-png', $CapturePng) }
+            if ($CameraAspect) { $options += @('--camera-aspect', $CameraAspect) }
+            if ($BackfaceCulling) { $options += '--backface-culling' }
             if ($StaticColors) { $options += @('--static-colors') }
             $options += @('--view-size', $ViewSize)
             if ($CameraEye -or $CameraTarget) { $options += @('--camera-eye', $CameraEye, '--camera-target', $CameraTarget, '--camera-fov', $CameraFov.ToString([System.Globalization.CultureInfo]::InvariantCulture)) }
