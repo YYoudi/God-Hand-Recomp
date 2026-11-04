@@ -2,7 +2,9 @@
 
 Window: night of 3–4 November 2026, Europe/Paris. Research and implementation stop
 at 2026-11-04 08:00 local (07:00 UTC). This is a bounded work session, not a promise
-to recreate the whole game overnight. This prompt can be replayed in the same chat.
+to recreate the whole game overnight. This historical window has ended. Do not replay its deadline as a new schedule.
+Later explicitly renewed goals use their own scope; no old automation is
+implicitly reactivated. Persistent tracking now follows docs/progress-tracking.md.
 
 ## Mission
 
@@ -100,13 +102,13 @@ After each feature or substantial finding, update docs/dashboard/data.json in
 English with actual changes, tests and limitations; regenerate the roadmap and
 blog using scripts/dashboard.py. Keep the short, modest journal design. Update
 AGENTS.md, README and master context when their state becomes stale. Capture the
-actual journal and register its provenance. Game captures stay local; publish
-only original journal images under the existing policy.
+actual journal and register its provenance. Unselected game captures stay local; selected unchanged reference/Bevy pairs
+follow docs/progress-tracking.md.
 
 Stage explicit original source/doc files. Run scripts/check_public_tree.py,
 scripts/dashboard.py --check and git diff --cached --check; inspect the staged
 diff. Keep ISO, BIOS, ELF, IRX, AFS, game assets, saves, generated translations,
-research backends, private inventories and gameplay captures out of Git, issues,
+research backends, private inventories and unselected gameplay captures out of Git, issues,
 releases and CI artifacts. MIT applies to original project code only. Push reviewed
 increments to the existing public repository and verify the matching CI commit
 and free main:/docs GitHub Pages deployment. If checks fail, fix or narrow the

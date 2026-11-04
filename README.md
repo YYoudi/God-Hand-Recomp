@@ -2,7 +2,9 @@
 
 An independent **Rust + Bevy** engine reimplementation for **God Hand (USA, PS2)**.
 Original code is public under MIT. Each user must provide their own ISO.
-No game code, models, textures, audio or levels are distributed.
+No game code, source models, textures, audio or level files are distributed.
+Selected rendered reference/Bevy screenshots may illustrate progress; game imagery
+remains owned by its rights holders and is not covered by MIT.
 
 **Status: early foundations. The game is not playable in this engine.**
 The read-only ISO/FST/AFS readers can locate and decode a narrow TIM2 texture subset.
@@ -10,6 +12,7 @@ The texture inspection view reads your ISO; the sandbox contains original primit
 
 - [Development journal](https://yyoudi.github.io/God-Hand-Recomp/)
 - [Roadmap](ROADMAP.md) · [Workflow](docs/workflow.md)
+- [Progress tracking and original reference/Bevy comparisons](docs/progress-tracking.md)
 - [First Rust milestone and adaptive workflow](docs/initialization-plan.md)
 - [First game-data map and next fidelity experiments](docs/game-structure-2026-11-03.md)
 - [Room-container and node metadata findings](docs/room-containers-2026-11-03.md)
@@ -61,7 +64,8 @@ and MinGW on PATH, or install Visual C++ Build Tools and the Windows SDK for MSV
 | crates/: reader, original logic, Bevy application | ISO, BIOS, ELF, IRX, AFS |
 | specs/: contracts with provenance | Translated game code, game binaries, dumps |
 | docs/: architecture, roadmap, journal | Extracted data, Ghidra projects, saves |
-| scripts/: tracking and validation tools | Research backends, gameplay captures |
+| scripts/: tracking and validation tools | Research backends, unselected captures |
+| Reviewed original reference/Bevy screenshot pairs | Source assets, dumps and private capture receipts |
 
 Static recompilation remains **local research**. Its generated code does not feed
 the public engine. Translating MIPS into C++ does not establish a clean-room implementation.
@@ -79,3 +83,10 @@ CI uses standard public Ubuntu runners without caches or custom artifact uploads
 Update docs/dashboard/data.json, run `python scripts/dashboard.py`, capture visual
 journal changes, then check staged files with `python scripts/check_public_tree.py`.
 Public resources are in English; conversations with the project owner remain in French.
+
+Progress is recorded after each feature or substantial finding, not estimated as
+a percentage. Public tasks, journal and comparison metadata live in
+`docs/dashboard/data.json`; private resumable checkpoints retain exact commands
+and evidence. Visual comparisons publish the original reference and Bevy files
+side by side with full-resolution links, provenance and explicit differences.
+Missing or unmatched reference evidence is reported, never manufactured.

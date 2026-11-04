@@ -30,9 +30,15 @@ and meet applicable obligations. No research-backend code is currently copied he
 ## Publication
 
 Never publish discs, BIOS, PS2 executables, IRX, data archives, translated game C++,
-linked game binaries, memory dumps, Ghidra projects, saves or captures containing
-game assets. Public captures show only our journal, without game logos or art.
-Gameplay captures remain under ignored recomp/; publication would require a separate decision.
+linked game binaries, memory dumps, Ghidra projects, saves or source assets.
+
+Owner decision, 2026-11-04: selected rendered reference/Bevy screenshots may now
+be published for comparison under docs/progress-tracking.md. This supersedes the
+earlier journal-only image rule, not the game-data exclusions. Original files
+are registered with provenance and hashes; unselected captures remain private.
+These images are not MIT, and the owner request is neither rights-holder
+permission nor legal certification. No source textures, models or game code
+may be published under this screenshot exception.
 
 Git exclusions and CI reduce accidental disclosure risk.
 They do not perform an exhaustive assessment of copyright ownership.

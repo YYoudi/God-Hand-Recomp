@@ -16,7 +16,8 @@ CUE without editing the originals. Prototype debug controls remain unverified.
 
 A third-party ps2-native-recomp trial reached the first fight and resumed a runtime
 snapshot. See docs/native-evaluation-2026-11-03.md and docs/native-backend-outputs.md.
-Game artifacts and captures stay local; this is not Bevy-engine progress.
+Game artifacts stay local; selected comparison screenshots now follow
+docs/progress-tracking.md. This backend result is not Bevy-engine progress.
 
 Foundation: crates/disc (read-only ISO), crates/engine (original simulation),
 crates/app (CLI and optional Bevy sandbox). The game is not playable in this engine.
@@ -32,7 +33,7 @@ specs/fst-catalog-v1.md and specs/tim2-indexed-v1.md. Do not start subagents unt
 the next scene contracts and tests establish meaningful independent work boundaries.
 New room-data boundary: DAT/SCP catalog access covers 94/93 retail containers and
 1,708 nested sections. SCR metadata on three candidates validates 156/232/45 nodes
-and signed MDB references; geometry is not decoded. Continue from
+and signed MDB references; static geometry decoding is described below. Continue from
 docs/room-containers-2026-11-03.md and docs/local/overnight-checkpoint.md. Source
 research uses Chihuahua's independent MIT format patterns, not original game code.
 Static MDB and TM3/TIM3 decoding now validate 433 meshes / 158 bank images on the
@@ -44,3 +45,17 @@ After each session, update docs/dashboard/data.json with actual changes, checks
 and limitations. Run python scripts/dashboard.py. Capture visual journal changes.
 Check staged files with python scripts/check_public_tree.py.
 Publish through free Pages from main:/docs without paid external hosting.
+
+Owner update, 2026-11-04: read docs/progress-tracking.md and the current
+`progress` / `comparisons` fields in docs/dashboard/data.json on every resume.
+Maintain docs/local/progress-checkpoint.md at each meaningful boundary, with
+verified revision, commands/results, evidence, failures and the next experiment.
+Publish modest English updates after features and substantial findings. Keep
+CPU tests, linked builds, actual rendering and fidelity validation distinct.
+Selected original reference and Bevy PNG pairs are now authorized for public
+GitHub/Pages comparison, unchanged with hashes, timestamps, runtime/revision,
+profile, same-subject alignment and visible limitations. This replaces the
+old journal-only image restriction, not the ISO/code/asset exclusions. MIT does
+not cover game imagery and this is not a rights-holder/legal certification.
+Do not invent a comparison or conceal mismatched camera/state. Register and
+prepare pairs with scripts/comparisons.py; publish only approved media.

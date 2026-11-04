@@ -1,6 +1,8 @@
 # Independent-engine workflow
 
-Read clean-room.md and architecture.md. Historical ghidra_analyze_retail.sh and
+Read clean-room.md, architecture.md and progress-tracking.md.
+On resume reconcile the goal, Git state, dashboard data and the ignored
+docs/local/progress-checkpoint.md; update that checkpoint at useful boundaries. Historical ghidra_analyze_retail.sh and
 prompts 01–05 concern local research; their translations must not enter the engine.
 Keep public resources in English and conversations with the owner in French.
 
@@ -46,7 +48,9 @@ python scripts/dashboard.py --check
 ```
 
 After a visual change, capture the displayed journal and record date, provenance
-and caption. Gameplay images remain local. Historical French journal captures can
+and caption. For visual features also prepare reviewed original Reference / Bevy
+pairs with hashes and alignment under progress-tracking.md; do not invent a pair
+when reference evidence is missing. Unselected gameplay images remain local. Historical French journal captures can
 remain as explicitly labeled archives; new captures use the English page.
 Keep static images, third-party results and independent-engine gameplay distinct.
 
@@ -65,4 +69,5 @@ or custom deployment workflow is used. Checks run on standard public Ubuntu runn
 without caches or artifact uploads. Verify CI and the published URL after pushing.
 
 Discs, extractions, tools, Ghidra projects, translated output and gameplay captures
-stay local. Before prototype/diff work, read unpublished docs/prototype-tcrf-notes.md.
+stay local, except selected original rendered comparison pairs registered under
+progress-tracking.md. Before prototype/diff work, read unpublished docs/prototype-tcrf-notes.md.

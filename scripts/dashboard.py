@@ -4,6 +4,7 @@ import datetime
 import json
 from html import escape
 from pathlib import Path
+from comparisons import validate_comparisons
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / 'docs/dashboard'
@@ -41,6 +42,9 @@ def render(data):
         path = (SITE / capture['path']).resolve()
         assert path.is_relative_to((SITE / 'captures').resolve()), 'Capture must stay inside captures/'
         assert path.is_file(), f'Missing capture: {path}'
+    validate_comparisons(data.get('comparisons', []), lambda path: (ROOT / path).read_bytes())
+    for pair in data.get('comparisons', []):
+        assert pair['feature'] in ids, 'Comparison feature must identify a roadmap task'
     for update in data['updates']:
         datetime.date.fromisoformat(update['date'])
         assert update['changes'] and update['validation'] and update['limits']
@@ -49,7 +53,8 @@ def render(data):
     for name in ('style.css',):
         assert (SITE / name).is_file(), f'Missing dashboard asset {name}'
     lines += ['## Outside the public repository', '',
-              'Discs, BIOS files, extracted data, translated game code, dumps and gameplay captures stay local.',
+              'Discs, BIOS files, extracted data, translated game code, dumps and unselected captures stay local.',
+              'Selected rendered reference/Bevy screenshots may be published under the [comparison protocol](docs/progress-tracking.md).',
               'See [the independent method](docs/clean-room.md) and [notices](NOTICE.md).', '']
     return '\n'.join(lines)
 
@@ -75,6 +80,27 @@ def blog(data):
         f' <small>— {escape(c["date"])} · {escape(c["source"])}</small></li>'
         for c in data['captures'])
     capture_section = f'<section><h2>Journal captures</h2><ul>{captures}</ul></section>' if captures else ''
+    pairs = []
+    for pair in data.get('comparisons', []):
+        figures = []
+        for side, label in [('reference', 'Reference'), ('bevy', 'Bevy')]:
+            item = pair[side]
+            path = escape(item['path'], quote=True)
+            caption = escape(item['caption'])
+            figures.append(f'''<figure><figcaption><strong>{label}</strong> — {caption}</figcaption>
+<a href="{path}"><img src="{path}" width="{item['width']}" height="{item['height']}" loading="lazy" alt="{label}: {caption}"></a>
+<small>{escape(item['profile'])} · {escape(item['runtime'])}<br>
+Captured {escape(item['captured_at'])} · revision {escape(item['revision'])}<br>
+<a href="{path}" download>Download unchanged original ({item['width']} × {item['height']})</a></small></figure>''')
+        observations = ''.join('<li>' + escape(s) + '</li>' for s in pair['observations'])
+        limits = ''.join('<li>' + escape(s) + '</li>' for s in pair['limits'])
+        pairs.append(f'''<article id="comparison-{escape(pair['id'], quote=True)}">
+<time datetime="{pair['date']}">{pair['date']}</time><h2>{escape(pair['title'])}</h2>
+<p>{escape(pair['scenario'])}</p><p><small>Alignment: {escape(pair['alignment'])}; feature {escape(pair['feature'])}. Not a claim of complete fidelity.</small></p>
+<div class="comparison">{''.join(figures)}</div><ul>{observations}</ul>
+<details><summary>Limits and provenance</summary><ul>{limits}</ul>
+<p>Game imagery belongs to its rights holders and is not covered by the project MIT license. Original file hashes are recorded in the public manifest.</p></details></article>''')
+    comparison_section = ('<section id="comparisons" aria-label="Reference and Bevy comparisons"><h2>Reference / Bevy</h2>' + ''.join(pairs) + '</section>') if pairs else ''
     return f'''<!doctype html>
 <html lang="en">
 <head>
@@ -98,6 +124,7 @@ def blog(data):
     <p>It is early. The game is not playable in this engine. This page records
     technical decisions, small steps and what we still need to understand.</p>
   </section>
+{comparison_section}
   <section id="journal" aria-label="Journal entries">
     {''.join(posts)}
   </section>

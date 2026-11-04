@@ -20,6 +20,31 @@ translated C++ or incompatibly licensed code into the engine. Translation or ren
 does not make code clean room. Do not claim legal certification or a formal separation
 that has not occurred. Document provenance.
 
+## Persistent progress and comparison evidence — owner decision, 2026-11-04
+
+Read docs/progress-tracking.md on every resume, together with the active goal,
+Git state, docs/dashboard/data.json and docs/local/progress-checkpoint.md.
+Maintain the local checkpoint at every useful boundary: last proven revision,
+exact commands/results, private artifact paths, unknowns, failed hypotheses,
+pending processes and the next falsifiable experiment. Public progress, tasks,
+journal and comparison registry remain in docs/dashboard/data.json.
+Distinguish observed, inferred, hypothetical, unknown and implemented/unverified;
+CPU, build, rendered integration and reference fidelity are separate gates.
+
+The owner now explicitly requests publication of selected original reference
+screenshots AND their Bevy counterparts, like the Giants comparison workflow.
+This supersedes the old journal-only image restriction, not the ISO/asset/code
+exclusions. Use reviewed, same-subject Reference / Bevy pairs, unchanged original
+PNGs, original-resolution downloads, SHA-256 filenames, timestamps, runtime and
+revision provenance, alignment and visible limitations. Do not invent a matched
+pair when a reference is missing. Before / After means named iteration revisions,
+not that Bevy is better than the original. Keep retail/prototype separate.
+Only entries validated in `comparisons` may publish to docs/dashboard/media/.
+Use scripts/comparisons.py for byte-preserving preparation; never sweep private
+evidence folders. This is the owner's publication request, not rights-holder
+permission or legal certification; game imagery is not MIT. No game pixels in
+synthetic test fixtures. Do not import Giants code, goals or app permissions.
+
 ## Workflow
 
 For the first Rust foundation, follow docs/initialization-plan.md and record material
@@ -42,8 +67,8 @@ Room data now has bounded DAT/SCP catalogs: 94 retail outer containers and 93
 nonempty SCP children (1,708 sections). SCR metadata validates 156/232/45 nodes
 on candidates r100/r101/r103, including signed backward MDB references. Read
 docs/room-containers-2026-11-03.md, specs/tagged-dat-v1.md and specs/scr-nodes-v1.md.
-Mesh payloads, actual room identities, topology, texture bindings and transform
-composition remain unverified. Public independent Chihuahua patterns are credited;
+Actual room identities, runtime transform composition and visual parity remain
+unverified; static mesh/topology/texture-bank scope is documented below. Public independent Chihuahua patterns are credited;
 do not substitute matching decompilation repositories for independent implementation.
 Static MDB flag-zero decoding and TM3/TIM3 banks now pass on the three candidates:
 433 meshes, 1,155 buffers, 102,570 vertices, 56,070 triangles and 158 bank images.
@@ -59,8 +84,9 @@ exposure includes independent MIT tool source for format semantics, no game code
 3. cargo test --workspace --locked; for Bevy, cargo check -p godhand-lab --features viewer --locked.
 4. Update tasks, journal, actual validations and limitations in docs/dashboard/data.json.
    Mark tasks done only after verification; never invent FPS or gameplay results.
-5. Capture the actual journal after visual changes. Gameplay captures stay local.
-   Register date and provenance in the manifest before staging.
+5. Capture the actual journal after visual changes. Publish selected original
+   reference/Bevy pairs under docs/progress-tracking.md; other captures stay local.
+   Register date, provenance, hashes and limitations before staging.
 6. python scripts/dashboard.py; explicitly stage public files;
    python scripts/check_public_tree.py; python scripts/dashboard.py --check.
 7. After pushing main, verify CI and Pages. Free Pages from main:/docs on github.io,

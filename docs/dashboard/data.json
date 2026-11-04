@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-03",
+  "updated": "2026-11-04",
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/God-Hand-Recomp",
   "engine": "Rust + Bevy 0.20.1",
@@ -89,6 +89,13 @@
           "status": "done",
           "area": "data",
           "acceptance": "Original header/table contract, checked ISO file views, synthetic malformed cases and owned-retail metadata-only smoke. No FST or payload decoding claimed."
+        },
+        {
+          "id": "I04",
+          "title": "Persistent progress and original comparison publication",
+          "status": "done",
+          "area": "tooling",
+          "acceptance": "Resume/checkpoint protocol, reviewed content-addressed original PNG pairs, synthetic preparation/validation tests and side-by-side HTML support. A real matched game comparison is a separate open fidelity gate."
         }
       ]
     },
@@ -435,6 +442,22 @@
   ],
   "updates": [
     {
+      "date": "2026-11-04",
+      "title": "Keeping a resumable record and original comparisons",
+      "summary": "Progress now has a persistent checkpoint protocol. Selected reference and Bevy screenshots can be published together, unchanged, with provenance and explicit differences.",
+      "changes": [
+        "Added resume instructions and a public progress record, separating observed results, hypotheses and missing evidence.",
+        "Added byte-preserving preparation of explicitly reviewed original PNG pairs, content-addressed names and hash/provenance checks.",
+        "Prepared a simple Reference / Bevy layout with links to each full-resolution original; no promotional counters or generated substitute images."
+      ],
+      "validation": "22 synthetic Python tests pass, including pair preparation without source modification, hash/CRC/dimension checks, profile separation, review requirements, duplicate rejection and escaped HTML. The baseline Rust code is unchanged; its 38 tests and viewer compilation were rechecked.",
+      "limits": "No new engine feature or fidelity result. The gallery has no pairs yet: the current isolated prop and first-fight screenshots are not a matched comparison. A same-subject reference capture is still required. The owner publication request does not license game imagery under MIT.",
+      "link": {
+        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/progress-tracking.md",
+        "label": "Progress and comparison evidence protocol"
+      }
+    },
+    {
       "date": "2026-11-03",
       "title": "A first real static prop in Bevy",
       "summary": "A well-like prop from the retail ISO now renders with its referenced textures. This is an isolated asset view; a room and its gameplay are still not reconstructed.",
@@ -572,6 +595,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-04-progress-comparisons.jpg",
+      "date": "2026-11-04",
+      "source": "Unretouched browser screenshot of the actual local English journal; no game imagery",
+      "caption": "Persistent progress and original comparison publication entry"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-03-static-prop.jpg",
       "date": "2026-11-03",
       "source": "Browser capture of the local English journal; no game imagery",
@@ -636,5 +666,17 @@
       "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/clean-room.md",
       "note": "Contracts before implementation"
     }
-  ]
+  ],
+  "progress": {
+    "goal": "Establish SCR transform composition and compare actual retail room placement in the independent Rust/Bevy engine.",
+    "baseline_revision": "c369c399673ac4f6bedc82bf175f5ae451503767",
+    "last_verified": "2026-11-04: re-ran 38 Rust tests, viewer compilation, formatting, 12 then-existing Python tests, dashboard drift and public-index guard. Baseline CI and Pages succeeded.",
+    "open_questions": [
+      "SCR rotation order and runtime translation/scale semantics remain unverified.",
+      "A matched reference capture of the isolated well-like prop is still missing.",
+      "Original camera, materials, lighting, scene activation and gameplay are not reconstructed."
+    ],
+    "next_experiment": "Test explicit SCR placement hypotheses, then capture the same retail landmark in the reference runtime and Bevy. Publish the unchanged originals with alignment limits."
+  },
+  "comparisons": []
 }

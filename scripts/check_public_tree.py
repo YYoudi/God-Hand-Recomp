@@ -3,6 +3,7 @@ from pathlib import Path, PurePosixPath
 import json
 import subprocess
 import sys
+from comparisons import MAX_IMAGE_BYTES, validate_comparisons
 
 ROOT = Path(__file__).resolve().parents[1]
 ROOT_FILES = {'.gitignore', '.gitattributes', 'AGENTS.md', 'README.md', 'LICENSE',
@@ -19,11 +20,12 @@ def problems(path, data, captures):
         errors.append('path outside public allowlist')
     if path.startswith('docs/local/') or path in {'docs/prototype-tcrf-notes.md', 'scripts/native.ps1', 'scripts/ghidra_analyze_retail.sh', 'docs/toolchains.lock.json'} or (path.startswith('prompts/0') and not path.startswith('prompts/00-')):
         errors.append('local research file')
-    if len(data) > MAX_SIZE:
-        errors.append('file larger than 1 MiB')
+    comparison_image = path.startswith('docs/dashboard/media/') and path in captures
+    if len(data) > (MAX_IMAGE_BYTES if comparison_image else MAX_SIZE):
+        errors.append('file exceeds public size limit')
     if p.suffix in {'.png', '.jpg'} and path in captures:
         if not (data.startswith(b'\x89PNG\r\n\x1a\n') if p.suffix == '.png' else data.startswith(b'\xff\xd8\xff')):
-            errors.append('invalid dashboard screenshot')
+            errors.append('invalid registered screenshot')
     elif path not in ROOT_FILES and p.suffix not in TEXT and path != 'docs/.nojekyll':
         errors.append('unsupported public file type')
     else:
@@ -55,6 +57,11 @@ def main():
             if '..' in PurePosixPath(path).parts or not path.startswith('docs/dashboard/captures/'):
                 sys.exit('Invalid capture path.')
             captures.add(path)
+        try:
+            captures.update(validate_comparisons(data.get('comparisons', []),
+                                                lambda path: git('show', ':' + path)))
+        except (ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+            sys.exit(f'Invalid staged comparison: {error}')
     failures = []
     for path in filter(None, paths):
         mode = git('ls-files', '-s', '--', path).split()[0]

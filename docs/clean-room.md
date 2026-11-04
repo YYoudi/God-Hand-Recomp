@@ -10,7 +10,8 @@ does not establish an independent implementation. Do not import it into the engi
 ## Observation → specification → implementation
 
 1. **Observe** inputs, outputs and behavior using a copy owned by the observer.
-   Keep gameplay captures, dumps and sensitive research notes local.
+   Keep raw evidence local; selected rendered comparison screenshots may be
+   published under progress-tracking.md. Dumps and sensitive notes stay private.
 2. **Specify** contracts in specs/: provenance, method, units, tolerances and uncertainty.
    No original code, decompiled pseudocode or function addresses.
 3. **Implement** from contracts and public standards, using original code and
@@ -33,7 +34,12 @@ Public: original code, fixtures created from scratch, functional contracts, orig
 documentation and journal captures. Original sandbox images require provenance review.
 
 Local only: ISO, BIOS, ELF, IRX, AFS, translated game code, Ghidra projects, dumps,
-saves and gameplay captures. Never attach them to issues, releases or CI artifacts.
+saves and unselected gameplay captures. Never attach them to issues, releases or CI artifacts.
+
+Owner decision, 2026-11-04: selected unchanged rendered reference/Bevy screenshots
+may be published through the reviewed comparison manifest. This is a narrow
+exception, not source-asset redistribution, rights-holder permission or a legal
+certification. Game imagery is not MIT. See [the protocol](progress-tracking.md).
 
 CI reduces disclosure risk; it does not determine code ownership.
 Every contribution declares provenance and preserves notices. See NOTICE.md.
