@@ -7,7 +7,7 @@ Updated: 2026-11-04. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Check independent depth-separated landmarks without retuning the manually fitted camera; test remaining placement and material-state hypotheses rather than treating one sign alignment as full fidelity.
+Next useful evidence: Use fixed-camera, depth-separated landmarks and observed per-draw state to distinguish placement errors from missing dynamic lighting, fog, alpha/filtering and postprocessing. Do not refit each object or make experimental colors the default.
 
 ## M0 — Public foundations
 
@@ -55,7 +55,7 @@ Dependencies: M1.
 | --- | --- | --- | --- |
 | R01 | Bevy viewer foundation | Done | Original primitive viewer compiled and rendered on Windows/Vulkan with bounded smoke exit; not a game scene. |
 | R02 | Window and GPU diagnostics | Done | Verify local execution, readable GPU errors and original sandbox capture. |
-| R03 | Textures and materials | In progress | Indexed TIM2 and observed linear/GS-transfer TIM3 profiles decode, with material ordinals bound to TM3 banks. Runtime UV/color/blending parity, other palettes and animated materials remain pending. |
+| R03 | Textures and materials | In progress | Indexed texture/bank decoding and raw MDB source colors are implemented. An opt-in byte-domain modulation shader passes synthetic GPU checks; per-resource state, dynamic light/fog, alpha tests/blends, filters and runtime parity remain open. |
 | R04 | Geometry and scenes | In progress | Load hierarchy, meshes, materials and positions from ISO. Diagnostic S/R/T placement and explicit resource selection now render a candidate overview. Actual scene association, runtime transform order, active-resource selection and reference-camera fidelity remain pending. |
 | R05 | Skeletons and animation | Planned | Poses/transitions match observable contracts; test interpolation. |
 | R06 | Camera and visibility | Planned | Specify and validate camera behavior, camera collisions, framing and occlusion. |

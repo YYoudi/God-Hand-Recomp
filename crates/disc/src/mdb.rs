@@ -7,6 +7,8 @@ pub struct StaticPrimitive {
     pub uvs: Vec<[f32; 2]>,
     pub indices: Vec<u32>,
     pub material: u16,
+    /// Unmodified four-byte candidate RGBA stream; absent is not invented white.
+    pub colors: Option<Vec<[u8; 4]>>,
 }
 
 #[derive(Debug)]
@@ -115,6 +117,7 @@ impl StaticMesh {
                 uvs: Vec::with_capacity(n),
                 indices: Vec::new(),
                 material: u16_at(&descriptor, 22),
+                colors: None,
             };
             source.seek(SeekFrom::Start(position))?;
             for i in 0..n {
@@ -152,6 +155,17 @@ impl StaticMesh {
                     f32::from(i16::from_le_bytes(pair[..2].try_into().unwrap())) / 4096.0,
                     f32::from(i16::from_le_bytes(pair[2..].try_into().unwrap())) / 4096.0 + 1.0,
                 ]);
+            }
+            let color = u32_at(&descriptor, 12);
+            if color != 0 {
+                source.seek(SeekFrom::Start(at + u64::from(color)))?;
+                let mut colors = Vec::with_capacity(n);
+                for _ in 0..n {
+                    let mut value = [0; 4];
+                    source.read_exact(&mut value)?;
+                    colors.push(value);
+                }
+                primitive.colors = Some(colors);
             }
             primitives.push(primitive);
         }
@@ -200,6 +214,28 @@ mod tests {
         assert_eq!(p.indices, [0, 1, 2, 2, 1, 3]);
         assert_eq!(p.uvs[0], [-1.0, 1.0]);
         assert_eq!(p.material, 7);
+        assert!(p.colors.is_none());
+    }
+    #[test]
+    fn preserves_raw_color_bytes_and_rejects_bad_color_regions() {
+        let mut bytes = fixture();
+        bytes[76..80].copy_from_slice(&80u32.to_le_bytes());
+        let colors = [
+            [0, 128, 255, 64],
+            [255, 1, 2, 128],
+            [3, 4, 5, 0],
+            [7, 8, 9, 255],
+        ];
+        for (i, color) in colors.iter().enumerate() {
+            bytes[144 + i * 4..148 + i * 4].copy_from_slice(color);
+        }
+        let mesh = StaticMesh::read(Cursor::new(bytes)).unwrap();
+        assert_eq!(mesh.primitives[0].colors.as_deref(), Some(&colors[..]));
+        for bad in [72u32, 96] {
+            let mut bytes = fixture();
+            bytes[76..80].copy_from_slice(&bad.to_le_bytes());
+            assert!(StaticMesh::read(Cursor::new(bytes)).is_err());
+        }
     }
     #[test]
     fn rejects_unknown_encoding_flags_and_early_triangle() {

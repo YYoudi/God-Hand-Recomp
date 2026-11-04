@@ -42,3 +42,8 @@ may be published under this screenshot exception.
 
 Git exclusions and CI reduce accidental disclosure risk.
 They do not perform an exhaustive assessment of copyright ownership.
+
+Hardware color arithmetic is informed by independent [ps2tek research](https://psi-rockin.github.io/ps2tek/).
+Only functional formulas were used, not third-party implementation code. The
+Rust oracle and embedded inspection shader are original; source colors and
+screenshots from the game are not relicensed under MIT.

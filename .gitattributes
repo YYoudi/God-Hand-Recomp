@@ -13,4 +13,5 @@
 *.ppm binary
 *.rs text eol=lf
 *.toml text eol=lf
+*.wesl text eol=lf
 Cargo.lock text eol=lf

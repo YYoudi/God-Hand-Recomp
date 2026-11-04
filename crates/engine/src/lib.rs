@@ -1,4 +1,5 @@
 //! Original GPU-free mechanics and inspection math; game behavior remains unverified.
+pub mod gs_color;
 pub mod inspection_camera;
 pub mod placement;
 pub const TICK_HZ: u32 = 60;

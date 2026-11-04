@@ -86,3 +86,8 @@ For a fixed inspection pose use Layout with -CameraEye, -CameraTarget,
 -CameraFov and -ViewSize; see specs/inspection-camera-v1.md. Save exact arguments
 in the private receipt and describe manual fitting publicly. Do not turn one
 landmark match into a recovered-camera or whole-scene fidelity claim.
+
+Source-color investigation: read specs/static-colors-v1.md. Use Layout
+-StaticColors only as an explicit experiment and hold the previous camera fixed.
+Default/off output, RGB component conformance and full game fidelity are separate
+checks. Never publish texture inspection extracts or raw draw/state traces.

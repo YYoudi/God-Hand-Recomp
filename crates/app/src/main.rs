@@ -3,6 +3,8 @@ use godhand_disc::afs::AfsCatalog;
 use godhand_disc::{fst::FstCatalog, tim2};
 use std::{env, error::Error, path::PathBuf};
 
+#[cfg(feature = "viewer")]
+mod color_material;
 mod room;
 #[cfg(feature = "viewer")]
 mod viewer;
@@ -36,6 +38,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     let mut camera_target = None;
     let mut camera_fov = None;
     let mut view_size = [1280, 720];
+    let mut static_colors = false;
     let mut collection = 1usize;
     let mut node = 0usize;
     while let Some(arg) = args.next() {
@@ -43,6 +46,8 @@ fn run() -> Result<(), Box<dyn Error>> {
             iso = Some(PathBuf::from(args.next().ok_or("--iso needs a path")?));
         } else if arg == "--sandbox" {
             sandbox = true;
+        } else if arg == "--static-colors" {
+            static_colors = true;
         } else if arg == "--catalog" {
             catalog = true;
         } else if arg == "--list" {
@@ -145,7 +150,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             smoke_seconds = Some(seconds);
         } else if arg == "--help" || arg == "-h" {
             println!(
-                "godhand-lab --iso <original USA disc.iso> [--catalog] [--list] [--inspect-textures] [--inspect-rooms] [--room <FST path>] [--inspect-meshes <FST path>] [--inspect-layout <FST path>] [--exclude-collection N]... [--rotation-order xyz/xzy/yxz/yzx/zxy/zyx] [--layout <FST path> | --texture <FST path> | --mesh <FST path> [--collection N --node N] | --sandbox] [--smoke-seconds 1..120] [--capture-png <new PNG path>] [--camera-eye X,Y,Z --camera-target X,Y,Z [--camera-fov 10..120]] [--view-size W,H]\nViews require --features viewer. Mesh view is local; layout view applies explicit placement hypotheses, not verified runtime scene activation. No game lighting. Multiaxis placement requires an explicit rotation order. Game assets stay in your own ISO."
+                "godhand-lab --iso <original USA disc.iso> [--catalog] [--list] [--inspect-textures] [--inspect-rooms] [--room <FST path>] [--inspect-meshes <FST path>] [--inspect-layout <FST path>] [--exclude-collection N]... [--rotation-order xyz/xzy/yxz/yzx/zxy/zyx] [--layout <FST path> | --texture <FST path> | --mesh <FST path> [--collection N --node N] | --sandbox] [--smoke-seconds 1..120] [--capture-png <new PNG path>] [--camera-eye X,Y,Z --camera-target X,Y,Z [--camera-fov 10..120]] [--view-size W,H] [--static-colors]\nViews require --features viewer. Mesh view is local; layout view applies explicit placement hypotheses, not verified runtime scene activation. No game lighting. Multiaxis placement requires an explicit rotation order. Game assets stay in your own ISO."
             );
             return Ok(());
         } else {
@@ -179,6 +184,9 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
     if capture_png.is_some() && smoke_seconds.is_none_or(|v| v < 10) {
         return Err("--capture-png requires --smoke-seconds 10..120 and a viewer mode".into());
+    }
+    if static_colors && mesh_path.is_none() && layout_path.is_none() {
+        return Err("--static-colors requires --mesh or --layout".into());
     }
     let camera_pose = match (camera_eye, camera_target) {
         (Some(eye), Some(target)) => {
@@ -307,6 +315,7 @@ fn run() -> Result<(), Box<dyn Error>> {
                     capture_png.clone(),
                     camera_pose,
                     view_size,
+                    static_colors,
                 )?;
                 #[cfg(not(feature = "viewer"))]
                 return Err(
@@ -331,6 +340,7 @@ fn run() -> Result<(), Box<dyn Error>> {
                 capture_png.clone(),
                 camera_pose,
                 view_size,
+                static_colors,
             )?;
             #[cfg(not(feature = "viewer"))]
             return Err("rebuild with --features viewer to display the decoded mesh".into());
@@ -372,6 +382,7 @@ fn run() -> Result<(), Box<dyn Error>> {
                 capture_png.clone(),
                 camera_pose,
                 view_size,
+                static_colors,
             )?;
             #[cfg(not(feature = "viewer"))]
             return Err("rebuild with --features viewer to display the decoded texture".into());
@@ -386,6 +397,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             capture_png.clone(),
             camera_pose,
             view_size,
+            static_colors,
         )?;
         #[cfg(not(feature = "viewer"))]
         return Err("rebuild with --features viewer to open the synthetic sandbox".into());

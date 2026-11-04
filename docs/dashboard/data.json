@@ -4,13 +4,13 @@
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/God-Hand-Recomp",
   "engine": "Rust + Bevy 0.20.1",
-  "phase": "Common-landmark comparison",
+  "phase": "Source-color and render-state investigation",
   "playable": false,
-  "next": "Check independent depth-separated landmarks without retuning the manually fitted camera; test remaining placement and material-state hypotheses rather than treating one sign alignment as full fidelity.",
+  "next": "Use fixed-camera, depth-separated landmarks and observed per-draw state to distinguish placement errors from missing dynamic lighting, fog, alpha/filtering and postprocessing. Do not refit each object or make experimental colors the default.",
   "validation": {
-    "tests": 52,
+    "tests": 56,
     "bevy_check": "pass",
-    "viewer_runtime": "Four 10-second street-level camera smokes completed; own-framebuffer 512x448 PNGs inspected. A same-saloon-landmark comparison is published; original camera and rendering parity remain unverified.",
+    "viewer_runtime": "Opt-in source-color mode captured with the previous camera fixed. Default output is byte-identical to its earlier baseline. Two private synthetic GPU probes validate RGB arithmetic and screen-linear interpolation, not game fidelity.",
     "gameplay": "Not implemented"
   },
   "milestones": [
@@ -185,7 +185,7 @@
           "title": "Textures and materials",
           "status": "in_progress",
           "area": "graphics",
-          "acceptance": "Indexed TIM2 and observed linear/GS-transfer TIM3 profiles decode, with material ordinals bound to TM3 banks. Runtime UV/color/blending parity, other palettes and animated materials remain pending."
+          "acceptance": "Indexed texture/bank decoding and raw MDB source colors are implemented. An opt-in byte-domain modulation shader passes synthetic GPU checks; per-resource state, dynamic light/fog, alpha tests/blends, filters and runtime parity remain open."
         },
         {
           "id": "R04",
@@ -443,6 +443,23 @@
   "updates": [
     {
       "date": "2026-11-04",
+      "title": "Reading source colors, not yet full game lighting",
+      "summary": "The viewer can now read the mesh color stream and use an explicit modulation experiment. The camera stays fixed; some facades darken, but shadow regions expose remaining rendering errors.",
+      "changes": [
+        "Confirmed the complete r100 geometry/texture SCP span is present unchanged in the reference snapshot; the whole surrounding DAT is not byte-identical.",
+        "Observed the native backend’s existing draw trace without changing its code. A traced/control newly rendered frame pair remained byte-identical.",
+        "Preserved raw source colors in the bounded MDB reader and added an original embedded modulation shader, disabled by default.",
+        "Published the actual opt-in result alongside the reference; retained the earlier default-mode capture for before/after comparison."
+      ],
+      "validation": "56 Rust and 25 Python synthetic tests pass. Two private no-disc GPU probes match seven expected RGB samples exactly, including a depth-varying triangle that distinguishes screen-linear interpolation. The harness uses registry versions/checksums from the public Cargo.lock. The real scene mode and scripted replay captured identical PNGs; default mode still matches its earlier PNG.",
+      "limits": "This is not complete GS lighting or a quality score. Source colors differ from final lit draw colors; fog, filtering, alpha state and multiple passes remain unresolved. Some shadows are too dark. Reference draw observations were from nearby frames, not an exact draw map for the published frame. No game code or original instructions were used.",
+      "link": {
+        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/source-colors-2026-11-04.md",
+        "label": "Residency evidence, color experiment and before/after limits"
+      }
+    },
+    {
+      "date": "2026-11-04",
       "title": "A reproducible street-level comparison",
       "summary": "The yellow saloon sign now gives us an identifiable static landmark in both the retail reference and Bevy. This is a manually fitted comparison camera, not original camera behavior.",
       "changes": [
@@ -629,6 +646,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-04-source-colors.jpg",
+      "date": "2026-11-04",
+      "source": "Unretouched browser screenshot of the actual local journal; thumbnails use reviewed registered reference/Bevy originals",
+      "caption": "Source-color experiment at the unchanged inspection camera"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-04-saloon-camera.jpg",
       "date": "2026-11-04",
       "source": "Unretouched browser screenshot of the actual local same-landmark gallery; thumbnails use reviewed registered comparison originals",
@@ -717,16 +741,62 @@
   ],
   "progress": {
     "goal": "Establish SCR transform composition and compare actual retail room placement in the independent Rust/Bevy engine.",
-    "baseline_revision": "62afc7f262b948e7bfb6d64944845c1e03656059",
-    "last_verified": "Camera development worktree: 52 Rust and 24 Python synthetic tests pass; native viewer linked. Four bounded 10-second smokes produced original 512x448 PNGs. Five invalid CLI camera/viewport cases were refused before disc access. Saloon material/mesh association and common facade visually checked against retail reference frame 4501.",
+    "baseline_revision": "c667fd2124ee8ef1a533a5b900eeb0cf61a3e78d",
+    "last_verified": "Development worktree: 56 Rust / 25 Python synthetic tests; native source-color scene captured at unchanged pose. Seven synthetic GPU samples match the CPU oracle exactly. Default-off output and explicit color-mode replay are byte-repeatable. Complete r100 SCP span matches snapshot data; whole DAT does not. Newly rendered traced/control reference frames match byte-for-byte.",
     "open_questions": [
-      "Camera pose is manually fitted to one facade; original gameplay camera, pixel aspect and parallax at other depths are not established.",
-      "General SCR handedness/order/units and resource activation remain diagnostic hypotheses.",
-      "Surface colors, shadow/alpha state, sky, actors and gameplay are not reproduced; prototype remains separate."
+      "Asset residency is not proof every SCR child is active or drawn. General SCR runtime composition and other-depth placement are unverified.",
+      "Source colors are not the final lit GS colors. Dynamic lighting, fog, alpha state, filtering, multiple texture functions and passes remain incomplete.",
+      "The opt-in color view has excessively dark shadow regions. Original camera, gameplay and prototype debug tools remain unimplemented/unverified."
     ],
-    "next_experiment": "Check independent depth-separated landmarks without retuning the manually fitted camera; test remaining placement and material-state hypotheses rather than treating one sign alignment as full fidelity."
+    "next_experiment": "Use fixed-camera, depth-separated landmarks and observed per-draw state to distinguish placement errors from missing dynamic lighting, fog, alpha/filtering and postprocessing. Do not refit each object or make experimental colors the default."
   },
   "comparisons": [
+    {
+      "id": "2026-11-04-source-colors",
+      "date": "2026-11-04",
+      "title": "Source colors with the previous camera unchanged",
+      "feature": "R03",
+      "scenario": "Same manually fitted saloon camera and 512 × 448 viewport. --static-colors enables a source-color modulation experiment; old texture-only output is retained in the preceding iteration. No camera or object placement was changed.",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "reference": {
+        "caption": "Retail first fight, frame 4501; street-level reference",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T19:08:23.882072+00:00",
+        "original": {
+          "path": "media/08175691062e0e919ed7aa7f03a82efbe329fb6ab553ad892358d9e7e9429c51.ppm",
+          "sha256": "08175691062e0e919ed7aa7f03a82efbe329fb6ab553ad892358d9e7e9429c51"
+        },
+        "path": "media/84d4dd7b49366102557095a8e263d7d2d8cb1057788dc6779ae8ddfb490b41fc.png",
+        "sha256": "84d4dd7b49366102557095a8e263d7d2d8cb1057788dc6779ae8ddfb490b41fc",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "Same camera, source-color modulation experiment enabled; incomplete lighting",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / Windows Vulkan",
+        "revision": "uncommitted",
+        "captured_at": "2026-11-04T19:53:41.729182+00:00",
+        "path": "media/a66e16783e72e42734cc0e0290f1fe09b3f6bdf83fc004abd9e302c6c8c5736d.png",
+        "sha256": "a66e16783e72e42734cc0e0290f1fe09b3f6bdf83fc004abd9e302c6c8c5736d",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "The source MDB color stream is now preserved and consumed explicitly; the default inspection mode is unchanged.",
+        "Facades darken and ground alpha/shading changes. Some shadows become excessively dark, exposing missing runtime light/fog/pass state.",
+        "Synthetic GPU checks validate only component color arithmetic/interpolation; they are not a fidelity score for these game images."
+      ],
+      "limits": [
+        "This is an opt-in experiment, not complete GS state replay. Dynamic lighting, fog, filtering/mips, other texture functions, alpha tests/blends and postprocessing are not reconstructed.",
+        "The reference remains frame 4501. Passive draw observations came from nearby frame 4502, checked with traced/control output frame 4503; they are not an exact draw map for this comparison image.",
+        "Camera remains manually fitted around one facade; other-depth parallax, original camera behavior and general SCR transforms remain unverified.",
+        "Collections 27/28 remain explicitly excluded and rendering is two-sided. Source alpha uses diagnostic host blending. Prototype was not used."
+      ]
+    },
     {
       "id": "2026-11-04-saloon-landmark",
       "date": "2026-11-04",

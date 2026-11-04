@@ -83,3 +83,19 @@ camera behavior or overall fidelity. The earlier unmatched overview is retained.
 Keep private texture inspection extracts/contact sheet out of Git. Next compare
 additional depth-separated landmarks without tuning the camera to each one;
 SCR/general rendering semantics and scene activation remain unresolved.
+
+Source-color increment, 2026-11-04: read specs/static-colors-v1.md and
+docs/source-colors-2026-11-04.md. MDB colors are preserved raw/optional.
+--static-colors is an opt-in byte-domain modulation experiment, not full GS state
+or lighting; default output was verified unchanged. 56 Rust / 25 Python tests;
+private synthetic GPU probes check seven RGB samples and screen-linear color
+interpolation. Do not supply game pixels/data to synthetic tests or CI.
+The complete r100 SCP geometry/texture span matches the reference snapshot;
+the WHOLE DAT does NOT match (opaque runtime-mutated sections). Residency does
+not establish every resource is active. Native draw observations are frame4502,
+paired traced/control frame4503; gallery reference stays4501. No original game
+instructions/translated functions were inspected. Raw snapshots, traces, opaque
+program labels, texture extracts and synthetic probe images remain PRIVATE.
+Some color-mode shadows are excessively dark; never mark rendering parity done
+or silently switch the default based on this experiment. Camera/placement and
+original runtime material/light/fog/alpha/filter/pass semantics remain open.

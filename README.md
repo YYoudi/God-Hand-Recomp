@@ -108,3 +108,8 @@ For reproducible **inspection** camera poses, use `--camera-eye X,Y,Z`,
 `--camera-target X,Y,Z`, optional `--camera-fov DEGREES`, and `--view-size W,H`.
 The [saloon comparison](docs/camera-landmark-2026-11-04.md) identifies a common
 static landmark; its manually fitted pose is not the original gameplay camera.
+
+An optional `--static-colors` mode for mesh/layout inspection consumes raw source
+vertex colors using a byte-domain modulation experiment. It is **not complete
+game lighting or GS state replay** and remains disabled by default. See the
+[source-color evidence and before/after limits](docs/source-colors-2026-11-04.md).

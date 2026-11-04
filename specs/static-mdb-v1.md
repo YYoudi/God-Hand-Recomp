@@ -41,6 +41,10 @@ GS blending and in-game scale remain separate fidelity gates.
 
 ## Acceptance
 
+Raw color-stream preservation and the opt-in modulation experiment are specified
+separately in [static-colors-v1.md](static-colors-v1.md); default inspection may
+still omit their rendering interpretation. Source colors are not final lit GS colors.
+
 Synthetic signed coordinates, both winding flags, non-emitting vertices, UVs,
 material ordinals and malformed headers/limits/streams. Boundaries must stop a
 mesh reading the next mesh's bytes. Real-data counts must match private probes.

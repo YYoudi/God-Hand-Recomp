@@ -1,4 +1,5 @@
 //! Separate synthetic build check and ISO-backed texture inspection modes.
+use crate::color_material::{SourceColorMaterial, SourceColorPlugin};
 use bevy::app::AppExit;
 use bevy::asset::RenderAssetUsages;
 use bevy::core_pipeline::tonemapping::{DebandDither, Tonemapping};
@@ -45,6 +46,8 @@ struct TextureInput(Option<RgbaImage>);
 struct MeshInput(Option<crate::room::MeshView>);
 #[derive(Resource)]
 struct CameraInput(Option<InspectionCamera>);
+#[derive(Resource)]
+struct SourceColorInput(bool);
 
 pub fn run(
     smoke_seconds: Option<u64>,
@@ -53,6 +56,7 @@ pub fn run(
     capture_png: Option<PathBuf>,
     camera: Option<InspectionCamera>,
     view_size: [u32; 2],
+    static_colors: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     if let Some(path) = &capture_png {
         if path.extension().is_none_or(|v| v != "png") || path.exists() {
@@ -71,6 +75,18 @@ pub fn run(
     println!(
         "Inspection camera: {camera:?}; requested physical output: {view_size:?}. Explicit pose is diagnostic, not recovered game camera behavior."
     );
+    if static_colors {
+        let missing = mesh.as_ref().map_or(0, |m| {
+            m.mesh
+                .primitives
+                .iter()
+                .filter(|p| p.colors.is_none())
+                .count()
+        });
+        println!(
+            "Static-color experiment enabled: raw RGB modulate /128, diagnostic host alpha; {missing} buffers use neutral fallback. No full runtime lighting/fog/blending parity."
+        );
+    }
     let completed = Arc::new(AtomicBool::new(false));
     let capture_expected = capture_png.is_some();
     let capture_result: CaptureResult = Arc::new(Mutex::new(None));
@@ -90,6 +106,7 @@ pub fn run(
         .insert_resource(TextureInput(texture))
         .insert_resource(MeshInput(mesh))
         .insert_resource(CameraInput(camera))
+        .insert_resource(SourceColorInput(static_colors))
         .insert_resource(CaptureRequest {
             path: capture_png,
             delay: Duration::from_secs(smoke_seconds.unwrap_or(20) / 2),
@@ -111,6 +128,7 @@ pub fn run(
                 ..default()
             }),
         )
+        .add_plugins(SourceColorPlugin)
         .add_systems(Startup, setup)
         .add_systems(Update, sample_input)
         .add_systems(Update, (request_capture, finish_smoke).chain())
@@ -201,6 +219,8 @@ fn setup(
     mut input: ResMut<TextureInput>,
     mut mesh_input: ResMut<MeshInput>,
     camera_input: Res<CameraInput>,
+    source_colors: Res<SourceColorInput>,
+    mut color_materials: ResMut<Assets<SourceColorMaterial>>,
 ) {
     if let Some(view) = mesh_input.0.take() {
         let mut handles = std::collections::BTreeMap::new();
@@ -213,7 +233,11 @@ fn setup(
                 },
                 TextureDimension::D2,
                 texture.pixels,
-                TextureFormat::Rgba8UnormSrgb,
+                if source_colors.0 {
+                    TextureFormat::Rgba8Unorm
+                } else {
+                    TextureFormat::Rgba8UnormSrgb
+                },
                 RenderAssetUsages::default(),
             );
             let mut sampler = ImageSamplerDescriptor::nearest();
@@ -232,7 +256,19 @@ fn setup(
             if primitive.indices.is_empty() {
                 continue;
             }
-            let mesh = Mesh::new(
+            let colors = if source_colors.0 {
+                Some(
+                    primitive
+                        .colors
+                        .unwrap_or_else(|| vec![[128; 4]; primitive.positions.len()])
+                        .into_iter()
+                        .map(|c| c.map(|v| f32::from(v) / 128.))
+                        .collect::<Vec<_>>(),
+                )
+            } else {
+                None
+            };
+            let mut mesh = Mesh::new(
                 PrimitiveTopology::TriangleList,
                 RenderAssetUsages::default(),
             )
@@ -240,6 +276,17 @@ fn setup(
             .with_inserted_attribute(Mesh::ATTRIBUTE_UV_0, primitive.uvs)
             .with_inserted_indices(Indices::U32(primitive.indices))
             .with_computed_normals();
+            if let Some(colors) = colors {
+                mesh.insert_attribute(Mesh::ATTRIBUTE_COLOR, colors);
+                commands.spawn((
+                    Mesh3d(meshes.add(mesh)),
+                    MeshMaterial3d(color_materials.add(SourceColorMaterial {
+                        texture: handles[&primitive.material].clone(),
+                    })),
+                    Transform::default(),
+                ));
+                continue;
+            }
             commands.spawn((
                 Mesh3d(meshes.add(mesh)),
                 MeshMaterial3d(materials.add(StandardMaterial {
