@@ -119,3 +119,7 @@ The [latest static-projection observation](docs/observed-projection-2026-11-04.m
 compares whole-resource holdouts and renders the street with explicit inspection
 aspect/culling. It does not establish camera motion, general SCR composition or
 full rendering fidelity; previous original comparisons are retained.
+
+The [second-view check](docs/second-view-2026-11-04.md) supports unchanged static
+placement with whole-resource holdouts. Full-resource sky controls still fail;
+this is not completed scene reconstruction or general runtime transform parity.

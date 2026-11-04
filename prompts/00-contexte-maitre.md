@@ -117,3 +117,16 @@ remain incomplete. 57 base Rust +3 additional viewer-only tests;25 Python tests.
 Run viewer-only synthetic adapter tests as well as locked base tests/checks.
 Next validate a second retail viewpoint without per-object fitting. Private
 raw data and opaque trace program labels remain excluded from publication.
+
+
+Second-view validation, 2026-11-04: read docs/second-view-2026-11-04.md.
+The same engine revision f83f076 predicts147/147 candidate points from FOUR
+held-out resources after reference movement/turning; no per-object refits.
+19 resources are unit-scale/zero-rotation: no general Euler/scale validation.
+Trace6202/control capture6203 agree byte-for-byte. Actual Bevy replay agrees.
+Full-resource default/color controls still overpaint the street with sky layers;
+manual27/28 exclusions are NOT scene activation or a fix. Retain failed originals
+privately; inspect material/depth/alpha/pass semantics next. Sky, actors/HUD,
+complete rendering, camera motion and gameplay remain absent/incomplete.
+60 distinct Rust /25 Python synthetic tests. Public pairs have raw originals;
+no game data, dumps, translated code or trace labels enter CI/public engine.

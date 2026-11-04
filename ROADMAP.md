@@ -7,7 +7,7 @@ Updated: 2026-11-04. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Validate a second retail viewpoint with whole-resource holdouts. Separate camera motion, general transforms, scene activation and missing material/light/fog/alpha/filter/pass state.
+Next useful evidence: Investigate sky/resource activation and per-pass depth/alpha state before expanding the reconstructed scene. General rotations, nonuniform scales, hierarchy and camera motion remain separate unverified work.
 
 ## M0 — Public foundations
 
@@ -56,7 +56,7 @@ Dependencies: M1.
 | R01 | Bevy viewer foundation | Done | Original primitive viewer compiled and rendered on Windows/Vulkan with bounded smoke exit; not a game scene. |
 | R02 | Window and GPU diagnostics | Done | Verify local execution, readable GPU errors and original sandbox capture. |
 | R03 | Textures and materials | In progress | Indexed texture/bank decoding and raw MDB source colors are implemented. An opt-in byte-domain modulation shader passes synthetic GPU checks; per-resource state, dynamic light/fog, alpha tests/blends, filters and runtime parity remain open. |
-| R04 | Geometry and scenes | In progress | Load hierarchy, meshes, materials and positions from ISO. One first-fight observation now supports static zero-rotation/unit-scale placement across depths, with whole-resource holdouts. General transforms, active resources, hierarchy, other viewpoints and runtime camera behavior remain pending. |
+| R04 | Geometry and scenes | In progress | Load hierarchy, meshes, materials and positions from ISO. Two retail viewpoints support static unit-scale/zero-rotation placement with whole-resource holdouts. General transforms, hierarchy, active-resource selection, other rooms and runtime camera behavior remain pending. |
 | R05 | Skeletons and animation | Planned | Poses/transitions match observable contracts; test interpolation. |
 | R06 | Camera and visibility | Planned | Specify and validate camera behavior, camera collisions, framing and occlusion. |
 | R07 | Image quality | Planned | Resolution, aspect ratio, UI scaling and settings preserve simulation behavior. |

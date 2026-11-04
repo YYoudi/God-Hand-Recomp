@@ -4,9 +4,9 @@
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/God-Hand-Recomp",
   "engine": "Rust + Bevy 0.20.1",
-  "phase": "Observation-backed static placement and projection",
+  "phase": "Static placement checked from two retail viewpoints",
   "playable": false,
-  "next": "Validate a second retail viewpoint with whole-resource holdouts. Separate camera motion, general transforms, scene activation and missing material/light/fog/alpha/filter/pass state.",
+  "next": "Investigate sky/resource activation and per-pass depth/alpha state before expanding the reconstructed scene. General rotations, nonuniform scales, hierarchy and camera motion remain separate unverified work.",
   "validation": {
     "tests": 60,
     "bevy_check": "pass",
@@ -192,7 +192,7 @@
           "title": "Geometry and scenes",
           "status": "in_progress",
           "area": "graphics",
-          "acceptance": "Load hierarchy, meshes, materials and positions from ISO. One first-fight observation now supports static zero-rotation/unit-scale placement across depths, with whole-resource holdouts. General transforms, active resources, hierarchy, other viewpoints and runtime camera behavior remain pending."
+          "acceptance": "Load hierarchy, meshes, materials and positions from ISO. Two retail viewpoints support static unit-scale/zero-rotation placement with whole-resource holdouts. General transforms, hierarchy, active-resource selection, other rooms and runtime camera behavior remain pending."
         },
         {
           "id": "R05",
@@ -443,6 +443,23 @@
   "updates": [
     {
       "date": "2026-11-04",
+      "title": "Checking a second retail viewpoint",
+      "summary": "The existing engine places the same retail resources consistently after the reference camera has turned and moved. No mesh or transform was adjusted for the new view.",
+      "changes": [
+        "Resumed an existing retail state recorded after analog movement and attack-button inputs, preserving the prototype as a separate reference.",
+        "Repeated passive trace/control validation and estimated one projection with four whole resources held out.",
+        "Rendered and repeated the new view using the already published engine revision. Geometry and source transforms are unchanged.",
+        "Retained failed full-resource renders: sky layers still overpaint the street, so scene activation and render state remain unresolved."
+      ],
+      "validation": "60 distinct Rust /25 Python synthetic tests and locked build/check pass. The three retail candidates remain readable. All147 held-out UV-candidate points are within1px of the common fit (median0.0255px); omitted or0.01-scaled translations give0/147. These are geometric observation checks, not image-fidelity scores. New traced/control native frame and Bevy replay are byte-identical.",
+      "limits": "19 candidate resources, all unit-scale/zero-rotation; only four are held out. An inherited private reporting label counted an absent saloon id as a fifth resource; corrected before publication, with point counts/residuals unchanged. No general Euler order, complete rendering, camera-motion behavior or gameplay is claimed. Sky, actors/HUD and full material/light/fog/alpha/filter/pass state remain missing or wrong.",
+      "link": {
+        "label": "Second-view evidence and remaining failures",
+        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/second-view-2026-11-04.md"
+      }
+    },
+    {
+      "date": "2026-11-04",
       "title": "One projection for several street landmarks",
       "summary": "Passive vertex observations give a shared inspection pose across near and distant static resources. The street renders without moving individual objects; camera behavior and the renderer are still incomplete.",
       "changes": [
@@ -663,6 +680,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-04-second-view.jpg",
+      "date": "2026-11-04",
+      "source": "Unretouched browser screenshot of the actual local journal; thumbnails use reviewed registered reference/Bevy originals",
+      "caption": "Second-view check with unchanged static placement"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-04-observed-projection.jpg",
       "date": "2026-11-04",
       "source": "Unretouched browser screenshot of the actual local journal; thumbnails show reviewed registered reference/Bevy originals",
@@ -765,16 +789,62 @@
   ],
   "progress": {
     "goal": "Establish SCR transform composition and compare actual retail room placement in the independent Rust/Bevy engine.",
-    "baseline_revision": "3e42c668cfb65fdb96cbcb05e4ed7b2eeb85f996",
-    "last_verified": "Development worktree: 57 base Rust + 3 additional viewer-only tests, 25 Python tests, locked build/check. Passive GS observer leaves newly rendered control frame unchanged. Shared projective fit predicts 862/865 held-out UV-candidate points within one pixel; held median 0.024 px. This measures GS geometry consistency, not image fidelity. Explicit aspect/culling render the street; old default and new workflow repeat are byte-identical.",
+    "baseline_revision": "f83f07607d5e44d793a9f0521376982774227d08",
+    "last_verified": "Existing engine revision f83f076, no new engine code: second retail trace/control frame6203 is byte-identical. Same placement predicts147/147 candidate points from FOUR held-out resources within1px (median0.0255px); omitted/rescaled translations predict0/147. Actual Bevy smoke/replay agrees byte-for-byte. All three retail candidates re-inspected;60 distinct Rust and25 Python tests pass. Geometry residuals are not image-fidelity scores.",
     "open_questions": [
-      "All 86 matched resources have unit scales and zero rotations: general Euler order, nonuniform scales, hierarchy, activation and other scenes remain unresolved.",
-      "The inferred projection explains one snapshot, not camera-follow behavior or all PS2 video modes. Global back-face culling is not a proven per-material rule.",
-      "Sky, actors, HUD, some props and full light/fog/alpha/filter/pass behavior remain missing or wrong. No gameplay."
+      "Both observed candidate sets still have unit scales and zero rotations; general Euler order, nonuniform scales, hierarchy and other rooms are not verified.",
+      "Full-resource control renders overpaint the street with sky layers. Manual27/28 exclusions are diagnostic, not runtime activation or a fix. Investigate material/depth/pass state rather than hiding the failure.",
+      "Camera-motion logic, dynamic actors/HUD, some props and full rendering remain absent or incorrect. No playable game."
     ],
-    "next_experiment": "Validate a second retail viewpoint with whole-resource holdouts. Separate camera motion, general transforms, scene activation and missing material/light/fog/alpha/filter/pass state."
+    "next_experiment": "Investigate sky/resource activation and per-pass depth/alpha state before expanding the reconstructed scene. General rotations, nonuniform scales, hierarchy and camera motion remain separate unverified work."
   },
   "comparisons": [
+    {
+      "id": "2026-11-04-second-view",
+      "date": "2026-11-04",
+      "title": "Checking the same placement from a second viewpoint",
+      "feature": "R04",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "scenario": "Resume an existing retail state recorded after user-style inputs. Source r100 geometry and SCR placement are unchanged; infer one new inspection camera using whole-resource holdouts. Same explicit 4:3 projection, back-face culling, source colors and 27/28 resource exclusions.",
+      "reference": {
+        "caption": "Retail second viewpoint, capture frame 6203",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T20:40:24.377141+00:00",
+        "original": {
+          "path": "media/6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e.ppm",
+          "sha256": "6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e"
+        },
+        "path": "media/91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af.png",
+        "sha256": "91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "Same static placement; second inferred inspection camera",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / Windows Vulkan",
+        "revision": "f83f07607d5e44d793a9f0521376982774227d08",
+        "captured_at": "2026-11-04T20:41:42.299836+00:00",
+        "path": "media/cde7a0e865f10105c7a6b28532df49b1f3c96c7a4805e3bb5e9d4ea136fa2180.png",
+        "sha256": "cde7a0e865f10105c7a6b28532df49b1f3c96c7a4805e3bb5e9d4ea136fa2180",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "The surrounding walls and near right masonry use the same placement contract as the earlier street comparison. No object was moved or fitted separately.",
+        "A common projection predicts all 147 candidate points from four held-out resources within one pixel. This is a GS geometry residual, not an image-fidelity score.",
+        "The inferred snapshot again suggests about 31-degree vertical FOV and 4:3 projection on 512 × 448 output. Camera-motion behavior is not implemented."
+      ],
+      "limits": [
+        "Passive draw label is frame 6202; newly rendered capture is labeled 6203. Traced and untraced new frame pixels match exactly. This is not a console capture.",
+        "All 19 UV-candidate resources still have unit scale and zero rotation; general Euler order, nonuniform scale, hierarchy and other rooms remain unverified.",
+        "Full-resource control renders overpaint the street with sky layers; their original failures remain local. Collections 27/28 are still manual diagnostic exclusions, not recovered scene activation.",
+        "Sky, dynamic actors, HUD, some props and full material/light/fog/alpha/filter/pass behavior remain absent or wrong. No gameplay or complete room reconstruction."
+      ]
+    },
     {
       "id": "2026-11-04-observed-projection",
       "date": "2026-11-04",
