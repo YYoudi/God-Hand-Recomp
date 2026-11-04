@@ -5,6 +5,10 @@ param(
     [string]$CapturePng = '',
     [string]$RotationOrder = '',
     [int[]]$ExcludeCollections = @(),
+    [string]$CameraEye = '',
+    [string]$CameraTarget = '',
+    [double]$CameraFov = 45.0,
+    [string]$ViewSize = '1280,720',
     [string]$AssetPath = 'etc/subscr/face_hm00.tm2',
     [string]$MeshPath = 'st1/r100.dat',
     [ValidateRange(0, 4095)][int]$Collection = 23,
@@ -81,6 +85,8 @@ try {
             if ($RotationOrder) { $options += @('--rotation-order', $RotationOrder) }
             foreach ($ordinal in $ExcludeCollections) { $options += @('--exclude-collection', "$ordinal") }
             if ($CapturePng) { $options += @('--capture-png', $CapturePng) }
+            $options += @('--view-size', $ViewSize)
+            if ($CameraEye -or $CameraTarget) { $options += @('--camera-eye', $CameraEye, '--camera-target', $CameraTarget, '--camera-fov', $CameraFov.ToString([System.Globalization.CultureInfo]::InvariantCulture)) }
             Run-Cargo (@('run', '-p', 'godhand-lab', '--features', 'viewer', '--locked', '--jobs', "$Jobs", '--', '--iso', $Iso, '--layout', $MeshPath, '--smoke-seconds', "$Seconds") + $options)
         }
         'MeshInspect' {

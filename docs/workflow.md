@@ -81,3 +81,8 @@ hypotheses, -ExcludeCollections for a logged manual resource subset and
 smoke; the snapshot is requested halfway through. Check the actual pixels and
 capture result, not only process exit. PPM reference captures publish unchanged
 with labeled lossless PNG previews and raw-download links under the protocol.
+
+For a fixed inspection pose use Layout with -CameraEye, -CameraTarget,
+-CameraFov and -ViewSize; see specs/inspection-camera-v1.md. Save exact arguments
+in the private receipt and describe manual fitting publicly. Do not turn one
+landmark match into a recovered-camera or whole-scene fidelity claim.

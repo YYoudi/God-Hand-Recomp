@@ -1,4 +1,5 @@
-//! Original sandbox mechanics. These are engineering defaults, not measured game behavior.
+//! Original GPU-free mechanics and inspection math; game behavior remains unverified.
+pub mod inspection_camera;
 pub mod placement;
 pub const TICK_HZ: u32 = 60;
 

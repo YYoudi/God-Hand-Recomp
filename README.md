@@ -103,3 +103,8 @@ cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso
 Manual resource exclusions are logged diagnostics, not game visibility rules.
 The first public reference/overview comparison is explicitly unmatched. The raw
 native PPM screenshot is preserved alongside its lossless PNG viewing preview.
+
+For reproducible **inspection** camera poses, use `--camera-eye X,Y,Z`,
+`--camera-target X,Y,Z`, optional `--camera-fov DEGREES`, and `--view-size W,H`.
+The [saloon comparison](docs/camera-landmark-2026-11-04.md) identifies a common
+static landmark; its manually fitted pose is not the original gameplay camera.

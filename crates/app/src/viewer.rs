@@ -8,6 +8,7 @@ use bevy::prelude::*;
 use bevy::render::render_resource::{Extent3d, TextureDimension, TextureFormat};
 use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
 use godhand_disc::tim2::RgbaImage;
+use godhand_engine::inspection_camera::{FAR, InspectionCamera, NEAR};
 use godhand_engine::{Position, TICK_HZ, step};
 use std::path::PathBuf;
 use std::sync::{
@@ -42,12 +43,16 @@ struct SmokeLimit {
 struct TextureInput(Option<RgbaImage>);
 #[derive(Resource)]
 struct MeshInput(Option<crate::room::MeshView>);
+#[derive(Resource)]
+struct CameraInput(Option<InspectionCamera>);
 
 pub fn run(
     smoke_seconds: Option<u64>,
     texture: Option<RgbaImage>,
     mesh: Option<crate::room::MeshView>,
     capture_png: Option<PathBuf>,
+    camera: Option<InspectionCamera>,
+    view_size: [u32; 2],
 ) -> Result<(), Box<dyn std::error::Error>> {
     if let Some(path) = &capture_png {
         if path.extension().is_none_or(|v| v != "png") || path.exists() {
@@ -63,6 +68,9 @@ pub fn run(
     {
         return Err("selected mesh has no emitted faces".into());
     }
+    println!(
+        "Inspection camera: {camera:?}; requested physical output: {view_size:?}. Explicit pose is diagnostic, not recovered game camera behavior."
+    );
     let completed = Arc::new(AtomicBool::new(false));
     let capture_expected = capture_png.is_some();
     let capture_result: CaptureResult = Arc::new(Mutex::new(None));
@@ -81,6 +89,7 @@ pub fn run(
         .init_resource::<Intent>()
         .insert_resource(TextureInput(texture))
         .insert_resource(MeshInput(mesh))
+        .insert_resource(CameraInput(camera))
         .insert_resource(CaptureRequest {
             path: capture_png,
             delay: Duration::from_secs(smoke_seconds.unwrap_or(20) / 2),
@@ -91,14 +100,17 @@ pub fn run(
             first_update: None,
             completed: Arc::clone(&completed),
         })
-        .add_plugins(DefaultPlugins.set(WindowPlugin {
-            primary_window: Some(Window {
-                title: title.into(),
-                resolution: (1280, 720).into(),
+        .add_plugins(
+            DefaultPlugins.set(WindowPlugin {
+                primary_window: Some(Window {
+                    title: title.into(),
+                    resolution: bevy::window::WindowResolution::new(view_size[0], view_size[1])
+                        .with_scale_factor_override(1.0),
+                    ..default()
+                }),
                 ..default()
             }),
-            ..default()
-        }))
+        )
         .add_systems(Startup, setup)
         .add_systems(Update, sample_input)
         .add_systems(Update, (request_capture, finish_smoke).chain())
@@ -188,6 +200,7 @@ fn setup(
     mut images: ResMut<Assets<Image>>,
     mut input: ResMut<TextureInput>,
     mut mesh_input: ResMut<MeshInput>,
+    camera_input: Res<CameraInput>,
 ) {
     if let Some(view) = mesh_input.0.take() {
         let mut handles = std::collections::BTreeMap::new();
@@ -242,20 +255,36 @@ fn setup(
         }
         let center = (minimum + maximum) * 0.5;
         let radius = ((maximum - minimum).length() * 0.5).max(0.1);
+        let (pose, fov, near, far) = if let Some(camera) = camera_input.0 {
+            (
+                Transform::from_translation(Vec3::from_array(camera.eye()))
+                    .looking_to(Vec3::from_array(camera.forward()), Vec3::Y),
+                camera.fov_radians(),
+                NEAR,
+                FAR,
+            )
+        } else {
+            (
+                Transform::from_translation(
+                    center + Vec3::new(2.0, 1.2, 2.0).normalize() * radius * 3.3,
+                )
+                .looking_at(center, Vec3::Y),
+                std::f32::consts::FRAC_PI_4,
+                radius * 0.01,
+                radius * 20.0,
+            )
+        };
         commands.spawn((
             Camera3d::default(),
             Tonemapping::None,
             DebandDither::Disabled,
             Projection::Perspective(PerspectiveProjection {
-                fov: std::f32::consts::FRAC_PI_4,
-                near: radius * 0.01,
-                far: radius * 20.0,
+                fov,
+                near,
+                far,
                 ..default()
             }),
-            Transform::from_translation(
-                center + Vec3::new(2.0, 1.2, 2.0).normalize() * radius * 3.3,
-            )
-            .looking_at(center, Vec3::Y),
+            pose,
         ));
         return;
     }

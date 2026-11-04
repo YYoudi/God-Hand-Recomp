@@ -7,7 +7,7 @@ Updated: 2026-11-04. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Identify the same retail landmark in both views and match reproducible camera framing; resolve sky/material state and active-resource selection rather than hardcoding diagnostic exclusions.
+Next useful evidence: Check independent depth-separated landmarks without retuning the manually fitted camera; test remaining placement and material-state hypotheses rather than treating one sign alignment as full fidelity.
 
 ## M0 — Public foundations
 

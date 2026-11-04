@@ -132,3 +132,13 @@ specs/scr-placement-v1.md and docs/placement-2026-11-04.md before extending.
 The public first-fight reference / candidate overview pair is explicitly
 UNMATCHED. Reference PPM is downloadable unchanged; its PNG is a labeled lossless
 preview. Do not turn this into a matched fidelity claim on resume.
+
+Common-landmark increment, 2026-11-04: explicit diagnostic camera eye/target/FOV
+and physical viewport are implemented under specs/inspection-camera-v1.md.
+Read docs/camera-landmark-2026-11-04.md. A second public pair identifies the same
+yellow saloon sign/facade at street level, manually fitted; it is NOT original
+camera behavior or overall fidelity. The earlier unmatched overview is retained.
+52 Rust synthetic tests; original 512x448 renderer captures and bounded exits.
+Keep private texture inspection extracts/contact sheet out of Git. Next compare
+additional depth-separated landmarks without tuning the camera to each one;
+SCR/general rendering semantics and scene activation remain unresolved.
