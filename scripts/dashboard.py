@@ -87,11 +87,14 @@ def blog(data):
             item = pair[side]
             path = escape(item['path'], quote=True)
             caption = escape(item['caption'])
+            original = item.get('original')
+            download = (f'<a href="{escape(original["path"], quote=True)}" download>Download unchanged original PPM ({item["width"]} × {item["height"]})</a><br>PNG above is a lossless viewing preview.' if original else
+                        f'<a href="{path}" download>Download unchanged original ({item["width"]} × {item["height"]})</a>')
             figures.append(f'''<figure><figcaption><strong>{label}</strong> — {caption}</figcaption>
 <a href="{path}"><img src="{path}" width="{item['width']}" height="{item['height']}" loading="lazy" alt="{label}: {caption}"></a>
 <small>{escape(item['profile'])} · {escape(item['runtime'])}<br>
 Captured {escape(item['captured_at'])} · revision {escape(item['revision'])}<br>
-<a href="{path}" download>Download unchanged original ({item['width']} × {item['height']})</a></small></figure>''')
+{download}</small></figure>''')
         observations = ''.join('<li>' + escape(s) + '</li>' for s in pair['observations'])
         limits = ''.join('<li>' + escape(s) + '</li>' for s in pair['limits'])
         pairs.append(f'''<article id="comparison-{escape(pair['id'], quote=True)}">

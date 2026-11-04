@@ -7,7 +7,7 @@ Updated: 2026-11-04. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Compare the same static landmark with a live retail reference; establish SCR transform composition and texture orientation before reconstructing a room.
+Next useful evidence: Identify the same retail landmark in both views and match reproducible camera framing; resolve sky/material state and active-resource selection rather than hardcoding diagnostic exclusions.
 
 ## M0 — Public foundations
 
@@ -56,7 +56,7 @@ Dependencies: M1.
 | R01 | Bevy viewer foundation | Done | Original primitive viewer compiled and rendered on Windows/Vulkan with bounded smoke exit; not a game scene. |
 | R02 | Window and GPU diagnostics | Done | Verify local execution, readable GPU errors and original sandbox capture. |
 | R03 | Textures and materials | In progress | Indexed TIM2 and observed linear/GS-transfer TIM3 profiles decode, with material ordinals bound to TM3 banks. Runtime UV/color/blending parity, other palettes and animated materials remain pending. |
-| R04 | Geometry and scenes | In progress | Load hierarchy, meshes, materials and positions from ISO. Static MDB decoding works on three candidates; room identity, transform composition and full scene placement remain pending. |
+| R04 | Geometry and scenes | In progress | Load hierarchy, meshes, materials and positions from ISO. Diagnostic S/R/T placement and explicit resource selection now render a candidate overview. Actual scene association, runtime transform order, active-resource selection and reference-camera fidelity remain pending. |
 | R05 | Skeletons and animation | Planned | Poses/transitions match observable contracts; test interpolation. |
 | R06 | Camera and visibility | Planned | Specify and validate camera behavior, camera collisions, framing and occlusion. |
 | R07 | Image quality | Planned | Resolution, aspect ratio, UI scaling and settings preserve simulation behavior. |

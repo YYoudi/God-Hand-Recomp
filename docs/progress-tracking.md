@@ -41,7 +41,11 @@ established, say so; do not present different objects as a fidelity comparison.
 Do not manufacture a reference when it is missing. Record that gap and the next
 capture needed. Nonvisual progress requires tests/evidence, not a fake image pair.
 
-Publish both original, unretouched PNG files byte-for-byte. Keep full-resolution
+Publish both original, unretouched screenshot files byte-for-byte. PNG is the
+normal profile. For the native backend’s P6/255 PPM output, publish that original
+PPM too, alongside a clearly labeled lossless PNG viewing preview. The preparation
+helper encodes the same RGB samples without resizing, cropping or color changes.
+Retain the raw-original download link; never relabel the preview as an original. Keep full-resolution
 images individually downloadable; a responsive side-by-side HTML view is enough.
 Do not crop, repaint, AI-correct, composite away errors, or rescale the stored
 originals. Do not convert an old JPEG to PNG and call it an original PNG.
@@ -73,14 +77,15 @@ and gameplay separately when relevant.
 
 ## Publication
 
-Only manifest-registered original PNG comparisons belong in
+Only manifest-registered original PNG/PPM comparisons and declared lossless previews belong in
 docs/dashboard/media/. Their filenames are their SHA-256. No directory-wide
 copy of private evidence is allowed. See scripts/comparisons.py for the manifest
 validator and byte-preserving preparation helper. Journal captures retain their
-existing separate registration under `captures`.
+existing separate registration under `captures`. A journal screenshot may show
+thumbnails of already reviewed/registered pairs, not new unreviewed game images.
 
 Prepare one private JSON entry with the fields listed above. For each image,
-provide `source` as the absolute path to its original PNG under
+provide `source` as the absolute path to its original PNG (or reference PPM) under
 recomp/experiments/, plus `caption`, `profile`, `runtime`, `revision` and
 `captured_at`. The helper computes public `path`, `sha256`, `width` and `height`
 from the actual file; it strips `source` from the public record. Set `reviewed`
@@ -94,7 +99,8 @@ python scripts/comparisons.py --entry docs/local/comparison-candidate.json
 python scripts/dashboard.py
 ```
 
-This copies just the two reviewed original files, then adds their record to the
+This copies just the two reviewed original files (and creates the declared
+lossless preview if a reference PPM needs one), then adds their record to the
 single public manifest. It never stages or pushes automatically. Existing pair
 ids cannot be replaced: use a new id for a later iteration and preserve history.
 

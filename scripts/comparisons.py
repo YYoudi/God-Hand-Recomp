@@ -1,4 +1,4 @@
-"""Validate and prepare explicitly reviewed original reference/Bevy PNG pairs."""
+"""Prepare reviewed reference/Bevy originals, with lossless previews for raw PPM."""
 import argparse
 import copy
 import datetime
@@ -49,6 +49,29 @@ def png_dimensions(data):
     raise ValueError('Missing PNG end')
 
 
+def ppm_pixels(data):
+    """Bounded P6/255 screenshot profile emitted by the local native backend."""
+    require(len(data) <= MAX_IMAGE_BYTES, 'PPM screenshot exceeds limit')
+    header = re.match(rb'P6\s+(\d{1,5})\s+(\d{1,5})\s+255[\r]?\n', data[:80])
+    require(header is not None, 'Unsupported original PPM screenshot header')
+    width, height = int(header[1]), int(header[2])
+    require(0 < width <= 8192 and 0 < height <= 8192 and width * height <= 16777216,
+            'PPM screenshot dimensions outside limit')
+    pixels = data[header.end():]
+    require(len(pixels) == width * height * 3, 'PPM screenshot payload length mismatch')
+    return width, height, pixels
+
+
+def ppm_preview(data):
+    """Lossless PNG encoding only. The unchanged PPM must also be published."""
+    width, height, pixels = ppm_pixels(data)
+    def chunk(tag, payload):
+        return struct.pack('>I', len(payload)) + tag + payload + struct.pack('>I', zlib.crc32(tag + payload))
+    rows = b''.join(b'\0' + pixels[y * width * 3:(y + 1) * width * 3] for y in range(height))
+    return (b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', width, height, 8, 2, 0, 0, 0)) +
+            chunk(b'IDAT', zlib.compress(rows)) + chunk(b'IEND', b''))
+
+
 def validate_comparisons(entries, read):
     """read receives a repository-relative path (working tree or Git index)."""
     paths, ids = set(), set()
@@ -69,8 +92,9 @@ def validate_comparisons(entries, read):
                     all(isinstance(s, str) and s.strip() for s in pair[field]), 'Missing comparison findings/limits')
         for side in ('reference', 'bevy'):
             item = pair[side]
-            require(set(item) == {'path', 'sha256', 'width', 'height', 'caption', 'profile',
-                                 'runtime', 'revision', 'captured_at'}, 'Unexpected or missing image fields')
+            fields = {'path', 'sha256', 'width', 'height', 'caption', 'profile',
+                      'runtime', 'revision', 'captured_at'}
+            require(set(item) in (fields, fields | {'original'}), 'Unexpected or missing image fields')
             digest = item['sha256']
             require(isinstance(digest, str) and re.fullmatch('[0-9a-f]{64}', digest), 'Invalid image hash')
             require(item['path'] == f'media/{digest}.png', 'Comparison path must be content-addressed PNG')
@@ -86,6 +110,17 @@ def validate_comparisons(entries, read):
             require(hashlib.sha256(data).hexdigest() == digest, 'Screenshot hash mismatch')
             require(png_dimensions(data) == (item['width'], item['height']), 'Screenshot dimensions mismatch')
             paths.add(path)
+            if 'original' in item:
+                require(side == 'reference', 'Raw PPM profile is for reference captures only')
+                original = item['original']
+                require(set(original) == {'path', 'sha256'}, 'Unexpected raw original fields')
+                require(re.fullmatch('[0-9a-f]{64}', original['sha256']) and
+                        original['path'] == 'media/' + original['sha256'] + '.ppm', 'Invalid original PPM path/hash')
+                raw_path = 'docs/dashboard/' + original['path']
+                raw = read(raw_path)
+                require(hashlib.sha256(raw).hexdigest() == original['sha256'], 'Original PPM hash mismatch')
+                require(ppm_pixels(raw)[:2] == (item['width'], item['height']), 'Original/preview dimensions differ')
+                paths.add(raw_path)
         require(pair['reference']['profile'] == pair['bevy']['profile'],
                 'Never silently compare prototype and retail')
         require(pair['reference']['sha256'] != pair['bevy']['sha256'],
@@ -99,10 +134,16 @@ def prepare(root, entry):
     for side in ('reference', 'bevy'):
         item = pair[side]
         source = Path(item.pop('source')).resolve()
-        require(source.is_relative_to(root / 'recomp/experiments') and source.suffix.lower() == '.png',
-                'Source must be an explicit private experiment PNG')
+        require(source.is_relative_to(root / 'recomp/experiments') and source.suffix.lower() in {'.png', '.ppm'},
+                'Source must be an explicit private experiment PNG/PPM')
         require(source.stat().st_size <= MAX_IMAGE_BYTES, 'Original screenshot exceeds 20 MiB')
         data = source.read_bytes()
+        if source.suffix.lower() == '.ppm':
+            require(side == 'reference', 'PPM source must be a reference screenshot')
+            raw_digest = hashlib.sha256(data).hexdigest()
+            item['original'] = dict(path=f'media/{raw_digest}.ppm', sha256=raw_digest)
+            pending['docs/dashboard/' + item['original']['path']] = data
+            data = ppm_preview(data)
         width, height = png_dimensions(data)
         digest = hashlib.sha256(data).hexdigest()
         item.update(path=f'media/{digest}.png', sha256=digest, width=width, height=height)

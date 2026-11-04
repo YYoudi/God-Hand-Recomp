@@ -23,8 +23,9 @@ def problems(path, data, captures):
     comparison_image = path.startswith('docs/dashboard/media/') and path in captures
     if len(data) > (MAX_IMAGE_BYTES if comparison_image else MAX_SIZE):
         errors.append('file exceeds public size limit')
-    if p.suffix in {'.png', '.jpg'} and path in captures:
-        if not (data.startswith(b'\x89PNG\r\n\x1a\n') if p.suffix == '.png' else data.startswith(b'\xff\xd8\xff')):
+    if p.suffix in {'.png', '.jpg', '.ppm'} and path in captures:
+        magic = {'.png': b'\x89PNG\r\n\x1a\n', '.jpg': b'\xff\xd8\xff', '.ppm': b'P6'}[p.suffix]
+        if not data.startswith(magic):
             errors.append('invalid registered screenshot')
     elif path not in ROOT_FILES and p.suffix not in TEXT and path != 'docs/.nojekyll':
         errors.append('unsupported public file type')

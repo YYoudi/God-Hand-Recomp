@@ -71,3 +71,13 @@ without caches or artifact uploads. Verify CI and the published URL after pushin
 Discs, extractions, tools, Ghidra projects, translated output and gameplay captures
 stay local, except selected original rendered comparison pairs registered under
 progress-tracking.md. Before prototype/diff work, read unpublished docs/prototype-tcrf-notes.md.
+
+## Placement experiments
+
+Read specs/scr-placement-v1.md before applying transforms. Use dev.ps1
+LayoutInspect / Layout, with explicit -RotationOrder when testing multiaxis
+hypotheses, -ExcludeCollections for a logged manual resource subset and
+-CapturePng for a new renderer-owned PNG. Captures require at least a 10-second
+smoke; the snapshot is requested halfway through. Check the actual pixels and
+capture result, not only process exit. PPM reference captures publish unchanged
+with labeled lossless PNG previews and raw-download links under the protocol.

@@ -6,13 +6,24 @@ use bevy::image::{ImageAddressMode, ImageSampler, ImageSamplerDescriptor};
 use bevy::mesh::{Indices, PrimitiveTopology};
 use bevy::prelude::*;
 use bevy::render::render_resource::{Extent3d, TextureDimension, TextureFormat};
+use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
 use godhand_disc::tim2::RgbaImage;
 use godhand_engine::{Position, TICK_HZ, step};
+use std::path::PathBuf;
 use std::sync::{
-    Arc,
+    Arc, Mutex,
     atomic::{AtomicBool, Ordering},
 };
 use std::time::{Duration, Instant};
+
+type CaptureResult = Arc<Mutex<Option<Result<(), String>>>>;
+
+#[derive(Resource)]
+struct CaptureRequest {
+    path: Option<PathBuf>,
+    delay: Duration,
+    result: CaptureResult,
+}
 
 #[derive(Component)]
 struct Actor;
@@ -36,7 +47,16 @@ pub fn run(
     smoke_seconds: Option<u64>,
     texture: Option<RgbaImage>,
     mesh: Option<crate::room::MeshView>,
+    capture_png: Option<PathBuf>,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    if let Some(path) = &capture_png {
+        if path.extension().is_none_or(|v| v != "png") || path.exists() {
+            return Err("capture destination must be a new .png file".into());
+        }
+        if smoke_seconds.is_none_or(|v| v < 10) {
+            return Err("capture requires a bounded smoke of at least 10 seconds".into());
+        }
+    }
     if mesh
         .as_ref()
         .is_some_and(|m| m.mesh.primitives.iter().all(|p| p.indices.is_empty()))
@@ -44,7 +64,11 @@ pub fn run(
         return Err("selected mesh has no emitted faces".into());
     }
     let completed = Arc::new(AtomicBool::new(false));
-    let title = if mesh.is_some() {
+    let capture_expected = capture_png.is_some();
+    let capture_result: CaptureResult = Arc::new(Mutex::new(None));
+    let title = if mesh.as_ref().is_some_and(|m| m.layout) {
+        "God Hand | candidate layout | S-R-T hypothesis, unlit; not runtime parity"
+    } else if mesh.is_some() {
         "God Hand | ISO static mesh inspection | unlit, local coordinates"
     } else if texture.is_some() {
         "God Hand | ISO texture inspection | not a game scene"
@@ -57,6 +81,11 @@ pub fn run(
         .init_resource::<Intent>()
         .insert_resource(TextureInput(texture))
         .insert_resource(MeshInput(mesh))
+        .insert_resource(CaptureRequest {
+            path: capture_png,
+            delay: Duration::from_secs(smoke_seconds.unwrap_or(20) / 2),
+            result: Arc::clone(&capture_result),
+        })
         .insert_resource(SmokeLimit {
             duration: smoke_seconds.map(Duration::from_secs),
             first_update: None,
@@ -72,16 +101,67 @@ pub fn run(
         }))
         .add_systems(Startup, setup)
         .add_systems(Update, sample_input)
-        .add_systems(Update, finish_smoke)
+        .add_systems(Update, (request_capture, finish_smoke).chain())
         .add_systems(FixedUpdate, move_actor)
         .run();
     if smoke_seconds.is_some() && !completed.load(Ordering::SeqCst) {
         return Err("smoke window closed before the configured deadline".into());
     }
+    if capture_expected {
+        match capture_result.lock().unwrap().as_ref() {
+            Some(Ok(())) => (),
+            Some(Err(message)) => return Err(format!("capture failed: {message}").into()),
+            None => return Err("capture did not finish before the smoke deadline".into()),
+        }
+    }
     match result {
         AppExit::Success => Ok(()),
         AppExit::Error(code) => Err(format!("viewer exited with code {code}").into()),
     }
+}
+
+fn request_capture(
+    mut commands: Commands,
+    limit: Res<SmokeLimit>,
+    mut request: ResMut<CaptureRequest>,
+) {
+    if !limit
+        .first_update
+        .is_some_and(|t| t.elapsed() >= request.delay)
+    {
+        return;
+    }
+    let Some(path) = request.path.take() else {
+        return;
+    };
+    let result = Arc::clone(&request.result);
+    commands
+        .spawn(Screenshot::primary_window())
+        .observe(move |capture: On<ScreenshotCaptured>| {
+            let saved = capture
+                .image
+                .clone()
+                .try_into_dynamic()
+                .map_err(|e| e.to_string())
+                .and_then(|image| {
+                    // create_new protects originals even if a file appeared after
+                    // the early path check while asynchronous capture was pending.
+                    let mut file = std::fs::OpenOptions::new()
+                        .write(true)
+                        .create_new(true)
+                        .open(&path)
+                        .map_err(|e| e.to_string())?;
+                    let format = bevy::image::ImageFormat::Png
+                        .as_image_crate_format()
+                        .ok_or_else(|| "PNG codec unavailable".to_owned())?;
+                    image.write_to(&mut file, format).map_err(|e| e.to_string())
+                });
+            match &saved {
+                Ok(()) => println!("Original renderer PNG captured: {}", path.display()),
+                Err(e) => eprintln!("Renderer PNG capture failed: {e}"),
+            }
+            *result.lock().unwrap() = Some(saved);
+        });
 }
 
 fn finish_smoke(mut limit: ResMut<SmokeLimit>, mut exit: MessageWriter<AppExit>) {

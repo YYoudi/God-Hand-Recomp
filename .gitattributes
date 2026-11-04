@@ -10,6 +10,7 @@
 *.js text eol=lf
 *.png binary
 *.jpg binary
+*.ppm binary
 *.rs text eol=lf
 *.toml text eol=lf
 Cargo.lock text eol=lf

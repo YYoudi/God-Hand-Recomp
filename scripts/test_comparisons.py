@@ -8,7 +8,7 @@ import tempfile
 import unittest
 import zlib
 
-from comparisons import png_dimensions, prepare, validate_comparisons
+from comparisons import png_dimensions, ppm_pixels, ppm_preview, prepare, validate_comparisons
 from dashboard import blog
 from check_public_tree import problems
 
@@ -139,6 +139,44 @@ class ComparisonTests(unittest.TestCase):
         pair, images = fixture()
         for path, payload in images.items():
             self.assertTrue(problems(path, payload, set()))
+
+    def test_ppm_preview_preserves_exact_original_pixels(self):
+        raw = b'P6\n2 1\n255\n' + bytes([1, 2, 3, 4, 5, 6])
+        self.assertEqual(ppm_pixels(raw), (2, 1, bytes([1, 2, 3, 4, 5, 6])))
+        preview = ppm_preview(raw)
+        self.assertEqual(png_dimensions(preview), (2, 1))
+        at, compressed = 8, b''
+        while at < len(preview):
+            size = struct.unpack_from('>I', preview, at)[0]
+            if preview[at + 4:at + 8] == b'IDAT':
+                compressed += preview[at + 8:at + 8 + size]
+            at += size + 12
+        self.assertEqual(zlib.decompress(compressed), b'\0' + raw[-6:])
+        for bad in [raw[:-1], raw + b'extra', b'P6\n99999 1\n255\n', b'P3\n2 1\n255\n']:
+            with self.assertRaises(ValueError):
+                ppm_pixels(bad)
+
+    def test_raw_reference_is_registered_and_labeled_not_called_original_png(self):
+        pair, images = fixture()
+        raw = b'P6\n2 1\n255\n' + bytes([1, 2, 3, 4, 5, 6])
+        digest = hashlib.sha256(raw).hexdigest()
+        preview = ppm_preview(raw)
+        preview_digest = hashlib.sha256(preview).hexdigest()
+        pair['reference'].update(path=f'media/{preview_digest}.png', sha256=preview_digest)
+        images['docs/dashboard/' + pair['reference']['path']] = preview
+        pair['reference']['original'] = dict(path=f'media/{digest}.ppm', sha256=digest)
+        raw_path = 'docs/dashboard/media/' + digest + '.ppm'
+        images[raw_path] = raw
+        paths = validate_comparisons([pair], images.__getitem__)
+        self.assertIn(raw_path, paths)
+        self.assertEqual(problems(raw_path, raw, paths), [])
+        self.assertTrue(problems(raw_path, raw, set()))
+        page = blog(dict(updates=[], captures=[], comparisons=[pair], repo='https://example.org/repo'))
+        self.assertIn('Download unchanged original PPM', page)
+        self.assertIn('lossless viewing preview', page)
+        images[raw_path] = raw[:-1] + b'X'
+        with self.assertRaises(ValueError):
+            validate_comparisons([pair], images.__getitem__)
 
 
 if __name__ == '__main__':

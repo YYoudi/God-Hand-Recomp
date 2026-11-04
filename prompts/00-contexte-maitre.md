@@ -59,3 +59,17 @@ old journal-only image restriction, not the ISO/code/asset exclusions. MIT does
 not cover game imagery and this is not a rights-holder/legal certification.
 Do not invent a comparison or conceal mismatched camera/state. Register and
 prepare pairs with scripts/comparisons.py; publish only approved media.
+
+Placement increment, 2026-11-04: specs/scr-placement-v1.md defines explicit
+S -> R -> T experiments and six fixed-axis application sequences. Unspecified
+multiaxis order is refused, never guessed. `--layout` / `--inspect-layout` place
+real resource nodes; repeated `--exclude-collection N` is explicit diagnostics,
+not inferred game visibility. Three candidates reproduce 433 nodes/meshes.
+r100 with collections 27/28 manually excluded rendered 148 nodes and 23,288
+triangles; automatic overview, unlit/two-sided, no scene activation or runtime
+parity established. `--capture-png` captures the renderer without desktop pixels
+halfway through a bounded smoke; destination must be new. Read
+specs/scr-placement-v1.md and docs/placement-2026-11-04.md before extending.
+The public first-fight reference / candidate overview pair is explicitly
+UNMATCHED. Reference PPM is downloadable unchanged; its PNG is a labeled lossless
+preview. Do not turn this into a matched fidelity claim on resume.

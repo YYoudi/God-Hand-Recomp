@@ -35,7 +35,7 @@ The owner now explicitly requests publication of selected original reference
 screenshots AND their Bevy counterparts, like the Giants comparison workflow.
 This supersedes the old journal-only image restriction, not the ISO/asset/code
 exclusions. Use reviewed, same-subject Reference / Bevy pairs, unchanged original
-PNGs, original-resolution downloads, SHA-256 filenames, timestamps, runtime and
+screenshots (PNG, or backend PPM with a labeled lossless PNG preview), original-resolution downloads, SHA-256 filenames, timestamps, runtime and
 revision provenance, alignment and visible limitations. Do not invent a matched
 pair when a reference is missing. Before / After means named iteration revisions,
 not that Bevy is better than the original. Keep retail/prototype separate.
@@ -118,3 +118,17 @@ independent-engine feature during this trial.
 
 Keep this file, README and prompts/00-contexte-maitre.md consistent.
 Report local artifacts with absolute paths. Do not delegate without explicit instruction.
+
+Placement increment, 2026-11-04: specs/scr-placement-v1.md defines explicit
+S -> R -> T experiments and six fixed-axis application sequences. Unspecified
+multiaxis order is refused, never guessed. `--layout` / `--inspect-layout` place
+real resource nodes; repeated `--exclude-collection N` is explicit diagnostics,
+not inferred game visibility. Three candidates reproduce 433 nodes/meshes.
+r100 with collections 27/28 manually excluded rendered 148 nodes and 23,288
+triangles; automatic overview, unlit/two-sided, no scene activation or runtime
+parity established. `--capture-png` captures the renderer without desktop pixels
+halfway through a bounded smoke; destination must be new. Read
+specs/scr-placement-v1.md and docs/placement-2026-11-04.md before extending.
+The public first-fight reference / candidate overview pair is explicitly
+UNMATCHED. Reference PPM is downloadable unchanged; its PNG is a labeled lossless
+preview. Do not turn this into a matched fidelity claim on resume.

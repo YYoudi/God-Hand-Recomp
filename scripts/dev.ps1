@@ -1,7 +1,10 @@
 param(
-    [ValidateSet('Doctor', 'Check', 'Build', 'Inspect', 'Catalog', 'Textures', 'Texture', 'MeshInspect', 'Mesh', 'Smoke')][string]$Action = 'Check',
+    [ValidateSet('Doctor', 'Check', 'Build', 'Inspect', 'Catalog', 'Textures', 'Texture', 'MeshInspect', 'Mesh', 'LayoutInspect', 'Layout', 'Smoke')][string]$Action = 'Check',
     [string]$Toolchain = '',
     [string]$Iso = '',
+    [string]$CapturePng = '',
+    [string]$RotationOrder = '',
+    [int[]]$ExcludeCollections = @(),
     [string]$AssetPath = 'etc/subscr/face_hm00.tm2',
     [string]$MeshPath = 'st1/r100.dat',
     [ValidateRange(0, 4095)][int]$Collection = 23,
@@ -66,6 +69,19 @@ try {
         }
         'Texture' {
             Run-Cargo @('run', '-p', 'godhand-lab', '--features', 'viewer', '--locked', '--jobs', "$Jobs", '--', '--iso', $Iso, '--texture', $AssetPath, '--smoke-seconds', "$Seconds")
+        }
+        'LayoutInspect' {
+            $options = @()
+            if ($RotationOrder) { $options += @('--rotation-order', $RotationOrder) }
+            foreach ($ordinal in $ExcludeCollections) { $options += @('--exclude-collection', "$ordinal") }
+            Run-Cargo (@('run', '-p', 'godhand-lab', '--locked', '--jobs', "$Jobs", '--', '--iso', $Iso, '--inspect-layout', $MeshPath) + $options)
+        }
+        'Layout' {
+            $options = @()
+            if ($RotationOrder) { $options += @('--rotation-order', $RotationOrder) }
+            foreach ($ordinal in $ExcludeCollections) { $options += @('--exclude-collection', "$ordinal") }
+            if ($CapturePng) { $options += @('--capture-png', $CapturePng) }
+            Run-Cargo (@('run', '-p', 'godhand-lab', '--features', 'viewer', '--locked', '--jobs', "$Jobs", '--', '--iso', $Iso, '--layout', $MeshPath, '--smoke-seconds', "$Seconds") + $options)
         }
         'MeshInspect' {
             Run-Cargo @('run', '-p', 'godhand-lab', '--locked', '--', '--iso', $Iso, '--inspect-meshes', $MeshPath)

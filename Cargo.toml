@@ -15,5 +15,5 @@ bevy = { version = "=0.20.1", default-features = false, features = [
     "std", "async_executor", "multi_threaded", "bevy_log", "bevy_asset",
     "bevy_window", "bevy_winit", "bevy_render", "bevy_mesh", "bevy_color",
     "bevy_camera", "bevy_light", "bevy_shader", "bevy_core_pipeline", "bevy_pbr",
-    "keyboard", "x11"
+    "keyboard", "x11", "png"
 ] }

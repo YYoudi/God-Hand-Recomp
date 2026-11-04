@@ -17,6 +17,7 @@ The texture inspection view reads your ISO; the sandbox contains original primit
 - [First game-data map and next fidelity experiments](docs/game-structure-2026-11-03.md)
 - [Room-container and node metadata findings](docs/room-containers-2026-11-03.md)
 - [First static mesh and texture-bank validation](docs/static-mesh-2026-11-03.md)
+- [Candidate placement experiments and unmatched reference comparison](docs/placement-2026-11-04.md)
 - [Clean-room method](docs/clean-room.md) · [Architecture](docs/architecture.md)
 - [PS2 recompilation research](docs/research-2026-11-03.md)
 - [Contributing](CONTRIBUTING.md) · [Licensing and scope](NOTICE.md)
@@ -50,8 +51,9 @@ RGBA32 palette. Other layouts are refused. Rendering an isolated asset does not
 establish a faithful game screen; reference-runtime comparison remains open.
 Room inspection validates storage sections and SCR node/MDB references. The narrow
 static MDB and TM3/TIM3 readers can display an isolated textured asset from the ISO.
-The mesh view uses local coordinates and unlit materials; scene placement, game
-lighting and reference-runtime parity remain open. Candidate paths still need
+The mesh view uses local coordinates. Candidate resource layouts now apply
+explicit affine hypotheses; multiaxis order is never guessed. Game scene
+activation, lighting and reference-runtime parity remain open. Candidate paths still need
 to be associated with a repeatable in-game scenario.
 
 Windows: use a GNU toolchain with `cargo +stable-x86_64-pc-windows-gnu ...`
@@ -90,3 +92,14 @@ a percentage. Public tasks, journal and comparison metadata live in
 and evidence. Visual comparisons publish the original reference and Bevy files
 side by side with full-resolution links, provenance and explicit differences.
 Missing or unmatched reference evidence is reported, never manufactured.
+
+Inspect a placement experiment (not a fidelity-validated scene):
+
+```sh
+cargo run -p godhand-lab -- --iso "/path/to/God Hand (USA).iso" --inspect-layout "st1/r100.dat"
+cargo run -p godhand-lab --features viewer -- --iso "/path/to/God Hand (USA).iso" --layout "st1/r100.dat" --exclude-collection 27 --exclude-collection 28 --smoke-seconds 30 --capture-png "/new/private/capture.png"
+```
+
+Manual resource exclusions are logged diagnostics, not game visibility rules.
+The first public reference/overview comparison is explicitly unmatched. The raw
+native PPM screenshot is preserved alongside its lossless PNG viewing preview.

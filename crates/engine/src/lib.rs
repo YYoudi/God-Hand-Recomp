@@ -1,4 +1,5 @@
 //! Original sandbox mechanics. These are engineering defaults, not measured game behavior.
+pub mod placement;
 pub const TICK_HZ: u32 = 60;
 
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
