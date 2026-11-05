@@ -4,6 +4,9 @@ Date: 2026-11-05. **Provisional direction, not a complete-game compatibility cla
 The independent Rust/Bevy lab is paused and preserved. No new Rust feature was
 started. This report concerns separate third-party C++ research builds.
 
+Follow-up: [the matching toolchain is now being tested in Linux](matching-evaluation-2026-11-05.md).
+The original Windows findings below remain historical evidence.
+
 ## Direction supported so far
 
 Use **LasVola as the primary playable-base candidate**, with an upstream

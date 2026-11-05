@@ -493,6 +493,23 @@
   "updates": [
     {
       "date": "2026-11-05",
+      "title": "Trying the matching build in Linux",
+      "summary": "The LucasPicoli evaluation now uses a real Linux guest rather than stopping at the Windows tooling failures. Its compiler probes pass; the retail matching build is still running.",
+      "changes": [
+        "Booted an isolated Debian guest with portable QEMU, without installing WSL or changing host drivers/security. The original disc remains untouched and all game-derived inputs remain private.",
+        "Pinned the same LucasPicoli revision on the Linux filesystem and completed upstream toolchain setup. Both original compiler probes pass, including the SN compiler through wibo.",
+        "The initial full Linux tooling run returns 529 passes, 21 skips and one failure caused by expected/build not yet being generated. This is not recorded as a clean suite pass.",
+        "Started the actual retail split/setup/build sequence. No locally matching ELF or PC port is claimed; the scanned input is still being split at this update."
+      ],
+      "validation": "Actual Linux boot and SSH verified; retail boot ELF matches the pinned project registry. Tool versions and licenses are recorded from fetched dependencies. Runtime save-point exploration continues privately, but no in-game card save/load round trip is established.",
+      "limits": "Toolchain setup and synthetic compiler probes are not a matching game build. Moving dependencies, symbol-range warnings and the prerequisite-dependent test remain visible. Assembly/raw-data fallbacks mean an identical ELF would not prove complete C recovery. No new Rust work or third-party source publication.",
+      "link": {
+        "label": "Linux environment, tests, dependency pins and build gates",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/matching-evaluation-2026-11-05.md"
+      }
+    },
+    {
+      "date": "2026-11-05",
       "title": "A local PC build and a small external texture proof",
       "summary": "LasVola now runs the retail opening and first fight locally. An original external file changes the ground texture, with a matched restoration control. This is a first modification proof, not a finished remaster.",
       "changes": [
@@ -877,6 +894,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-05-linux-matching-journal.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched actual hidden-browser capture of the English Linux toolchain evaluation journal; no game pixels in this capture.",
+      "caption": "Supported Linux compiler probes, explicit failing prerequisite test and unverified matching build"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-05-native-build-journal-selected.jpg",
       "date": "2026-11-05",
       "source": "Unretouched actual hidden-browser capture of the English native-build and texture-proof journal; taken before a minor directional wording correction. Original gameplay PNGs are registered separately.",
@@ -1050,12 +1074,12 @@
   "progress": {
     "goal": "Experimentally choose the best faithful and remasterable God Hand PC codebase: LasVola playable-base evaluation first, LucasPicoli matching-decompilation complement separately.",
     "baseline_revision": "fc34d4a37b18f17746a490ac6ec902674e5bccd6",
-    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass.",
+    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet.",
     "open_questions": [
       "Real in-game saving on the inter-area Map and loading in a new process are not yet reproduced. Runtime snapshots are a separate successful test, not a replacement.",
       "Same-size texture replacement works; named-resource packs, true HD texture dimensions, hot reload and general remaster rendering remain unproven.",
       "Headless captures have top/right margins. Cause, normal visible-window behavior, audible audio, physical keyboard/controller and later-stage stability remain unverified.",
-      "Lucas checked-in matching figures are upstream reports, not locally rebuilt measurements. Its supported matching environment still needs provisioning. Decompiled camera source exposure is logged; affected future logic cannot claim independent provenance."
+      "Lucas matching percentages remain upstream reports. Linux toolchain probes pass, but the actual retail build and post-setup test rerun are still pending. Dependency versions are recorded; source exposure remains logged."
     ],
     "next_experiment": "Reproduce a genuine inter-area Map save and load it in a new process; diagnose the physical-window margins and test real input/audio before broader playthrough and HD asset work.",
     "status": "active"
