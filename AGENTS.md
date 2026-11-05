@@ -243,3 +243,16 @@ Reference/Bevy originals published. Default inspector unchanged. Next isolate
 vertex-alpha/texture/pass inputs for identifiable ground resources before
 changing material assignment. Do not hide failed holes or claim full GS9bit
 intermediates from RGBA8 arithmetic tests. Goal remains ACTIVE; no delegation.
+
+Texture addressing increment, 2026-11-05: read specs/texture-addressing-v1.md and
+docs/texture-addressing-2026-11-05.md. Per-axisClamp/Repeat and explicit --address
+clamp/repeat; defaults unchanged.80distinctRust (70base+10viewer-only),25Python;
+147,456actualGPUaddress samples and previousalpha/blend suitespass. Four default
+Clamp replays byte-identical; four Repeat variants restore texture detail, but
+BLUE GROUND GAPS PERSIST. Two no-cull controls fullyocclude the street: rejected.
+SelectedRepeat originals captured from committedenginebb7aedf; previousClamp
+originals retained.176/28candidatebuffers showwrap0/0, notcomplete materialidentity
+or activation. Existingtrace hasSTQ/position but NO RGBA; cannotprove runtime
+vertexalpha from it. Next clipping-aware ground-fragment correspondence and
+texture/alpha/pass mapping; absence ofexactcornerUVmatches isNOTinactiveproof.
+No globalwindingflip/forcedalpha/deletingresources as guessedfixes. GoalACTIVE.

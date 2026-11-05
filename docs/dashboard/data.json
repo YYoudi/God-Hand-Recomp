@@ -6,11 +6,11 @@
   "engine": "Rust + Bevy 0.20.1",
   "phase": "Autonomous native-rendering investigation",
   "playable": false,
-  "next": "Investigate ground holes at both unchanged poses: compare observed vertex-alpha/texture/pass inputs for identifiable resources, then replace the uniform-state control with evidence-supported material and ordering behavior.",
+  "next": "Investigate clipping-aware mapping of ground fragments and their texture/alpha/pass inputs. Repeat alone did not fix the gaps; removing culling occludes both views. Keep uniform-state and activation claims open.",
   "validation": {
-    "tests": 78,
+    "tests": 80,
     "bevy_check": "pass",
-    "viewer_runtime": "A separate no-window ISO-backed uniform-state control renders all156 r100 nodes /353 buffers /23,686 triangles /67 images at both fixed poses. Street visible without exclusions, but blue ground holes and material/sky failures remain. Production inspector unchanged. Synthetic byte blend and ordered feedback pass actual Vulkan checks.",
+    "viewer_runtime": "Explicit Repeat restores texture detail at both full-resource poses, but blue ground gaps persist. Four unchanged default Clamp replays are byte-identical to prior originals; two no-cull controls occlude the street. Production viewer unchanged. Actual Vulkan address/alpha/blend component checks pass.",
     "gameplay": "Not implemented"
   },
   "milestones": [
@@ -443,6 +443,23 @@
   "updates": [
     {
       "date": "2026-11-05",
+      "title": "Repeat restores texture detail, not all ground gaps",
+      "summary": "An isolated addressing experiment restores facade, terrain and mountain texture detail. The blue gaps remain on both views, so Clamp was not their whole cause.",
+      "changes": [
+        "Added explicit per-axis Clamp/Repeat addressing with four bounded nearest samplers and an opt-in --address control option. Existing defaults stay unchanged.",
+        "Tested original negative/out-of-range UV fixtures, integer boundaries/offsets, mixed sampler bindings and transparent-border alpha feedback. A forced-Clamp negative control fails as expected.",
+        "Replayed all four previous Clamp render argument sets with new output paths and identical PNG bytes, then changed only addressing for four Repeat renders at the same two full-resource poses.",
+        "Published reviewed original Repeat / reference pairs with a committed engine revision. Retained prior Clamp and failed no-cull controls; no camera/object fitting or resource exclusion."
+      ],
+      "validation": "80 distinct Rust and25 Python synthetic tests pass. Actual Vulkan:147,456 addressing samples plus the prior exhaustive alpha/blend suites. All four default Clamp PNGs remain byte-identical. Eight address controls plus two no-cull diagnostics exit normally; original ISO SHA-256 unchanged.",
+      "limits": "Repeat improves sampling, not overall rendering parity. Blue ground gaps persist; dropping culling blocks the street with nearby rear surfaces. Uniform states and storage order are still controls, not recovered materials/activation. No actors/HUD, camera behavior or gameplay.",
+      "link": {
+        "label": "Addressing contract, controlled originals and rejected hole hypothesis",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/texture-addressing-2026-11-05.md"
+      }
+    },
+    {
+      "date": "2026-11-05",
       "title": "An all-resource byte-blend control at both viewpoints",
       "summary": "The street is visible with all resources included in a separate raw-alpha, ordered-rendering experiment. Both fixed viewpoints still expose blue ground holes and material errors; this is not a recovered scene renderer.",
       "changes": [
@@ -757,6 +774,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-05-texture-addressing.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched browser screenshot of the actual local English Repeat addressing journal; original game/control pairs are registered separately",
+      "caption": "Repeat sampling result and rejected all-hole hypothesis"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-05-byte-source-over.jpg",
       "date": "2026-11-05",
       "source": "Unretouched browser screenshot of the actual local English journal; reviewed original comparison pairs are registered separately",
@@ -901,17 +925,109 @@
   ],
   "progress": {
     "goal": "Resolve full-resource sky overpainting with original evidence-supported native Rust/Bevy depth/alpha behavior, synthetic CPU/GPU checks and real comparisons at both established viewpoints.",
-    "baseline_revision": "d84617ac20995d6e2f3c118ac9af39fdd458947c",
-    "last_verified": "78 distinct Rust tests (70 base +8 viewer-only),25 Python tests, locked viewer check/build pass. GPU:16,777,216 byte-source-over pixels +163,840 feedback/mask/order/culling samples; previous4,718,592 alpha-stage +573,442 spatial cases pass. Four bounded real-ISO controls at the two unchanged poses completed; original ISO unchanged. Uniform controls expose ground holes and are not accepted as recovered materials or full rendering.",
+    "baseline_revision": "fb0f307d2c91d306459c08d1aa13286c1fcdfe93",
+    "last_verified": "80 distinct Rust tests (70 base +10 viewer-only),25 Python tests and locked check/build pass. GPU:147,456 address samples plus all previous alpha/blend checks. Four Clamp replays match old original PNG bytes exactly; four Repeat controls render both fixed poses. Two no-cull controls fail visibly. Original ISO unchanged. Source engine revision for new captures:bb7aedf2805822b550c5e84d0c116e02c348df99.",
     "open_questions": [
-      "Uniform caller-selected states are controls, not complete per-draw mapping. Native runtime order, activation and texture identity remain unverified.",
-      "Ground holes persist in both new all-resource views. Vertex-alpha composition, texture/material binding, filtering, pass state and wider color intermediates need isolated observation-backed tests; do not guess a fix.",
-      "Byte-input source-over component checks do not prove full GS precision or scene fidelity. Original camera motion, general transforms, actors/HUD and gameplay remain incomplete."
+      "Repeat matches observed wrap0/0 on the existing176/28 candidate-buffer joins, not every active material. Complete texture identity, activation and draw order remain unverified.",
+      "Addressing explains stretched edge samples, not all ground gaps. New source/trace correspondence must account for clipped triangles; absent exact-corner UV matches are not proof a resource is inactive.",
+      "No-cull controls occlude the street; forcing alpha, flipping winding globally or deleting resources is not supported. Wider GS color precision, filtering/fog, actors/HUD, general transforms, camera motion and gameplay remain incomplete."
     ],
-    "next_experiment": "Investigate ground holes at both unchanged poses: compare observed vertex-alpha/texture/pass inputs for identifiable resources, then replace the uniform-state control with evidence-supported material and ordering behavior.",
+    "next_experiment": "Investigate clipping-aware mapping of ground fragments and their texture/alpha/pass inputs. Repeat alone did not fix the gaps; removing culling occludes both views. Keep uniform-state and activation claims open.",
     "status": "active"
   },
   "comparisons": [
+    {
+      "id": "2026-11-05-repeat-second",
+      "date": "2026-11-05",
+      "title": "Second-view Repeat addressing control — ground gap remains",
+      "feature": "R03",
+      "scenario": "Same full r100 resources, fixed camera and512x448 output as the preceding Clamp control.156 nodes,353 buffers,23,686 triangles,67 images; source-over, GT127/framebuffer-only failure, unmasked GEQUAL depth, nearest sampling, back-face culling and storage order unchanged. Only explicit addressing changes to Repeat on both axes; no exclusions or object/camera fitting.",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "reference": {
+        "caption": "Retail second viewpoint, capture frame 6203",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T20:40:24.377141+00:00",
+        "original": {
+          "path": "media/6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e.ppm",
+          "sha256": "6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e"
+        },
+        "path": "media/91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af.png",
+        "sha256": "91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "Explicit Repeat: texture detail returns, but blue ground gap and incomplete materials remain",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / Windows Vulkan / original ordered uniform-state control",
+        "revision": "bb7aedf2805822b550c5e84d0c116e02c348df99",
+        "captured_at": "2026-11-05T17:33:20.796901+00:00",
+        "path": "media/8f7e4953c9ceeb7f09ba0a4dbc7b8a8038aa6fb27692a95b97c673b63a74ebc8.png",
+        "sha256": "8f7e4953c9ceeb7f09ba0a4dbc7b8a8038aa6fb27692a95b97c673b63a74ebc8",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "Out-of-range UVs now repeat rather than selecting stretched edge texels. Facades, ground detail and the second-view mountain textures become visible.",
+        "The earlier Clamp command was replayed first: all four retained Clamp PNGs remain byte-identical. Only addressing varies for the Repeat comparison.",
+        "The blue ground gap persists in both fixed views. The hypothesis that Clamp caused all the holes is rejected; no-cull controls also fail by occluding the street."
+      ],
+      "limits": [
+        "Repeat0/0 is observed on176/28 geometry-consistent candidate buffers, not every resource; counts overlap across views. UV matching is not texture identity or complete runtime mapping.",
+        "Uniform alpha/blend state and storage order are still explicit controls. Ground coverage, clipping-aware material assignment, activation and native pass ordering remain unresolved.",
+        "Nearest sampling, incomplete sky/shading, dark or aliased surfaces, missing actors/HUD and byte-input color precision differ from the reference. No gameplay, full-GS or camera-behavior claim.",
+        "Reference remains the third-party native backend, not hardware or PCSX2. Prototype is separate. Both source PNG and reference PPM are unchanged originals; the reference PNG is a labeled lossless preview."
+      ]
+    },
+    {
+      "id": "2026-11-05-repeat-first",
+      "date": "2026-11-05",
+      "title": "First-view Repeat addressing control — ground gap remains",
+      "feature": "R03",
+      "scenario": "Same full r100 resources, fixed camera and512x448 output as the preceding Clamp control.156 nodes,353 buffers,23,686 triangles,67 images; source-over, GT127/framebuffer-only failure, unmasked GEQUAL depth, nearest sampling, back-face culling and storage order unchanged. Only explicit addressing changes to Repeat on both axes; no exclusions or object/camera fitting.",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "reference": {
+        "caption": "Retail first fight, newly rendered capture frame 4503; traced/control pixels identical",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T20:18:44.359477+00:00",
+        "original": {
+          "path": "media/033e25087ed4fe723f77b608804cb4af404c25c6e8671f4a743cbf18ad355dad.ppm",
+          "sha256": "033e25087ed4fe723f77b608804cb4af404c25c6e8671f4a743cbf18ad355dad"
+        },
+        "path": "media/edace008cb069c5c1a80cb803c1bf71aab90a7740ad57ee2cb3f91d3941cc9f5.png",
+        "sha256": "edace008cb069c5c1a80cb803c1bf71aab90a7740ad57ee2cb3f91d3941cc9f5",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "Explicit Repeat: texture detail returns, but blue ground gap and incomplete materials remain",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / Windows Vulkan / original ordered uniform-state control",
+        "revision": "bb7aedf2805822b550c5e84d0c116e02c348df99",
+        "captured_at": "2026-11-05T17:33:08.710167+00:00",
+        "path": "media/467b8596967c777e11a8a2cb3ef3edf55614ce50ad1c4fd43655cdd3435755a0.png",
+        "sha256": "467b8596967c777e11a8a2cb3ef3edf55614ce50ad1c4fd43655cdd3435755a0",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "Out-of-range UVs now repeat rather than selecting stretched edge texels. Facades, ground detail and the second-view mountain textures become visible.",
+        "The earlier Clamp command was replayed first: all four retained Clamp PNGs remain byte-identical. Only addressing varies for the Repeat comparison.",
+        "The blue ground gap persists in both fixed views. The hypothesis that Clamp caused all the holes is rejected; no-cull controls also fail by occluding the street."
+      ],
+      "limits": [
+        "Repeat0/0 is observed on176/28 geometry-consistent candidate buffers, not every resource; counts overlap across views. UV matching is not texture identity or complete runtime mapping.",
+        "Uniform alpha/blend state and storage order are still explicit controls. Ground coverage, clipping-aware material assignment, activation and native pass ordering remain unresolved.",
+        "Nearest sampling, incomplete sky/shading, dark or aliased surfaces, missing actors/HUD and byte-input color precision differ from the reference. No gameplay, full-GS or camera-behavior claim.",
+        "Reference remains the third-party native backend, not hardware or PCSX2. Prototype is separate. Both source PNG and reference PPM are unchanged originals; the reference PNG is a labeled lossless preview."
+      ]
+    },
     {
       "id": "2026-11-05-byte-source-over-second",
       "date": "2026-11-05",

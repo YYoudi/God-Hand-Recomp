@@ -1,6 +1,6 @@
 # Explicit texture addressing, version 1
 
-Date: 5 November 2026. Status: CPU/GPU component validated; controlled retail comparison pending.
+Date: 5 November 2026. Status: component and controlled retail comparisons validated; fidelity/mapping incomplete.
 Provenance: original reader/renderer code, original synthetic sampling fixtures,
 and previously retained data-only GS register observations. No game instructions,
 translated functions or shaders are implementation inputs.
@@ -58,3 +58,8 @@ ISO and prototype. Publish selected unchanged Reference / Bevy pairs and named
 Clamp/Repeat iterations, with source revision, provenance and visible limitations.
 Uniform state/storage order remain controls until per-draw coverage is validated;
 no gameplay, full rendering or scene-activation gate is completed by this feature.
+
+Observed retail outcome: Repeat restores texture detail, but ground gaps persist
+at both poses. The hypothesis that Clamp caused ALL holes is rejected. Removing
+culling instead fully occludes both views. Retain those controls and do not turn
+Repeat or culling into a recovered per-asset policy without further evidence.

@@ -115,3 +115,10 @@ fixed by forcing alpha, changing culling, deleting resources or moving the camer
 Establish material/ordering coverage before replacing the uniform control.
 Full GS source intermediates, filtering/fog, scene activation, general transforms,
 camera motion, actors/HUD and gameplay remain incomplete. Goal active, not complete.
+
+## Subsequent addressing experiment
+
+[Explicit Repeat](texture-addressing-2026-11-05.md) restores texture detail while
+keeping the same source-over controls. The original Clamp commands remain byte-
+identical; the blue ground gaps persist. Neither addressing nor disabling culling
+provides a complete hole/material fix. Original images above remain unchanged.

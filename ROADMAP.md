@@ -7,7 +7,7 @@ Updated: 2026-11-05. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Investigate ground holes at both unchanged poses: compare observed vertex-alpha/texture/pass inputs for identifiable resources, then replace the uniform-state control with evidence-supported material and ordering behavior.
+Next useful evidence: Investigate clipping-aware mapping of ground fragments and their texture/alpha/pass inputs. Repeat alone did not fix the gaps; removing culling occludes both views. Keep uniform-state and activation claims open.
 
 ## M0 — Public foundations
 

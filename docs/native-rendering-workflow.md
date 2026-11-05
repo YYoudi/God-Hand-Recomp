@@ -43,6 +43,11 @@ not old files/PIDs. Keep unrelated changes and historical captures untouched.
   but ground holes persist. Read byte-source-over-2026-11-05.md; do not accept
   uniform states or storage order as recovered game materials/activation.
 
+- Explicit Repeat restores texture detail but does not eliminate the ground gaps.
+  Four default Clamp replays remain byte-identical; both no-cull views fail. Read
+  texture-addressing-2026-11-05.md and pursue clipping-aware ground/pass evidence,
+  not a guessed global alpha/culling change.
+
 ## Execute and adjust
 
 1. Form one falsifiable rendering hypothesis; record alternative explanations.

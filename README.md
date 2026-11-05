@@ -127,14 +127,16 @@ this is not completed scene reconstruction or general runtime transform parity.
 
 The [new autonomous rendering goal](docs/native-rendering-workflow.md)
 starts from the sky-overpainting failure. Its [first investigation](docs/render-pass-investigation-2026-11-05.md)
-adds original CPU alpha-stage write permissions; GPU integration remains pending.
+adds original CPU alpha-stage write permissions, now consumed by the separate
+ordered GPU control; complete runtime integration remains pending.
 All-opaque diagnostic captures are rejected controls, not completed native rendering.
 
 Repository: [god-hand-rs](https://github.com/YYoudi/god-hand-rs). The native-rendering goal has been explicitly resumed by the owner.
 
 The [ordered GPU alpha component](docs/ordered-alpha-gpu-2026-11-05.md) passes
-synthetic offscreen Vulkan checks. It is not connected to the retail viewer yet;
-blending and full-resource rendering remain open.
+synthetic offscreen Vulkan checks. The normal interactive inspector is unchanged;
+a byte-blend subset and all-resource controls exist, but complete runtime
+materials and rendering remain open.
 
 [Raw texture alpha](docs/raw-texture-alpha-2026-11-05.md) is preserved separately
 from presentation transparency; the existing viewer output policy is unchanged.
@@ -144,3 +146,7 @@ The [byte-blend control](docs/byte-source-over-2026-11-05.md) now renders all
 resources at both fixed inspection poses without a window. The street appears,
 but ground holes and material/sky errors remain. This is an explicit uniform-state
 experiment, not recovered game materials, scene activation or playable content.
+
+[Explicit Repeat addressing](docs/texture-addressing-2026-11-05.md) restores
+texture detail in the all-resource control. The ground gaps persist; this is
+not yet recovered rendering. Previous Clamp outputs and defaults are preserved.
