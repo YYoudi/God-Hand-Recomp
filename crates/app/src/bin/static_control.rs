@@ -24,6 +24,7 @@ struct Options {
     output: PathBuf,
     cull: bool,
     order: Option<EulerOrder>,
+    address: TextureWrap,
 }
 fn parse(args: Vec<OsString>) -> GpuResult<Options> {
     let mut values = BTreeMap::new();
@@ -47,6 +48,7 @@ fn parse(args: Vec<OsString>) -> GpuResult<Options> {
             "--alpha-failure",
             "--capture-png",
             "--rotation-order",
+            "--address",
         ]
         .contains(&key.as_str())
         {
@@ -65,6 +67,15 @@ fn parse(args: Vec<OsString>) -> GpuResult<Options> {
                 .and_then(|v| v.parse().map_err(|_| "invalid rotation order"))
         })
         .transpose()?;
+    let address = values
+        .remove("--address")
+        .map(|v| {
+            v.into_string()
+                .map_err(|_| "invalid address")
+                .and_then(|v| v.parse::<TextureWrap>())
+        })
+        .transpose()?
+        .unwrap_or_default();
     let mut value = |key: &str| -> GpuResult<OsString> {
         Ok(values
             .remove(key)
@@ -112,6 +123,7 @@ fn parse(args: Vec<OsString>) -> GpuResult<Options> {
         output,
         cull,
         order,
+        address,
     })
 }
 fn main() {
@@ -124,7 +136,7 @@ fn run() -> GpuResult<()> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
     if args == [OsString::from("--help")] {
         println!(
-            "godhand-static-control --iso <personal ISO> --room <exact DAT path> --eye X,Y,Z --target X,Y,Z --fov 10..120 --aspect 0.25..4 --size W,H --blend overwrite/source-over --alpha-failure keep/framebuffer-only --capture-png <NEW PNG> [--backface-culling] [--rotation-order xyz/... ]\nNo-window all-resource UNIFORM-STATE CONTROL, not recovered materials. Fixed GT127, GEQUAL/unmasked depth, raw textures, nearest/clamp, source colors with reported neutral fallback. Storage ordering is NOT runtime ordering; no scene activation/fidelity claim."
+            "godhand-static-control --iso <personal ISO> --room <exact DAT path> --eye X,Y,Z --target X,Y,Z --fov 10..120 --aspect 0.25..4 --size W,H --blend overwrite/source-over --alpha-failure keep/framebuffer-only --capture-png <NEW PNG> [--backface-culling] [--rotation-order xyz/... ] [--address clamp/repeat]\nNo-window all-resource UNIFORM-STATE CONTROL, not recovered materials. Fixed GT127, GEQUAL/unmasked depth, raw textures, nearest sampling (default clamp), source colors with reported neutral fallback. Storage ordering is NOT runtime ordering; no scene activation/fidelity claim."
         );
         return Ok(());
     }
@@ -197,11 +209,12 @@ fn run() -> GpuResult<()> {
             },
             blend: o.blend,
             cull_backfaces: o.cull,
+            address: [o.address; 2],
         });
     }
     validate_inputs(o.size, &textures, &draws)?;
     println!(
-        "UNIFORM STATE CONTROL: {} nodes /{} buffers /{} triangles /{} images; missing-color neutral fallback on{} buffers. Blend {:?}; failure {:?}; GT127; GEQUAL/unmasked; cull {}; nearest/clamp; storage order. NO recovered material mapping or scene activation.",
+        "UNIFORM STATE CONTROL: {} nodes /{} buffers /{} triangles /{} images; missing-color neutral fallback on{} buffers. Blend {:?}; failure {:?}; GT127; GEQUAL/unmasked; cull {}; nearest/{:?}; storage order. NO recovered material mapping or scene activation.",
         summary.nodes,
         summary.buffers,
         summary.indices / 3,
@@ -209,7 +222,8 @@ fn run() -> GpuResult<()> {
         missing_colors,
         o.blend,
         o.failure,
-        o.cull
+        o.cull,
+        o.address
     );
     let (_app, device, queue) = offscreen::setup()?;
     let mut gpu = OrderedAlphaGpu::new(&device);
@@ -267,6 +281,18 @@ mod tests {
             let mut bad = args();
             let i = bad.iter().position(|v| v == key).unwrap();
             bad[i + 1] = value.into();
+            assert!(parse(bad).is_err());
+        }
+    }
+    #[test]
+    fn addressing_is_optional_explicit_and_never_guessed() {
+        assert_eq!(parse(args()).unwrap().address, TextureWrap::Clamp);
+        let mut repeat = args();
+        repeat.extend([OsString::from("--address"), OsString::from("repeat")]);
+        assert_eq!(parse(repeat).unwrap().address, TextureWrap::Repeat);
+        for value in ["auto", "region-clamp", "mirror", "0", ""] {
+            let mut bad = args();
+            bad.extend([OsString::from("--address"), OsString::from(value)]);
             assert!(parse(bad).is_err());
         }
     }

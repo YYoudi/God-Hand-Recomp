@@ -5,6 +5,8 @@ use godhand_engine::fragment_alpha::{AlphaComparison::*, AlphaFailure::*, AlphaS
 use godhand_lab::alpha_gpu::*;
 use godhand_lab::offscreen::setup;
 use std::time::{Duration, Instant};
+#[path = "alpha_check/address_checks.rs"]
+mod address_checks;
 #[path = "alpha_check/blend_checks.rs"]
 mod blend_checks;
 
@@ -23,6 +25,7 @@ fn quad(
         stage,
         blend: ByteBlend::Overwrite,
         cull_backfaces: false,
+        address: [TextureWrap::Clamp; 2],
         vertices: [0, 1, 2, 0, 2, 3]
             .into_iter()
             .map(|i| AlphaVertex {
@@ -191,6 +194,10 @@ fn run() -> GpuResult<()> {
     let spatial = spatial_checks(&mut gpu, &device, &queue)?;
     println!(
         "PASS: {spatial} additional raw RGBA/depth spatial samples (ordering/equality/occlusion/modulation/interpolation)."
+    );
+    let address_samples = address_checks::run(&mut gpu, &device, &queue)?;
+    println!(
+        "PASS: {address_samples} texture-addressing samples (negative UVs, axes, integer shifts, cache/order, raw border-alpha feedback)."
     );
     let (blend_pixels, blend_spatial) = blend_checks::run(&mut gpu, &device, &queue, quick)?;
     println!(
@@ -541,6 +548,7 @@ fn spatial_checks(
     let draw = AlphaDraw {
         blend: ByteBlend::Overwrite,
         cull_backfaces: false,
+        address: [TextureWrap::Clamp; 2],
         texture: 0,
         stage: enabled_pass,
         vertices: [

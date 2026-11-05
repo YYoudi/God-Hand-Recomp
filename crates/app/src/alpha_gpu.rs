@@ -39,6 +39,32 @@ impl From<godhand_disc::tim2::RawRgbaImage> for RawAlphaTexture {
     }
 }
 
+/// Explicit host nearest-sampler addressing, not full GS region addressing.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
+pub enum TextureWrap {
+    #[default]
+    Clamp,
+    Repeat,
+}
+impl std::str::FromStr for TextureWrap {
+    type Err = &'static str;
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
+            "clamp" => Ok(Self::Clamp),
+            "repeat" => Ok(Self::Repeat),
+            _ => Err("address must be clamp or repeat; region/mirror modes unsupported"),
+        }
+    }
+}
+impl TextureWrap {
+    fn gpu(self) -> AddressMode {
+        match self {
+            Self::Clamp => AddressMode::ClampToEdge,
+            Self::Repeat => AddressMode::Repeat,
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct AlphaDraw {
     pub vertices: Vec<AlphaVertex>,
@@ -46,6 +72,7 @@ pub struct AlphaDraw {
     pub stage: AlphaStage,
     pub blend: ByteBlend,
     pub cull_backfaces: bool,
+    pub address: [TextureWrap; 2],
 }
 
 fn comparison_code(comparison: AlphaComparison) -> u32 {
@@ -135,7 +162,7 @@ struct PreparedDraw {
 pub struct OrderedAlphaGpu {
     shader: ShaderModule,
     layout: BindGroupLayout,
-    sampler: Sampler,
+    samplers: BTreeMap<[TextureWrap; 2], Sampler>,
     pipelines: BTreeMap<[bool; 4], RenderPipeline>,
 }
 
@@ -202,16 +229,26 @@ impl OrderedAlphaGpu {
                 },
             ],
         );
-        let sampler = device.create_sampler(&SamplerDescriptor {
-            label: Some("raw alpha nearest clamp"),
-            mag_filter: FilterMode::Nearest,
-            min_filter: FilterMode::Nearest,
-            ..Default::default()
-        });
+        let mut samplers = BTreeMap::new();
+        for u in [TextureWrap::Clamp, TextureWrap::Repeat] {
+            for v in [TextureWrap::Clamp, TextureWrap::Repeat] {
+                samplers.insert(
+                    [u, v],
+                    device.create_sampler(&SamplerDescriptor {
+                        label: Some("explicit nearest texture addressing"),
+                        mag_filter: FilterMode::Nearest,
+                        min_filter: FilterMode::Nearest,
+                        address_mode_u: u.gpu(),
+                        address_mode_v: v.gpu(),
+                        ..Default::default()
+                    }),
+                );
+            }
+        }
         Self {
             shader,
             layout,
-            sampler,
+            samplers,
             pipelines: BTreeMap::new(),
         }
     }
@@ -434,7 +471,7 @@ impl OrderedAlphaGpu {
                         },
                         BindGroupEntry {
                             binding: 1,
-                            resource: BindingResource::Sampler(&self.sampler),
+                            resource: BindingResource::Sampler(&self.samplers[&draw.address]),
                         },
                         BindGroupEntry {
                             binding: 2,
@@ -724,8 +761,30 @@ mod tests {
                 },
                 blend: ByteBlend::Overwrite,
                 cull_backfaces: false,
+                address: [TextureWrap::Clamp; 2],
             },
         )
+    }
+    #[test]
+    fn addressing_is_explicit_bounded_and_default_compatible() {
+        assert_eq!(TextureWrap::default(), TextureWrap::Clamp);
+        assert_eq!(
+            "repeat".parse::<TextureWrap>().unwrap().gpu(),
+            AddressMode::Repeat
+        );
+        assert_eq!(
+            "clamp".parse::<TextureWrap>().unwrap().gpu(),
+            AddressMode::ClampToEdge
+        );
+        for bad in ["auto", "mirror", "region-repeat", "0", ""] {
+            assert!(bad.parse::<TextureWrap>().is_err());
+        }
+        let modes = [TextureWrap::Clamp, TextureWrap::Repeat];
+        let keys: std::collections::BTreeSet<_> = modes
+            .into_iter()
+            .flat_map(|u| modes.map(move |v| [u, v]))
+            .collect();
+        assert_eq!(keys.len(), 4);
     }
     #[test]
     fn rejects_malformed_and_nonfinite_inputs_before_gpu_use() {
