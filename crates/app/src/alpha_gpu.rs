@@ -143,10 +143,28 @@ pub fn validate_inputs(
 }
 
 fn vertex_bytes(vertices: &[AlphaVertex]) -> Vec<u8> {
-    let mut bytes = Vec::with_capacity(vertices.len() * 40);
-    for vertex in vertices {
-        for value in vertex.clip.iter().chain(&vertex.uv).chain(&vertex.color) {
-            bytes.extend_from_slice(&value.to_le_bytes());
+    debug_assert!(vertices.len().is_multiple_of(3));
+    let mut bytes = Vec::with_capacity(vertices.len() * 64);
+    for triangle in vertices.chunks_exact(3) {
+        let reference = triangle[0].color;
+        let mut mask = 0u32;
+        for (channel, value) in reference.iter().enumerate() {
+            if triangle
+                .iter()
+                .all(|vertex| vertex.color[channel] == *value)
+            {
+                mask |= 1 << channel;
+            }
+        }
+        for vertex in triangle {
+            for value in vertex.clip.iter().chain(&vertex.uv).chain(&vertex.color) {
+                bytes.extend_from_slice(&value.to_le_bytes());
+            }
+            for value in reference {
+                bytes.extend_from_slice(&value.to_le_bytes());
+            }
+            bytes.extend_from_slice(&mask.to_le_bytes());
+            bytes.extend_from_slice(&0u32.to_le_bytes());
         }
     }
     bytes
@@ -309,6 +327,16 @@ impl OrderedAlphaGpu {
                 offset: 24,
                 shader_location: 2,
             },
+            VertexAttribute {
+                format: VertexFormat::Float32x4,
+                offset: 40,
+                shader_location: 3,
+            },
+            VertexAttribute {
+                format: VertexFormat::Uint32,
+                offset: 56,
+                shader_location: 4,
+            },
         ];
         let pipeline = device.create_render_pipeline(&RawRenderPipelineDescriptor {
             label: Some("ordered alpha permissions"),
@@ -318,7 +346,7 @@ impl OrderedAlphaGpu {
                 entry_point: Some("vertex"),
                 compilation_options: Default::default(),
                 buffers: &[Some(RawVertexBufferLayout {
-                    array_stride: 40,
+                    array_stride: 64,
                     step_mode: VertexStepMode::Vertex,
                     attributes: &attributes,
                 })],
@@ -845,13 +873,45 @@ mod tests {
             uv: [5., 6.],
             color: [7., 8., 9., 10.],
         };
-        let bytes = vertex_bytes(&draw.vertices[..1]);
-        assert_eq!(bytes.len(), 40);
-        let values: Vec<_> = bytes
+        let bytes = vertex_bytes(&draw.vertices);
+        assert_eq!(bytes.len(), 3 * 64);
+        let values: Vec<_> = bytes[..40]
             .chunks_exact(4)
             .map(|b| f32::from_le_bytes(b.try_into().unwrap()))
             .collect();
         assert_eq!(values, [1., 2., 3., 4., 5., 6., 7., 8., 9., 10.]);
+        let flat: Vec<_> = bytes[40..56]
+            .chunks_exact(4)
+            .map(|b| f32::from_le_bytes(b.try_into().unwrap()))
+            .collect();
+        assert_eq!(flat, [7., 8., 9., 10.]);
+        assert_eq!(u32::from_le_bytes(bytes[56..60].try_into().unwrap()), 0);
+        assert_eq!(&bytes[60..64], &[0; 4]);
+    }
+    #[test]
+    fn constant_masks_are_per_triangle_and_keep_subthreshold_floats() {
+        let (_, mut draw) = valid();
+        draw.vertices[0].color = [10., 20., 30., 128.];
+        draw.vertices[1].color = [11., 21., 31., 128.];
+        draw.vertices[2].color = [12., 22., 32., 128.];
+        let below = f32::from_bits(128f32.to_bits() - 1);
+        let mut second = draw.vertices.clone();
+        for vertex in &mut second {
+            vertex.color = [7.5, 8.25, 9.75, below];
+        }
+        draw.vertices.extend(second);
+        let bytes = vertex_bytes(&draw.vertices);
+        for i in 0..6 {
+            let at = i * 64;
+            assert_eq!(
+                u32::from_le_bytes(bytes[at + 56..at + 60].try_into().unwrap()),
+                if i < 3 { 8 } else { 15 }
+            );
+            assert_eq!(
+                f32::from_le_bytes(bytes[at + 52..at + 56].try_into().unwrap()),
+                if i < 3 { 128. } else { below }
+            );
+        }
     }
     #[test]
     fn comparison_uniform_codes_are_explicit_and_unique() {

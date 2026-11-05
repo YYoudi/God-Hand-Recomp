@@ -8,17 +8,23 @@ struct Input {
     @location(0) clip: vec4<f32>,
     @location(1) uv: vec2<f32>,
     @location(2) color: vec4<f32>,
+    @location(3) constant_color: vec4<f32>,
+    @location(4) constant_mask: u32,
 };
 struct Varying {
     @builtin(position) clip: vec4<f32>,
     @location(0) uv: vec2<f32>,
     @location(1) @interpolate(linear) color: vec4<f32>,
+    @location(2) @interpolate(flat) constant_color: vec4<f32>,
+    @location(3) @interpolate(flat) constant_mask: u32,
 };
 @vertex fn vertex(input: Input) -> Varying {
     var result: Varying;
     result.clip = input.clip;
     result.uv = input.uv;
     result.color = input.color;
+    result.constant_color = input.constant_color;
+    result.constant_mask = input.constant_mask;
     return result;
 }
 fn passes(alpha: u32) -> bool {
@@ -40,7 +46,10 @@ struct Output {
 };
 @fragment fn fragment(input: Varying) -> Output {
     let texel = round(textureSample(source_texture, source_sampler, input.uv) * 255.0);
-    let color = floor(clamp(input.color, vec4<f32>(0.0), vec4<f32>(255.0)));
+    let constant = vec4<bool>((input.constant_mask & 1u) != 0u, (input.constant_mask & 2u) != 0u,
+        (input.constant_mask & 4u) != 0u, (input.constant_mask & 8u) != 0u);
+    let source_color = select(input.color, input.constant_color, constant);
+    let color = floor(clamp(source_color, vec4<f32>(0.0), vec4<f32>(255.0)));
     let bytes = clamp(floor(texel * color / 128.0), vec4<f32>(0.0), vec4<f32>(255.0));
     let accepted = passes(u32(bytes.a));
     if ((params.branch == 0u && !accepted) || (params.branch == 1u && accepted)) { discard; }

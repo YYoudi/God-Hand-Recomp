@@ -9,6 +9,8 @@ use std::time::{Duration, Instant};
 mod address_checks;
 #[path = "alpha_check/blend_checks.rs"]
 mod blend_checks;
+#[path = "alpha_check/constant_checks.rs"]
+mod constant_checks;
 
 fn quad(
     rect: [f32; 4],
@@ -195,6 +197,8 @@ fn run() -> GpuResult<()> {
     println!(
         "PASS: {spatial} additional raw RGBA/depth spatial samples (ordering/equality/occlusion/modulation/interpolation)."
     );
+    let constant_samples = constant_checks::run(&mut gpu, &device, &queue, quick)?;
+    println!("PASS: {constant_samples} constant-channel/clipping/threshold sample checks.");
     let address_samples = address_checks::run(&mut gpu, &device, &queue)?;
     println!(
         "PASS: {address_samples} texture-addressing samples (negative UVs, axes, integer shifts, cache/order, raw border-alpha feedback)."
