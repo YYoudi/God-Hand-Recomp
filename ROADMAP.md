@@ -7,7 +7,7 @@ Updated: 2026-11-05. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Development goal paused by the owner; GPU integration remains pending explicit resume.
+Next useful evidence: Preserve raw retail alpha, specify byte-domain blending and explicit per-draw state, then validate both unchanged full-resource retail viewpoints. The production viewer remains unchanged.
 
 ## M0 — Public foundations
 

@@ -90,3 +90,10 @@ retail views, retain regressions and publish evidence-supported changes.
 Sky activation, general transform semantics, actors/HUD, gameplay and complete
 rendering remain unresolved. The prototype is separate, raw game artifacts stay
 private, and publication uses standard public CI and free main:/docs GitHub Pages.
+
+## Subsequent component validation
+
+The [ordered GPU increment](ordered-alpha-gpu-2026-11-05.md) now consumes this
+CPU model in a synthetic offscreen renderer. This supersedes the earlier
+not-wired statement for that component only; production retail integration,
+blending and the two-view full-resource acceptance gate are still pending.

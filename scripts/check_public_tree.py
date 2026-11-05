@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ROOT_FILES = {'.gitignore', '.gitattributes', 'AGENTS.md', 'README.md', 'LICENSE',
               'NOTICE.md', 'CONTRIBUTING.md', 'ROADMAP.md', 'Cargo.toml', 'Cargo.lock'}
 PREFIXES = ('.github/', 'scripts/', 'prompts/', 'docs/', 'crates/', 'specs/')
-TEXT = {'.md', '.py', '.ps1', '.sh', '.json', '.yml', '.yaml', '.html', '.css', '.js', '.txt', '.rs', '.toml', '.wesl'}
+TEXT = {'.md', '.py', '.ps1', '.sh', '.json', '.yml', '.yaml', '.html', '.css', '.js', '.txt', '.rs', '.toml', '.wesl', '.wgsl'}
 MAX_SIZE = 1024 * 1024
 
 

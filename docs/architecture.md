@@ -15,8 +15,8 @@ dependencies. Their God Hand compatibility is not progress in our independent en
 | --- | --- | --- |
 | godhand-disc | Read-only ISO 9660/FST/AFS access, bounds checks | Namespace, ordinal binding and bounded payload windows |
 | Formats | Payload decoding, geometry, textures, skeletons, audio | Indexed TIM2/TIM3, TM3 banks, DAT/SCP, SCR metadata and static MDB subset with raw optional source colors; animated formats and runtime semantics pending |
-| godhand-engine | Original GPU-free testable simulation | Generic X/Z movement, explicit GPU-free placement experiments (runtime semantics unverified), and a GPU-free alpha-stage write-permission model (not yet connected to Bevy) |
-| Bevy application | Window, rendering, camera, input | ISO texture/static-mesh inspection, diagnostic resource layouts, own-framebuffer PNG capture, opt-in source-color modulation, explicit projection-aspect/culling inspection and original sandbox; native Vulkan visual smokes verified |
+| godhand-engine | Original GPU-free testable simulation | Generic X/Z movement, explicit GPU-free placement experiments (runtime semantics unverified), and a GPU-free alpha-stage write-permission model (consumed by the opt-in offscreen GPU adapter, not the production retail viewer) |
+| Bevy application | Window, rendering, camera, input | ISO texture/static-mesh inspection, diagnostic resource layouts, own-framebuffer PNG capture, opt-in source-color modulation, explicit projection-aspect/culling inspection and original sandbox; native Vulkan visual smokes verified; shared ordered alpha-stage GPU component with synthetic offscreen conformance |
 | Game | Scenes and observable behavior | Not implemented |
 
 The 60 Hz step and sandbox speed are provisional engineering choices, not measurements

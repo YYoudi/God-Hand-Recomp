@@ -8,9 +8,10 @@ class PublicTreeTests(unittest.TestCase):
         self.assertEqual(problems('crates/disc/src/lib.rs', b'pub fn read() {}', set()), [])
 
     def test_original_shader_is_text_not_an_arbitrary_binary_exception(self):
-        path = 'crates/app/src/inspection.wesl'
-        self.assertEqual(problems(path, b'// Original synthetic shader source', set()), [])
-        self.assertTrue(problems(path, b'\x7fELF\0not shader text', set()))
+        for suffix in ['wesl', 'wgsl']:
+            path = f'crates/app/src/inspection.{suffix}'
+            self.assertEqual(problems(path, b'// Original synthetic shader source', set()), [])
+            self.assertTrue(problems(path, b'\x7fELF\0not shader text', set()))
 
     def test_local_or_generated_paths_refused(self):
         for path in ['God Hand (USA).iso', 'recomp/output/main.cpp', 'PS2Recomp/src/test.rs',

@@ -55,17 +55,21 @@ pub struct AlphaStage {
 
 impl AlphaStage {
     pub fn permissions(self, alpha: u8) -> WritePermissions {
-        let (rgb, framebuffer_alpha, depth) =
-            if !self.enabled || self.comparison.passes(alpha, self.reference) {
-                (true, true, true)
-            } else {
-                match self.failure {
-                    AlphaFailure::Keep => (false, false, false),
-                    AlphaFailure::FramebufferOnly => (true, true, false),
-                    AlphaFailure::DepthOnly => (false, false, true),
-                    AlphaFailure::RgbOnly => (true, false, false),
-                }
-            };
+        self.branch_permissions(!self.enabled || self.comparison.passes(alpha, self.reference))
+    }
+
+    /// Pipeline permissions for the selected comparison branch; not final pixel visibility.
+    pub fn branch_permissions(self, passed: bool) -> WritePermissions {
+        let (rgb, framebuffer_alpha, depth) = if passed {
+            (true, true, true)
+        } else {
+            match self.failure {
+                AlphaFailure::Keep => (false, false, false),
+                AlphaFailure::FramebufferOnly => (true, true, false),
+                AlphaFailure::DepthOnly => (false, false, true),
+                AlphaFailure::RgbOnly => (true, false, false),
+            }
+        };
         WritePermissions {
             rgb,
             framebuffer_alpha,

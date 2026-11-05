@@ -1,7 +1,7 @@
 # Fragment alpha write permissions, version 1
 
-Date: 5 November 2026. Status: original GPU-free alpha-stage model; not connected
-to Bevy draw submission yet. No claim of full GS replay or recovered game materials.
+Date: 5 November 2026. Status: original GPU-free alpha-stage model, now consumed by
+the ordered offscreen GPU adapter. Production retail viewer integration remains pending. No claim of full GS replay or recovered game materials.
 
 ## Provenance and observed reason
 

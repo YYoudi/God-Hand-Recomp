@@ -1,7 +1,7 @@
 # Autonomous native-rendering workflow
 
-Current status, 5 November 2026: **paused by the owner**. The workflow below
-describes remaining work; do not execute it until explicitly resumed.
+Current status, 5 November 2026: **active, explicitly resumed by the owner**.
+Work in background; notify only for a substantial milestone or required intervention.
 
 Date: 5 November 2026. Owner requested autonomous work and GitHub/journal updates.
 This is an independent Rust + Bevy engine, not execution/translation of the game.
@@ -34,7 +34,9 @@ not old files/PIDs. Keep unrelated changes and historical captures untouched.
   coexist. Source opacity alone does not identify every observed failure action.
 - specs/fragment-write-permissions-v1.md and the original fragment_alpha Rust model
   cover byte-alpha comparisons and separate RGB/framebuffer-alpha/depth permissions.
-  They are not wired into Bevy yet. Raw traces and per-buffer mappings stay private.
+  They now drive a reusable offscreen GPU component; production retail integration
+  remains pending. See ordered-alpha-gpu-2026-11-05.md. Raw traces and per-buffer
+  mappings stay private.
 
 ## Execute and adjust
 

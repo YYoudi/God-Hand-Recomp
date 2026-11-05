@@ -148,5 +148,14 @@ raw traces/mappings private, prototype separate, no delegation and no paid servi
 
 Repository rename, 2026-11-05: public repository is now YYoudi/god-hand-rs;
 Pages uses https://yyoudi.github.io/god-hand-rs/. Local workspace directory is
-unchanged. Native-rendering goal is PAUSED by the owner; do not execute that
-workflow until explicitly resumed. Preserve historical screenshot originals.
+unchanged. The owner subsequently explicitly resumed the native-rendering goal;
+keep it ACTIVE and work in background with milestone-only notifications.
+Preserve historical screenshot originals.
+
+Ordered GPU alpha increment, 2026-11-05: read specs/ordered-alpha-gpu-v1.md and
+docs/ordered-alpha-gpu-2026-11-05.md. Shared app-library component and opt-in
+godhand-alpha-check executable validate separate RGB/data-alpha/depth writes
+without a disc or window. 67 distinct Rust /25 Python synthetic tests; actual
+Vulkan exhaustive and spatial checks pass. No blending or production retail
+viewer integration yet. Raw alpha is required: converted texture alpha is NOT
+equivalent. No new retail fidelity or scene-activation result. Goal remains active.

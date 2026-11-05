@@ -6,11 +6,11 @@
   "engine": "Rust + Bevy 0.20.1",
   "phase": "Autonomous native-rendering investigation",
   "playable": false,
-  "next": "Development goal paused by the owner; GPU integration remains pending explicit resume.",
+  "next": "Preserve raw retail alpha, specify byte-domain blending and explicit per-draw state, then validate both unchanged full-resource retail viewpoints. The production viewer remains unchanged.",
   "validation": {
-    "tests": 64,
+    "tests": 67,
     "bevy_check": "pass",
-    "viewer_runtime": "Production viewer unchanged. A private all-opaque control at both full-resource poses restores visible geometry but breaks shadows/cutouts and sky appearance; rejected as a material fix. The new CPU alpha-stage model is not connected to Bevy yet.",
+    "viewer_runtime": "New reusable offscreen GPU component: 4,718,592 alpha-stage pixel cases and 573,442 spatial samples pass exact RGB/stored-alpha/depth checks on RTX 5080 / Vulkan. No disc or game fixtures; no blending. Production retail viewer unchanged.",
     "gameplay": "Not implemented"
   },
   "milestones": [
@@ -443,6 +443,22 @@
   "updates": [
     {
       "date": "2026-11-05",
+      "title": "Testing separate alpha and depth writes on the GPU",
+      "summary": "Development resumed after the repository rename. An original offscreen Rust/WGSL component now checks alpha comparisons and independent RGB, stored-alpha and depth writes. It is not a retail renderer fix.",
+      "changes": [
+        "Added a reusable app-library component with caller-ordered draws and complementary passing/failing branches, driven by the existing CPU permission model.",
+        "Kept framebuffer alpha as separate data; zero stored alpha does not make the presented RGB transparent.",
+        "Added an opt-in no-window, no-disc conformance executable. Production materials and the existing retail screenshots are unchanged."
+      ],
+      "validation": "67 distinct Rust and25 Python synthetic tests pass. Actual RTX 5080 / Vulkan run:4,718,592 exhaustive pixel cases plus573,442 spatial samples match CPU RGB, stored alpha and depth. Covers all byte-alpha/reference pairs, comparisons, failure actions, depth masks, disabled tests, later occlusion, equal depth, ordering (including overlapping mixed-outcome primitives within one draw), modulation, interpolation and clipping. CI compiles the component and runs CPU tests only.",
+      "limits": "No blending, fog, lighting, runtime material mapping or retail replay in this component. The current normalized texture alpha is not valid raw input. No new Reference / Bevy pair is manufactured for synthetic GPU work. Sky overpainting, scene activation and gameplay remain open.",
+      "link": {
+        "label": "GPU contract, results and remaining integration work",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/ordered-alpha-gpu-2026-11-05.md"
+      }
+    },
+    {
+      "date": "2026-11-05",
       "title": "Repository renamed to god-hand-rs",
       "summary": "The public repository and journal now use the god-hand-rs address. The native-rendering development goal is paused at the owner’s request.",
       "changes": [
@@ -708,6 +724,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-05-ordered-alpha-gpu.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched browser screenshot of the actual local English journal entry; no game or synthetic fixture imagery",
+      "caption": "Resumed development and synthetic ordered GPU alpha-stage validation"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-05-repository-rename.jpg",
       "date": "2026-11-05",
       "source": "Unretouched browser screenshot of the actual renamed local journal entry; no game imagery",
@@ -831,15 +854,15 @@
   ],
   "progress": {
     "goal": "Resolve full-resource sky overpainting with original evidence-supported native Rust/Bevy depth/alpha behavior, synthetic CPU/GPU checks and real comparisons at both established viewpoints.",
-    "baseline_revision": "5d35247e42567c4ad2be282a572117a2bc065b81",
-    "last_verified": "Current development:64 distinct Rust and25 Python synthetic tests pass. CPU alpha comparisons exhaust byte alpha/reference pairs; all fail actions and depth-mask precedence tested. Two real-ISO ten-second all-opaque controls completed from a private copy of our app with root-pinned registry versions. This is a rejected experiment, not a production viewer fix.",
+    "baseline_revision": "dc472c1f69ba6ed6648d48027eae587aa2b49fd6",
+    "last_verified": "67 distinct Rust synthetic tests (61 base +6 viewer-only),25 Python tests and locked viewer check pass. Original ordered alpha-stage GPU component passes 4,718,592 exhaustive pixel cases plus573,442 spatial samples on Vulkan. Linked opt-in executable uses the shared app library; production retail viewer is not wired to it.",
     "open_questions": [
-      "Host material alpha modes conflate blending, queue membership and depth writes; the all-opaque control does not isolate depth alone.",
-      "Existing candidate-state joins show alpha testing/blending/depth writes together, with different failure actions. Source opacity cannot identify every per-asset rule.",
-      "The CPU alpha-stage model is not wired to GPU passes. Sky activation, exact byte-domain blend math, alpha normalization, ordering and full rendering remain open. General transforms and gameplay are still incomplete."
+      "Raw retail alpha must be preserved separately from normalized presentation alpha before this component can consume ISO-backed textures.",
+      "GPU write permissions are verified without blending. Byte-domain blend arithmetic, per-draw state assignment, scene activation and transparent order remain unresolved.",
+      "No new retail replay or fidelity improvement is claimed. General transforms, camera motion, complete rendering and gameplay remain incomplete."
     ],
-    "next_experiment": "Paused by the owner. On explicit resume: Specify and implement GPU alpha-stage write/discard paths, first with synthetic overlapping geometry, then both full-resource retail views. Do not ship the all-opaque control or infer per-draw state from source opacity alone.",
-    "status": "paused"
+    "next_experiment": "Preserve raw retail alpha, specify byte-domain blending and explicit per-draw state, then validate both unchanged full-resource retail viewpoints. The production viewer remains unchanged.",
+    "status": "active"
   },
   "comparisons": [
     {

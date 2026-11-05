@@ -130,4 +130,8 @@ starts from the sky-overpainting failure. Its [first investigation](docs/render-
 adds original CPU alpha-stage write permissions; GPU integration remains pending.
 All-opaque diagnostic captures are rejected controls, not completed native rendering.
 
-Repository: [god-hand-rs](https://github.com/YYoudi/god-hand-rs). The native-rendering goal is currently paused by the owner.
+Repository: [god-hand-rs](https://github.com/YYoudi/god-hand-rs). The native-rendering goal has been explicitly resumed by the owner.
+
+The [ordered GPU alpha component](docs/ordered-alpha-gpu-2026-11-05.md) passes
+synthetic offscreen Vulkan checks. It is not connected to the retail viewer yet;
+blending and full-resource rendering remain open.
