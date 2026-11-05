@@ -3,7 +3,7 @@ use godhand_disc::{
     dat::DatCatalog,
     mdb::StaticMesh,
     scr::ScrCatalog,
-    tim2::RgbaImage,
+    tim2::{RawRgbaImage, RgbaImage},
     tm3::{self, TextureBank},
 };
 use godhand_engine::placement::{EulerOrder, Placement};
@@ -19,9 +19,9 @@ pub struct Inspection {
     pub nodes: usize,
 }
 
-pub struct MeshView {
+pub struct MeshView<T = RgbaImage> {
     pub mesh: StaticMesh,
-    pub textures: BTreeMap<u16, RgbaImage>,
+    pub textures: BTreeMap<u16, T>,
     #[cfg_attr(not(feature = "viewer"), allow(dead_code))]
     pub layout: bool,
 }
@@ -143,6 +143,32 @@ pub fn load_layout(
     order: Option<EulerOrder>,
     excluded: &[usize],
 ) -> io::Result<(MeshView, LayoutSummary)> {
+    load_layout_with(source, order, excluded, |r| {
+        let image = tm3::decode(r)?;
+        let bytes = image.pixels.len();
+        Ok((image, bytes))
+    })
+}
+
+/// Raw-alpha variant for explicit state controls, not normal presentation assets.
+pub fn load_layout_raw(
+    source: &mut (impl Read + Seek),
+    order: Option<EulerOrder>,
+    excluded: &[usize],
+) -> io::Result<(MeshView<RawRgbaImage>, LayoutSummary)> {
+    load_layout_with(source, order, excluded, |r| {
+        let image = tm3::decode_raw(r)?;
+        let bytes = image.pixels.len();
+        Ok((image, bytes))
+    })
+}
+
+fn load_layout_with<T>(
+    source: &mut (impl Read + Seek),
+    order: Option<EulerOrder>,
+    excluded: &[usize],
+    mut decode: impl FnMut(&mut dyn Read) -> io::Result<(T, usize)>,
+) -> io::Result<(MeshView<T>, LayoutSummary)> {
     let outer = DatCatalog::read(&mut *source)?;
     let scp_ordinal = unique_section(&outer, *b"SCP\0")?;
     let mut scp = outer.open_section(source, scp_ordinal)?;
@@ -209,9 +235,9 @@ pub fn load_layout(
         if let std::collections::btree_map::Entry::Vacant(entry) =
             textures.entry(primitive.material)
         {
-            let image =
-                tm3::decode(bank.open_image(&mut bank_source, usize::from(primitive.material))?)?;
-            bytes += image.pixels.len();
+            let (image, length) =
+                decode(&mut bank.open_image(&mut bank_source, usize::from(primitive.material))?)?;
+            bytes += length;
             if bytes > 256 * 1024 * 1024 {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidData,
@@ -409,6 +435,34 @@ mod tests {
         dat(&[(*b"SCP\0", dat(&[(*b"SCR\0", scr), (*b"TM3\0", bank)]))])
     }
 
+    #[test]
+    fn raw_layout_preserves_geometry_bindings_and_presentation_relation() {
+        let bytes = fixture(false, 0);
+        let (raw, a) = load_layout_raw(&mut Cursor::new(&bytes), None, &[]).unwrap();
+        let (legacy, b) = load_layout(&mut Cursor::new(&bytes), None, &[]).unwrap();
+        assert_eq!(
+            (a.nodes, a.buffers, a.indices),
+            (b.nodes, b.buffers, b.indices)
+        );
+        assert_eq!(raw.mesh.primitives.len(), legacy.mesh.primitives.len());
+        for (a, b) in raw.mesh.primitives.iter().zip(&legacy.mesh.primitives) {
+            assert_eq!(a.positions, b.positions);
+            assert_eq!(a.uvs, b.uvs);
+            assert_eq!(a.indices, b.indices);
+            assert_eq!(a.colors, b.colors);
+            assert_eq!(a.material, b.material);
+        }
+        assert_eq!(
+            raw.textures.keys().collect::<Vec<_>>(),
+            legacy.textures.keys().collect::<Vec<_>>()
+        );
+        for (id, image) in raw.textures {
+            assert_eq!(
+                image.into_presentation().pixels,
+                legacy.textures[&id].pixels
+            );
+        }
+    }
     #[test]
     fn synthetic_layout_places_both_nodes_and_shares_one_texture() {
         let (view, count) = load_layout(&mut Cursor::new(fixture(false, 0)), None, &[]).unwrap();

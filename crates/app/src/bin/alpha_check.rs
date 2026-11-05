@@ -1,18 +1,12 @@
 //! Opt-in, no-disc GPU conformance. CI compiles/tests helpers, never runs this main.
-use bevy::{
-    app::PluginsState,
-    prelude::*,
-    render::{
-        RenderApp,
-        pipelined_rendering::PipelinedRenderingPlugin,
-        renderer::{RenderAdapterInfo, RenderDevice, RenderQueue},
-    },
-    window::{ExitCondition, WindowPlugin},
-    winit::WinitPlugin,
-};
+use bevy::render::renderer::{RenderDevice, RenderQueue};
+use godhand_engine::byte_blend::ByteBlend;
 use godhand_engine::fragment_alpha::{AlphaComparison::*, AlphaFailure::*, AlphaStage};
 use godhand_lab::alpha_gpu::*;
+use godhand_lab::offscreen::setup;
 use std::time::{Duration, Instant};
+#[path = "alpha_check/blend_checks.rs"]
+mod blend_checks;
 
 fn quad(
     rect: [f32; 4],
@@ -27,6 +21,8 @@ fn quad(
     AlphaDraw {
         texture,
         stage,
+        blend: ByteBlend::Overwrite,
+        cull_backfaces: false,
         vertices: [0, 1, 2, 0, 2, 3]
             .into_iter()
             .map(|i| AlphaVertex {
@@ -36,36 +32,6 @@ fn quad(
             })
             .collect(),
     }
-}
-
-fn setup() -> GpuResult<(App, RenderDevice, RenderQueue)> {
-    let mut app = App::new();
-    app.add_plugins(
-        DefaultPlugins
-            .set(WindowPlugin {
-                primary_window: None,
-                exit_condition: ExitCondition::DontExit,
-                ..Default::default()
-            })
-            .disable::<WinitPlugin>()
-            .disable::<PipelinedRenderingPlugin>(),
-    );
-    let start = Instant::now();
-    while app.plugins_state() != PluginsState::Ready {
-        if start.elapsed() > Duration::from_secs(30) {
-            return Err("GPU plugin initialization timeout".into());
-        }
-        bevy::tasks::tick_global_task_pools_on_main_thread();
-        std::thread::sleep(Duration::from_millis(1));
-    }
-    app.finish();
-    app.cleanup();
-    let render = app.sub_app(RenderApp).world();
-    let info = render.resource::<RenderAdapterInfo>();
-    println!("GPU adapter: {} / {:?}", info.name, info.backend);
-    let device = render.resource::<RenderDevice>().clone();
-    let queue = render.resource::<RenderQueue>().clone();
-    Ok((app, device, queue))
 }
 
 fn main() {
@@ -79,7 +45,7 @@ fn run() -> GpuResult<()> {
     let args: Vec<_> = std::env::args().skip(1).collect();
     if args == ["--help"] {
         println!(
-            "godhand-alpha-check [--quick]\nNo ISO, window or game data. Tests the ordered GPU alpha adapter against the CPU oracle. --quick uses six reference boundaries; default uses all256.\nRGB overwrite and write permissions only, NOT GS blending or retail rendering."
+            "godhand-alpha-check [--quick]\nNo ISO, window or game data. Tests the ordered GPU alpha adapter against the CPU oracle. --quick uses six reference boundaries; default uses all256.\nRGB overwrite, alpha write permissions and explicit byte-input source-over subset; NOT full GS or retail rendering."
         );
         return Ok(());
     }
@@ -226,8 +192,12 @@ fn run() -> GpuResult<()> {
     println!(
         "PASS: {spatial} additional raw RGBA/depth spatial samples (ordering/equality/occlusion/modulation/interpolation)."
     );
+    let (blend_pixels, blend_spatial) = blend_checks::run(&mut gpu, &device, &queue, quick)?;
     println!(
-        "PASS: {checked} GPU alpha-stage pixels; every RGB/stored-alpha/depth value matches CPU. Mode:{} elapsed:{:.3}s. No blending or retail fidelity implied.",
+        "PASS: {blend_pixels} byte-source-over GPU pixels and {blend_spatial} additional feedback/write-mask/order samples."
+    );
+    println!(
+        "PASS: {checked} GPU alpha-stage pixels; every RGB/stored-alpha/depth value matches CPU. Mode:{} elapsed:{:.3}s. Byte-input blend subset only; no full GS or retail fidelity implied.",
         if quick { "quick" } else { "full" },
         start.elapsed().as_secs_f64()
     );
@@ -569,6 +539,8 @@ fn spatial_checks(
         }
     }
     let draw = AlphaDraw {
+        blend: ByteBlend::Overwrite,
+        cull_backfaces: false,
         texture: 0,
         stage: enabled_pass,
         vertices: [

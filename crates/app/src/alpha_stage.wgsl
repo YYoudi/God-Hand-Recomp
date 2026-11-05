@@ -1,8 +1,9 @@
 // Original ordered alpha-stage component; not game shader code.
-struct Params { enabled: u32, comparison: u32, reference: u32, branch: u32, };
+struct Params { enabled: u32, comparison: u32, reference: u32, branch: u32, blend: u32, pad0:u32, pad1:u32, pad2:u32, };
 @group(0) @binding(0) var source_texture: texture_2d<f32>;
 @group(0) @binding(1) var source_sampler: sampler;
 @group(0) @binding(2) var<uniform> params: Params;
+@group(0) @binding(3) var destination_rgb: texture_2d<f32>;
 struct Input {
     @location(0) clip: vec4<f32>,
     @location(1) uv: vec2<f32>,
@@ -44,7 +45,14 @@ struct Output {
     let accepted = passes(u32(bytes.a));
     if ((params.branch == 0u && !accepted) || (params.branch == 1u && accepted)) { discard; }
     var result: Output;
-    result.rgb = vec4<f32>(bytes.rgb / 255.0, 1.0);
+    var rgb = bytes.rgb;
+    if (params.blend == 1u) {
+        let destination = vec3<i32>(round(textureLoad(destination_rgb,vec2<i32>(input.clip.xy),0).rgb * 255.0));
+        let product = (vec3<i32>(bytes.rgb) - destination) * i32(bytes.a);
+        let blended = destination + (product >> vec3<u32>(7u));
+        rgb = vec3<f32>(clamp(blended,vec3<i32>(0),vec3<i32>(255)));
+    }
+    result.rgb = vec4<f32>(rgb / 255.0, 1.0);
     result.framebuffer_alpha = bytes.a / 255.0;
     return result;
 }

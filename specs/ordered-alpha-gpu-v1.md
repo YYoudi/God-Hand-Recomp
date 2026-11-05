@@ -76,3 +76,8 @@ image API; the GPU adapter accepts it explicitly without conversion. The
 synthetic exhaustive ramp exercises an original encoded TIM2/CSM1 input.
 Production retail textures still use the unchanged presentation path; this
 does not supply blending or evidence-supported per-draw state assignment.
+
+Extension, 5 November 2026: byte-source-over-v1.md adds explicit per-draw byte
+blending with safe previous-primitive RGB snapshots and explicit culling.
+Overwrite remains available with unchanged conformance results. The no-blend
+statements above describe the initial component, not the later optional subset.

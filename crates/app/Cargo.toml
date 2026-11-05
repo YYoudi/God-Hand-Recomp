@@ -29,3 +29,8 @@ required-features = ["viewer"]
 [[bin]]
 name = "godhand-alpha-inspect"
 path = "src/bin/alpha_inspect.rs"
+
+[[bin]]
+name = "godhand-static-control"
+path = "src/bin/static_control.rs"
+required-features = ["viewer"]

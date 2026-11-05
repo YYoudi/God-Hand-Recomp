@@ -1,9 +1,10 @@
 //! Original caller-ordered GPU alpha-stage adapter. No retail state inference.
-//! Contract: specs/ordered-alpha-gpu-v1.md. RGB overwrite only (no blending yet).
+//! Contracts: ordered-alpha-gpu-v1.md and byte-source-over-v1.md; not full GS replay.
 use bevy::render::{
     render_resource::*,
     renderer::{RenderDevice, RenderQueue},
 };
+use godhand_engine::byte_blend::ByteBlend;
 use godhand_engine::fragment_alpha::{AlphaComparison, AlphaStage, WritePermissions};
 use std::{borrow::Cow, collections::BTreeMap, error::Error, sync::mpsc, time::Duration};
 
@@ -43,6 +44,8 @@ pub struct AlphaDraw {
     pub vertices: Vec<AlphaVertex>,
     pub texture: usize,
     pub stage: AlphaStage,
+    pub blend: ByteBlend,
+    pub cull_backfaces: bool,
 }
 
 fn comparison_code(comparison: AlphaComparison) -> u32 {
@@ -125,14 +128,15 @@ fn vertex_bytes(vertices: &[AlphaVertex]) -> Vec<u8> {
 struct PreparedDraw {
     vertices: Buffer,
     count: u32,
-    branches: Vec<([bool; 3], BindGroup)>,
+    branches: Vec<([bool; 4], BindGroup)>,
+    blended: bool,
 }
 
 pub struct OrderedAlphaGpu {
     shader: ShaderModule,
     layout: BindGroupLayout,
     sampler: Sampler,
-    pipelines: BTreeMap<[bool; 3], RenderPipeline>,
+    pipelines: BTreeMap<[bool; 4], RenderPipeline>,
 }
 
 pub struct AlphaFrame {
@@ -182,7 +186,17 @@ impl OrderedAlphaGpu {
                     ty: BindingType::Buffer {
                         ty: BufferBindingType::Uniform,
                         has_dynamic_offset: false,
-                        min_binding_size: BufferSize::new(16),
+                        min_binding_size: BufferSize::new(32),
+                    },
+                    count: None,
+                },
+                BindGroupLayoutEntry {
+                    binding: 3,
+                    visibility: ShaderStages::FRAGMENT,
+                    ty: BindingType::Texture {
+                        sample_type: TextureSampleType::Float { filterable: false },
+                        view_dimension: TextureViewDimension::D2,
+                        multisampled: false,
                     },
                     count: None,
                 },
@@ -202,8 +216,18 @@ impl OrderedAlphaGpu {
         }
     }
 
-    fn pipeline(&mut self, device: &RenderDevice, writes: WritePermissions) -> [bool; 3] {
-        let key = [writes.rgb, writes.framebuffer_alpha, writes.depth];
+    fn pipeline(
+        &mut self,
+        device: &RenderDevice,
+        writes: WritePermissions,
+        cull_backfaces: bool,
+    ) -> [bool; 4] {
+        let key = [
+            writes.rgb,
+            writes.framebuffer_alpha,
+            writes.depth,
+            cull_backfaces,
+        ];
         if self.pipelines.contains_key(&key) {
             return key;
         }
@@ -263,7 +287,11 @@ impl OrderedAlphaGpu {
                 })],
             },
             primitive: PrimitiveState {
-                cull_mode: None,
+                cull_mode: if cull_backfaces {
+                    Some(Face::Back)
+                } else {
+                    None
+                },
                 ..Default::default()
             },
             depth_stencil: Some(DepthStencilState {
@@ -322,6 +350,17 @@ impl OrderedAlphaGpu {
             depth: target("ordered alpha depth", TextureFormat::Depth32Float),
             size,
         };
+        let destination_snapshot = device.create_texture(&TextureDescriptor {
+            label: Some("previous primitive byte RGB"),
+            size: extent,
+            mip_level_count: 1,
+            sample_count: 1,
+            dimension: TextureDimension::D2,
+            format: TextureFormat::Rgba8Unorm,
+            usage: TextureUsages::COPY_DST | TextureUsages::TEXTURE_BINDING,
+            view_formats: &[],
+        });
+        let destination_view = destination_snapshot.create_view(&Default::default());
         let gpu_textures: Vec<_> = textures
             .iter()
             .map(|image| {
@@ -366,12 +405,16 @@ impl OrderedAlphaGpu {
                 if !permissions.rgb && !permissions.framebuffer_alpha && !permissions.depth {
                     continue;
                 }
-                let key = self.pipeline(device, permissions);
+                let key = self.pipeline(device, permissions, draw.cull_backfaces);
                 let params: Vec<u8> = [
                     u32::from(draw.stage.enabled),
                     comparison_code(draw.stage.comparison),
                     u32::from(draw.stage.reference),
                     u32::from(!passed),
+                    u32::from(draw.blend == ByteBlend::SourceOver),
+                    0,
+                    0,
+                    0,
                 ]
                 .into_iter()
                 .flat_map(u32::to_le_bytes)
@@ -397,6 +440,10 @@ impl OrderedAlphaGpu {
                             binding: 2,
                             resource: uniform.as_entire_binding(),
                         },
+                        BindGroupEntry {
+                            binding: 3,
+                            resource: BindingResource::TextureView(&destination_view),
+                        },
                     ],
                 );
                 branches.push((key, group));
@@ -405,6 +452,7 @@ impl OrderedAlphaGpu {
                 vertices,
                 count: draw.vertices.len() as u32,
                 branches,
+                blended: draw.blend == ByteBlend::SourceOver,
             });
         }
         let color = frame.color.create_view(&Default::default());
@@ -413,72 +461,143 @@ impl OrderedAlphaGpu {
         let mut encoder = device.create_command_encoder(&CommandEncoderDescriptor {
             label: Some("ordered alpha commands"),
         });
-        {
-            let mut pass = encoder.begin_render_pass(&RenderPassDescriptor {
-                label: Some("caller-ordered alpha-stage draw stream"),
-                color_attachments: &[
-                    Some(RenderPassColorAttachment {
-                        view: &color,
-                        depth_slice: None,
-                        resolve_target: None,
-                        ops: Operations {
-                            load: LoadOp::Clear(
-                                bevy::color::LinearRgba::new(
-                                    f32::from(clear[0]) / 255.,
-                                    f32::from(clear[1]) / 255.,
-                                    f32::from(clear[2]) / 255.,
-                                    1.,
-                                )
-                                .into(),
-                            ),
-                            store: StoreOp::Store,
-                        },
-                    }),
-                    Some(RenderPassColorAttachment {
-                        view: &alpha,
-                        depth_slice: None,
-                        resolve_target: None,
-                        ops: Operations {
-                            load: LoadOp::Clear(
-                                bevy::color::LinearRgba::new(
-                                    f32::from(clear[3]) / 255.,
-                                    0.,
-                                    0.,
-                                    1.,
-                                )
-                                .into(),
-                            ),
-                            store: StoreOp::Store,
-                        },
-                    }),
-                ],
-                depth_stencil_attachment: Some(RenderPassDepthStencilAttachment {
-                    view: &depth,
-                    depth_ops: Some(Operations {
-                        load: LoadOp::Clear(0.),
-                        store: StoreOp::Store,
-                    }),
-                    stencil_ops: None,
-                }),
-                timestamp_writes: None,
-                occlusion_query_set: None,
-                multiview_mask: None,
-            });
+        let target_views = [&color, &alpha, &depth];
+        if prepared.iter().all(|d| !d.blended) {
+            render_targets(
+                &mut encoder,
+                target_views,
+                Some(clear),
+                &prepared,
+                &self.pipelines,
+                None,
+            );
+        } else {
+            render_targets(
+                &mut encoder,
+                target_views,
+                Some(clear),
+                &[],
+                &self.pipelines,
+                None,
+            );
             for draw in &prepared {
-                pass.set_vertex_buffer(0, *draw.vertices.slice(..));
-                // Preserve primitive order even when overlapping triangles have
-                // different alpha outcomes. Whole-draw branch batching is not equivalent.
+                if draw.branches.is_empty() {
+                    continue;
+                }
+                if !draw.blended {
+                    render_targets(
+                        &mut encoder,
+                        target_views,
+                        None,
+                        std::slice::from_ref(draw),
+                        &self.pipelines,
+                        None,
+                    );
+                    continue;
+                }
                 for first in (0..draw.count).step_by(3) {
-                    for (key, group) in &draw.branches {
-                        pass.set_pipeline(&self.pipelines[key]);
-                        pass.set_bind_group(0, &**group, &[]);
-                        pass.draw(first..first + 3, 0..1);
-                    }
+                    encoder.copy_texture_to_texture(
+                        TexelCopyTextureInfo {
+                            texture: &frame.color,
+                            mip_level: 0,
+                            origin: Origin3d::ZERO,
+                            aspect: TextureAspect::All,
+                        },
+                        TexelCopyTextureInfo {
+                            texture: &destination_snapshot,
+                            mip_level: 0,
+                            origin: Origin3d::ZERO,
+                            aspect: TextureAspect::All,
+                        },
+                        extent,
+                    );
+                    render_targets(
+                        &mut encoder,
+                        target_views,
+                        None,
+                        std::slice::from_ref(draw),
+                        &self.pipelines,
+                        Some(first),
+                    );
                 }
             }
         }
         queue.submit([encoder.finish()]);
         Ok(frame)
+    }
+}
+
+fn render_targets(
+    encoder: &mut CommandEncoder,
+    views: [&TextureView; 3],
+    clear: Option<[u8; 4]>,
+    draws: &[PreparedDraw],
+    pipelines: &BTreeMap<[bool; 4], RenderPipeline>,
+    first_triangle: Option<u32>,
+) {
+    let [color, alpha, depth] = views;
+    let mut pass = encoder.begin_render_pass(&RenderPassDescriptor {
+        label: Some("caller-ordered alpha-stage draw stream"),
+        color_attachments: &[
+            Some(RenderPassColorAttachment {
+                view: color,
+                depth_slice: None,
+                resolve_target: None,
+                ops: Operations {
+                    load: clear.map_or(LoadOp::Load, |c| {
+                        LoadOp::Clear(
+                            bevy::color::LinearRgba::new(
+                                f32::from(c[0]) / 255.,
+                                f32::from(c[1]) / 255.,
+                                f32::from(c[2]) / 255.,
+                                1.,
+                            )
+                            .into(),
+                        )
+                    }),
+                    store: StoreOp::Store,
+                },
+            }),
+            Some(RenderPassColorAttachment {
+                view: alpha,
+                depth_slice: None,
+                resolve_target: None,
+                ops: Operations {
+                    load: clear.map_or(LoadOp::Load, |c| {
+                        LoadOp::Clear(
+                            bevy::color::LinearRgba::new(f32::from(c[3]) / 255., 0., 0., 1.).into(),
+                        )
+                    }),
+                    store: StoreOp::Store,
+                },
+            }),
+        ],
+        depth_stencil_attachment: Some(RenderPassDepthStencilAttachment {
+            view: depth,
+            depth_ops: Some(Operations {
+                load: if clear.is_some() {
+                    LoadOp::Clear(0.)
+                } else {
+                    LoadOp::Load
+                },
+                store: StoreOp::Store,
+            }),
+            stencil_ops: None,
+        }),
+        timestamp_writes: None,
+        occlusion_query_set: None,
+        multiview_mask: None,
+    });
+    for draw in draws {
+        pass.set_vertex_buffer(0, *draw.vertices.slice(..));
+        let range = first_triangle.map_or(0..draw.count, |first| first..first + 3);
+        for triangle in range.step_by(3) {
+            for (key, group) in &draw.branches {
+                pass.set_pipeline(&pipelines[key]);
+                pass.set_bind_group(0, &**group, &[]);
+                pass.draw(triangle..triangle + 3, 0..1);
+            }
+        }
     }
 }
 
@@ -603,6 +722,8 @@ mod tests {
                     failure: Keep,
                     depth_write_masked: false,
                 },
+                blend: ByteBlend::Overwrite,
+                cull_backfaces: false,
             },
         )
     }

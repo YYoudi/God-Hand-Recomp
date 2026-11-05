@@ -5,7 +5,7 @@ use std::{env, error::Error, path::PathBuf};
 
 #[cfg(feature = "viewer")]
 mod color_material;
-mod room;
+use godhand_lab::room;
 #[cfg(feature = "viewer")]
 mod viewer;
 

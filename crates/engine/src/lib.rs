@@ -1,4 +1,5 @@
 //! Original GPU-free mechanics and inspection math; game behavior remains unverified.
+pub mod byte_blend;
 pub mod fragment_alpha;
 pub mod gs_color;
 pub mod inspection_camera;

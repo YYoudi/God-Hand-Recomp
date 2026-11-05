@@ -169,3 +169,18 @@ retail bank images /1,894,912texels with unchanged ISO; no asset extraction.
 exhaustive GPU conformance. No blending/material mapping/production integration
 or new retail fidelity claim. Next specify byte-domain blending/state and both
 full-resource views, not another all-opaque shortcut. Goal remains active.
+
+Byte-source-over/control increment, 2026-11-05: read specs/byte-source-over-v1.md
+and docs/byte-source-over-2026-11-05.md. Original byte-input blend math and
+per-primitive destination snapshots pass actual exhaustive Vulkan checks; a
+stale whole-draw snapshot negative control fails as expected.78 distinct Rust
+(70base+8viewer-only),25Python tests. Shared raw layout reader and separate
+no-window godhand-static-control rendered all156r100nodes at BOTH fixed poses,
+no exclusions/camera/object edits. Street visible, but BLUE GROUND HOLES and
+material/sky errors persist. Uniform state/storage order are explicit controls,
+NOT recovered materials, native draw order, scene activation or a shipping fix.
+Both Keep/framebuffer-only failures retained; selected unchanged framebuffer-only
+Reference/Bevy originals published. Default inspector unchanged. Next isolate
+vertex-alpha/texture/pass inputs for identifiable ground resources before
+changing material assignment. Do not hide failed holes or claim full GS9bit
+intermediates from RGBA8 arithmetic tests. Goal remains ACTIVE; no delegation.

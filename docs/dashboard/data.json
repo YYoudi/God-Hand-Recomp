@@ -6,11 +6,11 @@
   "engine": "Rust + Bevy 0.20.1",
   "phase": "Autonomous native-rendering investigation",
   "playable": false,
-  "next": "Specify byte-domain blending and evidence-supported per-draw state; integrate the ordered raw-alpha path experimentally, then compare both unchanged full-resource retail viewpoints.",
+  "next": "Investigate ground holes at both unchanged poses: compare observed vertex-alpha/texture/pass inputs for identifiable resources, then replace the uniform-state control with evidence-supported material and ordering behavior.",
   "validation": {
-    "tests": 72,
+    "tests": 78,
     "bevy_check": "pass",
-    "viewer_runtime": "Production viewer unchanged. Separate raw/presentation texture APIs pass retail read-only compatibility checks on158 images /1,894,912 texels. Decoder-to-GPU synthetic conformance passes4,718,592 alpha-stage cases +573,442 spatial samples on Vulkan; no blending or retail fidelity pass.",
+    "viewer_runtime": "A separate no-window ISO-backed uniform-state control renders all156 r100 nodes /353 buffers /23,686 triangles /67 images at both fixed poses. Street visible without exclusions, but blue ground holes and material/sky failures remain. Production inspector unchanged. Synthetic byte blend and ordered feedback pass actual Vulkan checks.",
     "gameplay": "Not implemented"
   },
   "milestones": [
@@ -443,6 +443,23 @@
   "updates": [
     {
       "date": "2026-11-05",
+      "title": "An all-resource byte-blend control at both viewpoints",
+      "summary": "The street is visible with all resources included in a separate raw-alpha, ordered-rendering experiment. Both fixed viewpoints still expose blue ground holes and material errors; this is not a recovered scene renderer.",
+      "changes": [
+        "Implemented original signed integer byte-source-over arithmetic and independent RGB, stored-alpha and depth writes, without host blending or attachment feedback hazards.",
+        "Tested a deliberately stale destination snapshot: it fails on overlapping primitives. Corrected per-primitive snapshots preserve ordered feedback.",
+        "Added an explicit no-window static-control tool sharing the raw layout reader and actual GPU component. Captured all156 r100 nodes at both unchanged poses, without resource exclusions or camera/object fitting.",
+        "Published reviewed original Reference / Bevy control pairs. Retained Keep and framebuffer-only controls and earlier failed baselines; no production viewer default changed."
+      ],
+      "validation": "78 distinct Rust and25 Python synthetic tests pass. CPU exhausts16,777,216 source/destination/alpha triples against a separate rational oracle. Actual Vulkan:16,777,216 blend pixels +163,840 feedback/write-mask/order/culling samples, plus the previous alpha suite. Four real-ISO offscreen captures exit normally; ISO SHA-256 unchanged; zero missing-color fallback buffers in these runs.",
+      "limits": "The control applies one explicit state in storage order, not verified per-draw material assignment or native ordering. Blue ground gaps, sky detail, filtering/shading differences and missing actors/HUD remain. This changes multiple rendering factors and does not isolate one cause or establish scene activation, full GS precision, camera behavior or gameplay.",
+      "link": {
+        "label": "Byte-blend tests, original controls and visible failures",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/byte-source-over-2026-11-05.md"
+      }
+    },
+    {
+      "date": "2026-11-05",
       "title": "Keeping texture alpha before presentation conversion",
       "summary": "The reader now exposes raw palette alpha separately from viewer transparency. A read-only check on the three retail candidates confirms why converted alpha cannot be reused as GPU test data.",
       "changes": [
@@ -740,6 +757,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-05-byte-source-over.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched browser screenshot of the actual local English journal; reviewed original comparison pairs are registered separately",
+      "caption": "Both all-resource uniform byte-blend controls and their visible ground failures"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-05-raw-texture-alpha.jpg",
       "date": "2026-11-05",
       "source": "Unretouched browser screenshot of the actual local English raw-alpha journal entry; no game imagery",
@@ -877,17 +901,111 @@
   ],
   "progress": {
     "goal": "Resolve full-resource sky overpainting with original evidence-supported native Rust/Bevy depth/alpha behavior, synthetic CPU/GPU checks and real comparisons at both established viewpoints.",
-    "baseline_revision": "0a68771581f95083f32280c2dff090a2a5e05c5a",
-    "last_verified": "72 distinct Rust synthetic tests (66 base +6 viewer-only),25 Python tests and locked viewer check pass. Retail raw-alpha inspection:158 images /1,894,912 texels; RGB and legacy alpha-conversion relation exact, ISO unchanged. Original synthetic TIM2/CSM1 decoder-to-GPU path passes exhaustive Vulkan checks; no game inputs to GPU conformance or CI.",
+    "baseline_revision": "d84617ac20995d6e2f3c118ac9af39fdd458947c",
+    "last_verified": "78 distinct Rust tests (70 base +8 viewer-only),25 Python tests, locked viewer check/build pass. GPU:16,777,216 byte-source-over pixels +163,840 feedback/mask/order/culling samples; previous4,718,592 alpha-stage +573,442 spatial cases pass. Four bounded real-ISO controls at the two unchanged poses completed; original ISO unchanged. Uniform controls expose ground holes and are not accepted as recovered materials or full rendering.",
     "open_questions": [
-      "Raw palette alpha is now preserved explicitly. Runtime texture identity, modulated per-draw alpha and active material assignment remain unverified.",
-      "GPU write permissions are verified without blending. Byte-domain blend arithmetic, per-draw state assignment, scene activation and transparent order remain unresolved.",
-      "No new retail rendered replay or fidelity improvement is claimed. General transforms, camera motion, complete rendering and gameplay remain incomplete."
+      "Uniform caller-selected states are controls, not complete per-draw mapping. Native runtime order, activation and texture identity remain unverified.",
+      "Ground holes persist in both new all-resource views. Vertex-alpha composition, texture/material binding, filtering, pass state and wider color intermediates need isolated observation-backed tests; do not guess a fix.",
+      "Byte-input source-over component checks do not prove full GS precision or scene fidelity. Original camera motion, general transforms, actors/HUD and gameplay remain incomplete."
     ],
-    "next_experiment": "Specify byte-domain blending and evidence-supported per-draw state; integrate the ordered raw-alpha path experimentally, then compare both unchanged full-resource retail viewpoints.",
+    "next_experiment": "Investigate ground holes at both unchanged poses: compare observed vertex-alpha/texture/pass inputs for identifiable resources, then replace the uniform-state control with evidence-supported material and ordering behavior.",
     "status": "active"
   },
   "comparisons": [
+    {
+      "id": "2026-11-05-byte-source-over-second",
+      "date": "2026-11-05",
+      "title": "Second-view uniform byte-source-over control",
+      "feature": "R03",
+      "scenario": "Same previously established inspection pose and 512 x 448 physical viewport, explicit4:3 projection and back-face culling. All156 r100 resource nodes /353 buffers /23,686 triangles /67 referenced raw images; no exclusions or object/camera refits. Uniform caller-selected byte source-over, GT127, framebuffer-only failure, unmasked GEQUAL depth, nearest/clamp sampling and storage order. This is NOT recovered per-draw state.",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "reference": {
+        "caption": "Retail second viewpoint, capture frame 6203",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T20:40:24.377141+00:00",
+        "original": {
+          "path": "media/6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e.ppm",
+          "sha256": "6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e"
+        },
+        "path": "media/91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af.png",
+        "sha256": "91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "All-resource uniform-state offscreen control; street visible, ground holes/material failures remain",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / Windows Vulkan / original ordered byte-source-over control",
+        "revision": "uncommitted",
+        "captured_at": "2026-11-05T17:07:38.484632+00:00",
+        "path": "media/f5cd907a90a07cf448e29163b78ff70991a6d9497ca723bce9fdf6f3bff01449.png",
+        "sha256": "f5cd907a90a07cf448e29163b78ff70991a6d9497ca723bce9fdf6f3bff01449",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "The street and buildings remain visible with every resource included; the previous all-blend inspection overpainted them. The same camera and placed source geometry are retained.",
+        "The renderer uses original tested integer blend/write paths and raw palette alpha; this is an actual ISO-backed renderer capture, not a synthetic scene or an edited image.",
+        "The blue region crossing the lower ground is a visible failure. The control is not accepted as complete materials, scene activation or full rendering."
+      ],
+      "limits": [
+        "The state is uniform and caller-selected. Only a subset of geometry-consistent UV candidates supports this blend equation; material identity, runtime order and complete assignment are not established.",
+        "Ground holes, missing sky detail, dark/stretched or aliased surfaces and incomplete shading remain. Both Keep and framebuffer-only control failures are retained privately; neither is a shipping material policy.",
+        "Raw byte-input blending does not verify wider GS source intermediates, full filtering/fog/alpha/pass precision or general transforms. Nearest/clamp and storage ordering are explicit diagnostic limits.",
+        "Actors, HUD, collisions, camera behavior and gameplay are absent. Reference is the third-party native backend, not hardware or PCSX2; prototype is separate.",
+        "Original512x448 PNG and reference PPM remain unchanged; the reference PNG is a labeled lossless preview. No cropping, refitting or per-object fitting."
+      ]
+    },
+    {
+      "id": "2026-11-05-byte-source-over-first",
+      "date": "2026-11-05",
+      "title": "First-view uniform byte-source-over control",
+      "feature": "R03",
+      "scenario": "Same previously established inspection pose and 512 x 448 physical viewport, explicit4:3 projection and back-face culling. All156 r100 resource nodes /353 buffers /23,686 triangles /67 referenced raw images; no exclusions or object/camera refits. Uniform caller-selected byte source-over, GT127, framebuffer-only failure, unmasked GEQUAL depth, nearest/clamp sampling and storage order. This is NOT recovered per-draw state.",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "reference": {
+        "caption": "Retail first fight, newly rendered capture frame 4503; traced/control pixels identical",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T20:18:44.359477+00:00",
+        "original": {
+          "path": "media/033e25087ed4fe723f77b608804cb4af404c25c6e8671f4a743cbf18ad355dad.ppm",
+          "sha256": "033e25087ed4fe723f77b608804cb4af404c25c6e8671f4a743cbf18ad355dad"
+        },
+        "path": "media/edace008cb069c5c1a80cb803c1bf71aab90a7740ad57ee2cb3f91d3941cc9f5.png",
+        "sha256": "edace008cb069c5c1a80cb803c1bf71aab90a7740ad57ee2cb3f91d3941cc9f5",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "All-resource uniform-state offscreen control; street visible, ground holes/material failures remain",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / Windows Vulkan / original ordered byte-source-over control",
+        "revision": "uncommitted",
+        "captured_at": "2026-11-05T17:07:32.255343+00:00",
+        "path": "media/b46740c4f8440a7c24823d583f039c2f5b76d2a97a707ffd3e2f4a86683bfd71.png",
+        "sha256": "b46740c4f8440a7c24823d583f039c2f5b76d2a97a707ffd3e2f4a86683bfd71",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "The street and buildings remain visible with every resource included; the previous all-blend inspection overpainted them. The same camera and placed source geometry are retained.",
+        "The renderer uses original tested integer blend/write paths and raw palette alpha; this is an actual ISO-backed renderer capture, not a synthetic scene or an edited image.",
+        "The blue region crossing the lower ground is a visible failure. The control is not accepted as complete materials, scene activation or full rendering."
+      ],
+      "limits": [
+        "The state is uniform and caller-selected. Only a subset of geometry-consistent UV candidates supports this blend equation; material identity, runtime order and complete assignment are not established.",
+        "Ground holes, missing sky detail, dark/stretched or aliased surfaces and incomplete shading remain. Both Keep and framebuffer-only control failures are retained privately; neither is a shipping material policy.",
+        "Raw byte-input blending does not verify wider GS source intermediates, full filtering/fog/alpha/pass precision or general transforms. Nearest/clamp and storage ordering are explicit diagnostic limits.",
+        "Actors, HUD, collisions, camera behavior and gameplay are absent. Reference is the third-party native backend, not hardware or PCSX2; prototype is separate.",
+        "Original512x448 PNG and reference PPM remain unchanged; the reference PNG is a labeled lossless preview. No cropping, refitting or per-object fitting."
+      ]
+    },
     {
       "id": "2026-11-05-depth-control-opaque",
       "date": "2026-11-05",

@@ -38,6 +38,11 @@ not old files/PIDs. Keep unrelated changes and historical captures untouched.
   remains pending. See ordered-alpha-gpu-2026-11-05.md. Raw traces and per-buffer
   mappings stay private.
 
+- The byte-source-over component now passes exhaustive CPU/GPU checks. Separate
+  all-resource uniform-state controls render both fixed views without exclusions,
+  but ground holes persist. Read byte-source-over-2026-11-05.md; do not accept
+  uniform states or storage order as recovered game materials/activation.
+
 ## Execute and adjust
 
 1. Form one falsifiable rendering hypothesis; record alternative explanations.

@@ -139,3 +139,8 @@ blending and full-resource rendering remain open.
 [Raw texture alpha](docs/raw-texture-alpha-2026-11-05.md) is preserved separately
 from presentation transparency; the existing viewer output policy is unchanged.
 The bounded inspector reads personal ISO data without extracting assets.
+
+The [byte-blend control](docs/byte-source-over-2026-11-05.md) now renders all
+resources at both fixed inspection poses without a window. The street appears,
+but ground holes and material/sky errors remain. This is an explicit uniform-state
+experiment, not recovered game materials, scene activation or playable content.
