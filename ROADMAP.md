@@ -7,7 +7,7 @@ Updated: 2026-11-05. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Preserve raw retail alpha, specify byte-domain blending and explicit per-draw state, then validate both unchanged full-resource retail viewpoints. The production viewer remains unchanged.
+Next useful evidence: Specify byte-domain blending and evidence-supported per-draw state; integrate the ordered raw-alpha path experimentally, then compare both unchanged full-resource retail viewpoints.
 
 ## M0 — Public foundations
 

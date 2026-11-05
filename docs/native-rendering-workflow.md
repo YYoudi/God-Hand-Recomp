@@ -53,7 +53,9 @@ not old files/PIDs. Keep unrelated changes and historical captures untouched.
    alpha; distinguish GS framebuffer alpha from final presentation opacity.
    Separate arithmetic tests,
    actual GPU results and retail fidelity. No disc or game pixels in tests/CI.
-5. Explicitly investigate GS byte-domain blending versus host linear blending,
+5. Raw TIM2/TIM3 preservation is implemented and checked on the retail banks;
+   read raw-texture-alpha-2026-11-05.md. Do not infer draw state from these bins.
+   Explicitly investigate GS byte-domain blending versus host linear blending,
    texture alpha normalization/overbright loss, transparent ordering and sky
    activation. Do not silently turn a diagnostic approximation into the default.
 6. Validate real full-resource views at both existing poses without moving objects

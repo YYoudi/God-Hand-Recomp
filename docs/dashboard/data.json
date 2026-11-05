@@ -6,11 +6,11 @@
   "engine": "Rust + Bevy 0.20.1",
   "phase": "Autonomous native-rendering investigation",
   "playable": false,
-  "next": "Preserve raw retail alpha, specify byte-domain blending and explicit per-draw state, then validate both unchanged full-resource retail viewpoints. The production viewer remains unchanged.",
+  "next": "Specify byte-domain blending and evidence-supported per-draw state; integrate the ordered raw-alpha path experimentally, then compare both unchanged full-resource retail viewpoints.",
   "validation": {
-    "tests": 67,
+    "tests": 72,
     "bevy_check": "pass",
-    "viewer_runtime": "New reusable offscreen GPU component: 4,718,592 alpha-stage pixel cases and 573,442 spatial samples pass exact RGB/stored-alpha/depth checks on RTX 5080 / Vulkan. No disc or game fixtures; no blending. Production retail viewer unchanged.",
+    "viewer_runtime": "Production viewer unchanged. Separate raw/presentation texture APIs pass retail read-only compatibility checks on158 images /1,894,912 texels. Decoder-to-GPU synthetic conformance passes4,718,592 alpha-stage cases +573,442 spatial samples on Vulkan; no blending or retail fidelity pass.",
     "gameplay": "Not implemented"
   },
   "milestones": [
@@ -443,6 +443,22 @@
   "updates": [
     {
       "date": "2026-11-05",
+      "title": "Keeping texture alpha before presentation conversion",
+      "summary": "The reader now exposes raw palette alpha separately from viewer transparency. A read-only check on the three retail candidates confirms why converted alpha cannot be reused as GPU test data.",
+      "changes": [
+        "Added distinct raw TIM2/TIM3 images and explicit consuming presentation conversion; existing viewer image semantics and defaults stay unchanged.",
+        "Connected original synthetic encoded TIM2/CSM1 data to the ordered GPU component through the raw type.",
+        "Added a bounded no-extraction alpha inspector for exact caller-selected ISO room banks. No runtime state or scene visibility is assigned from texture contents."
+      ],
+      "validation": "72 distinct Rust and25 Python synthetic tests pass. All158 bank images /1,894,912 texels pass raw-to-presentation compatibility checks; original ISO SHA-256 unchanged. Actual Vulkan conformance:4,718,592 exhaustive alpha-stage pixel cases plus573,442 spatial samples; fixtures contain no game data.",
+      "limits": "19,980 texels change the unmodulated >127 predicate if presentation alpha is mistaken for raw alpha; this is a diagnostic input difference, not a count of incorrect screen pixels. No blending, production GPU integration or new retail Reference / Bevy pair. Sky activation and full-resource rendering remain open.",
+      "link": {
+        "label": "Raw-alpha contract and bounded retail findings",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/raw-texture-alpha-2026-11-05.md"
+      }
+    },
+    {
+      "date": "2026-11-05",
       "title": "Testing separate alpha and depth writes on the GPU",
       "summary": "Development resumed after the repository rename. An original offscreen Rust/WGSL component now checks alpha comparisons and independent RGB, stored-alpha and depth writes. It is not a retail renderer fix.",
       "changes": [
@@ -724,6 +740,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-05-raw-texture-alpha.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched browser screenshot of the actual local English raw-alpha journal entry; no game imagery",
+      "caption": "Raw texture alpha preserved separately from presentation transparency"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-05-ordered-alpha-gpu.jpg",
       "date": "2026-11-05",
       "source": "Unretouched browser screenshot of the actual local English journal entry; no game or synthetic fixture imagery",
@@ -854,14 +877,14 @@
   ],
   "progress": {
     "goal": "Resolve full-resource sky overpainting with original evidence-supported native Rust/Bevy depth/alpha behavior, synthetic CPU/GPU checks and real comparisons at both established viewpoints.",
-    "baseline_revision": "dc472c1f69ba6ed6648d48027eae587aa2b49fd6",
-    "last_verified": "67 distinct Rust synthetic tests (61 base +6 viewer-only),25 Python tests and locked viewer check pass. Original ordered alpha-stage GPU component passes 4,718,592 exhaustive pixel cases plus573,442 spatial samples on Vulkan. Linked opt-in executable uses the shared app library; production retail viewer is not wired to it.",
+    "baseline_revision": "0a68771581f95083f32280c2dff090a2a5e05c5a",
+    "last_verified": "72 distinct Rust synthetic tests (66 base +6 viewer-only),25 Python tests and locked viewer check pass. Retail raw-alpha inspection:158 images /1,894,912 texels; RGB and legacy alpha-conversion relation exact, ISO unchanged. Original synthetic TIM2/CSM1 decoder-to-GPU path passes exhaustive Vulkan checks; no game inputs to GPU conformance or CI.",
     "open_questions": [
-      "Raw retail alpha must be preserved separately from normalized presentation alpha before this component can consume ISO-backed textures.",
+      "Raw palette alpha is now preserved explicitly. Runtime texture identity, modulated per-draw alpha and active material assignment remain unverified.",
       "GPU write permissions are verified without blending. Byte-domain blend arithmetic, per-draw state assignment, scene activation and transparent order remain unresolved.",
-      "No new retail replay or fidelity improvement is claimed. General transforms, camera motion, complete rendering and gameplay remain incomplete."
+      "No new retail rendered replay or fidelity improvement is claimed. General transforms, camera motion, complete rendering and gameplay remain incomplete."
     ],
-    "next_experiment": "Preserve raw retail alpha, specify byte-domain blending and explicit per-draw state, then validate both unchanged full-resource retail viewpoints. The production viewer remains unchanged.",
+    "next_experiment": "Specify byte-domain blending and evidence-supported per-draw state; integrate the ordered raw-alpha path experimentally, then compare both unchanged full-resource retail viewpoints.",
     "status": "active"
   },
   "comparisons": [

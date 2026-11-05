@@ -85,3 +85,10 @@ The autonomous goal remains active. General transforms, camera motion,
 actors/HUD, full rendering and gameplay remain incomplete; prototype behavior
 stays separate. Original project code is MIT; this is a provenance protocol,
 not legal certification or a formal independent-team clean room.
+
+## Subsequent raw-input increment
+
+The [raw texture-alpha APIs](raw-texture-alpha-2026-11-05.md) now preserve palette
+bytes separately, and the exhaustive synthetic GPU ramp starts at encoded TIM2.
+This closes the raw-reader input prerequisite, not retail renderer integration
+or the remaining blend/state/full-resource acceptance gates.

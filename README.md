@@ -135,3 +135,7 @@ Repository: [god-hand-rs](https://github.com/YYoudi/god-hand-rs). The native-ren
 The [ordered GPU alpha component](docs/ordered-alpha-gpu-2026-11-05.md) passes
 synthetic offscreen Vulkan checks. It is not connected to the retail viewer yet;
 blending and full-resource rendering remain open.
+
+[Raw texture alpha](docs/raw-texture-alpha-2026-11-05.md) is preserved separately
+from presentation transparency; the existing viewer output policy is unchanged.
+The bounded inspector reads personal ISO data without extracting assets.

@@ -34,3 +34,11 @@ the multi-palette font variant is deliberately outside this boundary. Decode and
 inspect a small named UI texture locally through ISO -> FST -> AFS -> TIM2 -> Bevy.
 Visual recognizability does not establish pixel-perfect parity with in-game GS
 blending. Reference-runtime comparison and other formats remain separate tasks.
+
+## Explicit raw-alpha API, 5 November 2026
+
+The historical decode/RgbaImage path remains presentation-normalized as above.
+The distinct decode_raw/RawRgbaImage path copies palette RGBA bytes unchanged;
+into_presentation consumes that raw image with the same existing conversion.
+See [raw-texture-alpha-v1.md](raw-texture-alpha-v1.md). Do not reuse normalized
+alpha as GS data or attempt to invert this lossy conversion.

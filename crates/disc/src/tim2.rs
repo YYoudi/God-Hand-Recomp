@@ -1,6 +1,7 @@
 //! Narrow, original indexed TIM2 decoder. See specs/tim2-indexed-v1.md.
 use std::io::{self, Read};
 
+/// Inspection/presentation RGBA. Alpha is normalized/clamped, NOT raw GS data.
 #[derive(Debug)]
 pub struct RgbaImage {
     pub width: u16,
@@ -8,17 +9,43 @@ pub struct RgbaImage {
     pub pixels: Vec<u8>,
 }
 
+/// Expanded palette bytes, including original unnormalized alpha. Not presentation RGBA.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RawRgbaImage {
+    pub width: u16,
+    pub height: u16,
+    pub pixels: Vec<u8>,
+}
+
+impl RawRgbaImage {
+    /// Consuming, lossy alpha conversion for the existing inspection viewer.
+    pub fn into_presentation(mut self) -> RgbaImage {
+        for pixel in self.pixels.chunks_exact_mut(4) {
+            pixel[3] = ((u16::from(pixel[3]) * 255 + 64) / 128).min(255) as u8;
+        }
+        RgbaImage {
+            width: self.width,
+            height: self.height,
+            pixels: self.pixels,
+        }
+    }
+}
+
 fn invalid(message: &'static str) -> io::Error {
     io::Error::new(io::ErrorKind::InvalidData, message)
 }
 
 pub fn decode(source: impl Read) -> io::Result<RgbaImage> {
-    let mut data = Vec::new();
-    source.take(16 * 1024 * 1024 + 1).read_to_end(&mut data)?;
-    decode_indexed(&data, false)
+    Ok(decode_raw(source)?.into_presentation())
 }
 
-pub(crate) fn decode_indexed(data: &[u8], tim3: bool) -> io::Result<RgbaImage> {
+pub fn decode_raw(source: impl Read) -> io::Result<RawRgbaImage> {
+    let mut data = Vec::new();
+    source.take(16 * 1024 * 1024 + 1).read_to_end(&mut data)?;
+    decode_indexed_raw(&data, false)
+}
+
+pub(crate) fn decode_indexed_raw(data: &[u8], tim3: bool) -> io::Result<RawRgbaImage> {
     if data.len() > 16 * 1024 * 1024 || data.len() < 64 {
         return Err(invalid("indexed texture input size invalid"));
     }
@@ -99,10 +126,9 @@ pub(crate) fn decode_indexed(data: &[u8], tim3: bool) -> io::Result<RgbaImage> {
             (index & !24) | ((index & 8) << 1) | ((index & 16) >> 1)
         };
         let color = &palette[index * 4..index * 4 + 4];
-        pixels.extend_from_slice(&color[..3]);
-        pixels.push(((u16::from(color[3]) * 255 + 64) / 128).min(255) as u8);
+        pixels.extend_from_slice(color);
     }
-    Ok(RgbaImage {
+    Ok(RawRgbaImage {
         width,
         height,
         pixels,
@@ -136,6 +162,90 @@ mod tests {
         }
         data
     }
+    fn assert_raw_relation(data: &[u8], tim3: bool) -> RawRgbaImage {
+        let raw = if tim3 {
+            crate::tm3::decode_raw(data)
+        } else {
+            decode_raw(data)
+        }
+        .unwrap();
+        let presentation = if tim3 {
+            crate::tm3::decode(data)
+        } else {
+            decode(data)
+        }
+        .unwrap();
+        assert_eq!(
+            (raw.width, raw.height),
+            (presentation.width, presentation.height)
+        );
+        assert_eq!(raw.pixels.len(), presentation.pixels.len());
+        for (a, b) in raw
+            .pixels
+            .chunks_exact(4)
+            .zip(presentation.pixels.chunks_exact(4))
+        {
+            assert_eq!(&a[..3], &b[..3]);
+            assert_eq!(b[3], ((u16::from(a[3]) * 255 + 64) / 128).min(255) as u8);
+        }
+        assert_eq!(raw.clone().into_presentation().pixels, presentation.pixels);
+        raw
+    }
+
+    #[test]
+    fn raw_alpha_preserves_every_palette_byte_without_changing_presentation() {
+        for tim3 in [false, true] {
+            for kind in [4, 5] {
+                let indices: Vec<_> = (0..=255).collect();
+                let mut bytes = fixture(kind, &indices, if kind == 4 { 512 } else { 256 });
+                if tim3 {
+                    bytes[..4].copy_from_slice(b"TIM3");
+                }
+                let colors = if kind == 4 { 16 } else { 256 };
+                for i in 0..colors {
+                    bytes[64 + indices.len() + i * 4 + 3] =
+                        if kind == 4 { (i * 17) as u8 } else { i as u8 };
+                }
+                let raw = assert_raw_relation(&bytes, tim3);
+                let mut seen = std::collections::BTreeSet::new();
+                for pixel in raw.pixels.chunks_exact(4) {
+                    assert_eq!(pixel[3], if kind == 4 { pixel[0] * 17 } else { pixel[0] });
+                    seen.insert(pixel[3]);
+                }
+                assert_eq!(seen.len(), colors);
+                assert!(seen.contains(&0) && seen.contains(&255));
+                if kind == 5 {
+                    assert!(seen.contains(&127) && seen.contains(&128) && seen.contains(&129));
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn raw_transfer_alpha_preserves_bytes_for_both_index_widths() {
+        for kind in [4, 5] {
+            let len = if kind == 4 { 8192 } else { 16384 };
+            let indices: Vec<_> = (0..len)
+                .map(|i| ((i * 73 + i / 251 * 19 + 11) % 256) as u8)
+                .collect();
+            let mut bytes = fixture(kind, &indices, 128);
+            bytes[..4].copy_from_slice(b"TIM3");
+            bytes[5] = 6;
+            bytes[38..40].copy_from_slice(&128u16.to_le_bytes());
+            let colors = if kind == 4 { 16 } else { 256 };
+            for i in 0..colors {
+                bytes[64 + len + i * 4 + 3] = if kind == 4 { (i * 17) as u8 } else { i as u8 };
+            }
+            let raw = assert_raw_relation(&bytes, true);
+            let mut seen = std::collections::BTreeSet::new();
+            for p in raw.pixels.chunks_exact(4) {
+                assert_eq!(p[3], if kind == 4 { p[0] * 17 } else { p[0] });
+                seen.insert(p[3]);
+            }
+            assert_eq!(seen.len(), colors);
+        }
+    }
+
     #[test]
     fn low_nibble_first_and_odd_pixel_count() {
         let bytes = fixture(4, &[0x31, 0xf2], 3);
@@ -179,9 +289,21 @@ mod tests {
             let mut bad = original.clone();
             bad[at] = value;
             assert!(decode(bad.as_slice()).is_err(), "offset {at}");
+            assert!(decode_raw(bad.as_slice()).is_err(), "raw offset {at}");
+            bad[..4].copy_from_slice(b"TIM3");
+            assert!(
+                crate::tm3::decode_raw(bad.as_slice()).is_err(),
+                "raw TIM3 offset {at}"
+            );
         }
         for end in 0..original.len() {
             assert!(decode(&original[..end]).is_err());
+            assert!(decode_raw(&original[..end]).is_err());
+            let mut tim3 = original[..end].to_vec();
+            if tim3.len() >= 4 {
+                tim3[..4].copy_from_slice(b"TIM3");
+            }
+            assert!(crate::tm3::decode_raw(tim3.as_slice()).is_err());
         }
     }
 

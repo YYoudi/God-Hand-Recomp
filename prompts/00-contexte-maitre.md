@@ -159,3 +159,13 @@ without a disc or window. 67 distinct Rust /25 Python synthetic tests; actual
 Vulkan exhaustive and spatial checks pass. No blending or production retail
 viewer integration yet. Raw alpha is required: converted texture alpha is NOT
 equivalent. No new retail fidelity or scene-activation result. Goal remains active.
+
+Raw texture alpha increment, 2026-11-05: read specs/raw-texture-alpha-v1.md and
+docs/raw-texture-alpha-2026-11-05.md. TIM2/TIM3 decode_raw returns a distinct
+RawRgbaImage; existing decode remains presentation-normalized. Never invert the
+lossy conversion or reinterpret RgbaImage. Bounded alpha inspector verified158
+retail bank images /1,894,912texels with unchanged ISO; no asset extraction.
+72 distinct Rust /25 Python tests; original synthetic encoded TIM2 now feeds
+exhaustive GPU conformance. No blending/material mapping/production integration
+or new retail fidelity claim. Next specify byte-domain blending/state and both
+full-resource views, not another all-opaque shortcut. Goal remains active.

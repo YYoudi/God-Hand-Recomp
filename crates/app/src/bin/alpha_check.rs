@@ -96,11 +96,39 @@ fn run() -> GpuResult<()> {
     let start = Instant::now();
     let (_app, device, queue) = setup()?;
     let mut gpu = OrderedAlphaGpu::new(&device);
-    let ramp = RawAlphaTexture {
-        width: 256,
-        height: 1,
-        rgba: (0..=255u8).flat_map(|a| [203, 101, 47, a]).collect(),
-    };
+    // Original indexed TIM2 fixture, not game pixels: exercise decoder -> typed GPU input.
+    let mut encoded = vec![0u8; 16 + 48 + 256 + 1024];
+    encoded[..4].copy_from_slice(b"TIM2");
+    encoded[4] = 4;
+    encoded[6] = 1;
+    encoded[16..20].copy_from_slice(&1328u32.to_le_bytes());
+    encoded[20..24].copy_from_slice(&1024u32.to_le_bytes());
+    encoded[24..28].copy_from_slice(&256u32.to_le_bytes());
+    encoded[28] = 48;
+    encoded[30..32].copy_from_slice(&256u16.to_le_bytes());
+    encoded[33] = 1;
+    encoded[34] = 3;
+    encoded[35] = 5;
+    encoded[36..38].copy_from_slice(&256u16.to_le_bytes());
+    encoded[38] = 1;
+    for (i, byte) in encoded[64..320].iter_mut().enumerate() {
+        *byte = i as u8;
+    }
+    // Explicit CSM1 block ordering, independent of the decoder bit expression.
+    let palette_order = (0..8).flat_map(|block| {
+        [0, 16, 8, 24]
+            .into_iter()
+            .flat_map(move |group| (0..8).map(move |lane| block * 32 + group + lane))
+    });
+    for (alpha, palette_index) in palette_order.enumerate() {
+        encoded[320 + palette_index * 4..324 + palette_index * 4].copy_from_slice(&[
+            203,
+            101,
+            47,
+            alpha as u8,
+        ]);
+    }
+    let ramp = RawAlphaTexture::from(godhand_disc::tim2::decode_raw(encoded.as_slice())?);
     let mut checked = 0u64;
     for enabled in [true, false] {
         let comparisons = if enabled {

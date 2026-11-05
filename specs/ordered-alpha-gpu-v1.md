@@ -70,3 +70,9 @@ full-resource views. This component alone is not goal completion.
 
 Within-draw ordering is a correctness-first diagnostic path with up to two GPU
 draw commands per triangle; no batching or performance claim is made.
+
+Raw decoder integration, 5 November 2026: TIM2/TIM3 now offer a distinct raw
+image API; the GPU adapter accepts it explicitly without conversion. The
+synthetic exhaustive ramp exercises an original encoded TIM2/CSM1 input.
+Production retail textures still use the unchanged presentation path; this
+does not supply blending or evidence-supported per-draw state assignment.

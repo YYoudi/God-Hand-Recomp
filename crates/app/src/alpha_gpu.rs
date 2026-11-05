@@ -28,6 +28,16 @@ pub struct RawAlphaTexture {
     pub rgba: Vec<u8>,
 }
 
+impl From<godhand_disc::tim2::RawRgbaImage> for RawAlphaTexture {
+    fn from(image: godhand_disc::tim2::RawRgbaImage) -> Self {
+        Self {
+            width: u32::from(image.width),
+            height: u32::from(image.height),
+            rgba: image.pixels,
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct AlphaDraw {
     pub vertices: Vec<AlphaVertex>,

@@ -44,3 +44,9 @@ swizzled coordinate samples plus full synthetic-image checks against an independ
 table-based reference. Measure all images in the three selected room banks.
 This proves texture decoding and resource association, not the game's lighting,
 alpha-test/blending, mipmap selection or camera. Actual pixels remain private.
+
+## Explicit raw-alpha API, 5 November 2026
+
+TIM3 now shares the distinct raw expansion API with TIM2. Transfer/palette
+addressing is unchanged; decode keeps normalized presentation alpha, decode_raw
+preserves all four palette bytes. See raw-texture-alpha-v1.md.

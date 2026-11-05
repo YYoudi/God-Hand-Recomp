@@ -25,3 +25,7 @@ path = "src/main.rs"
 name = "godhand-alpha-check"
 path = "src/bin/alpha_check.rs"
 required-features = ["viewer"]
+
+[[bin]]
+name = "godhand-alpha-inspect"
+path = "src/bin/alpha_inspect.rs"

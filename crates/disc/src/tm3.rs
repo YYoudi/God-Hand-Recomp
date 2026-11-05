@@ -86,9 +86,13 @@ impl TextureBank {
 }
 
 pub fn decode(source: impl Read) -> io::Result<crate::tim2::RgbaImage> {
+    Ok(decode_raw(source)?.into_presentation())
+}
+
+pub fn decode_raw(source: impl Read) -> io::Result<crate::tim2::RawRgbaImage> {
     let mut bytes = Vec::new();
     source.take(16 * 1024 * 1024 + 1).read_to_end(&mut bytes)?;
-    crate::tim2::decode_indexed(&bytes, true)
+    crate::tim2::decode_indexed_raw(&bytes, true)
 }
 
 fn bit(value: usize, index: usize) -> usize {
