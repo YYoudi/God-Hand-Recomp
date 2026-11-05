@@ -76,9 +76,15 @@ def validate_comparisons(entries, read):
     """read receives a repository-relative path (working tree or Git index)."""
     paths, ids = set(), set()
     for pair in entries:
-        require(set(pair) == {'id', 'date', 'title', 'feature', 'scenario', 'alignment',
-                             'observations', 'limits', 'reviewed', 'reference', 'bevy'},
+        required = {'id', 'date', 'title', 'feature', 'scenario', 'alignment',
+                    'observations', 'limits', 'reviewed', 'reference', 'bevy'}
+        require(set(pair) in (required, required | {'labels'}),
                 'Unexpected or missing comparison fields')
+        if 'labels' in pair:
+            require(isinstance(pair['labels'], dict) and set(pair['labels']) == {'reference', 'bevy'},
+                    'Explicit comparison labels must identify both sides')
+            require(all(isinstance(s, str) and 0 < len(s.strip()) <= 80
+                        for s in pair['labels'].values()), 'Invalid comparison labels')
         require(re.fullmatch(r'[a-z0-9][a-z0-9-]{0,79}', pair['id']) and pair['id'] not in ids,
                 'Invalid or duplicate comparison id')
         ids.add(pair['id'])

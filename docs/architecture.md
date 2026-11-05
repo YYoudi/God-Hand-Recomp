@@ -1,5 +1,10 @@
 # ADR 001 — Rust + Bevy independent engine
 
+Current priority (2026-11-05): the independent engine is paused, not achieved.
+Evaluate the separate faithful PC-port/remaster route under
+[port-evaluation-workflow.md](port-evaluation-workflow.md). The original engine
+contracts below remain preserved; do not import third-party game/GPL source.
+
 Date: 2026-11-03. Status: adopted at the user's request.
 
 ## Decision

@@ -117,3 +117,15 @@ data; CI may validate only the approved publication files' hashes/headers.
 GitHub Pages stays on main:/docs and github.io, with standard public runners and
 no paid hosting or persistent CI artifacts/caches. No permissions from Giants
 are imported into this project. Do not modify that repository for this workflow.
+
+## PC-port evaluation extension — 2026-11-05
+
+The owner changed the final objective to a faithful, remasterable PC port. Keep
+old Reference / Bevy pairs and exact provenance unchanged. A new pair may use
+optional `labels` with exactly `reference` and `bevy` text labels (1..80 nonblank
+characters) to identify a third-party baseline/modified runtime honestly. The
+legacy internal key `bevy` remains for schema compatibility only; it is not a
+claim that a labeled third-party screenshot is Bevy. Specify exact upstream
+revision and local patch status in runtime/caption/limits. Never present edited
+GPL runtime screenshots as independent MIT-engine progress. All review, unchanged
+original bytes, hashes, private data and rights-holder limitations still apply.

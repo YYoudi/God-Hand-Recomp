@@ -1,8 +1,24 @@
-# AGENTS.md — God Hand independent engine lab
+# AGENTS.md â€” God Hand independent engine lab
+
+## Current priority — owner decision, 2026-11-05
+
+The final objective is a faithful, modifiable PC port and later remaster, not
+necessarily Rust/Bevy. The independent-engine rendering goal is **paused, not
+achieved**. Preserve its source, pending edits, tests and original evidence; do
+not start new Rust features. Evaluate LasVola/godhand-recomp first through a real
+local build and modification experiment, then LucasPicoli/god-hand-decomp as a
+separate matching-decompilation/comprehension project. Follow
+[the evaluation workflow](docs/port-evaluation-workflow.md). Keep all third-party
+checkouts, generated game code, ELF/assets/dumps and GPL experiments in ignored
+research workspaces, never in the public MIT engine. Record exposure explicitly;
+any future component using decompiled code is not an independent reimplementation.
+No automatic republication of third-party content. No delegation. Public journal
+and resources stay English, factual and on free GitHub Pages.
+
 
 Reply to the user in French. Maintain public resources and the journal in English.
 Read docs/workflow.md, docs/clean-room.md and docs/architecture.md before changing
-the engine. The user's 2026-11-03 decision supersedes the initial pipeline:
+the engine. Historical independent-engine scope (now paused), adopted 2026-11-03:
 **independent Rust + Bevy reimplementation**, original public MIT code, personal ISO required.
 
 ## Scope
@@ -20,7 +36,7 @@ translated C++ or incompatibly licensed code into the engine. Translation or ren
 does not make code clean room. Do not claim legal certification or a formal separation
 that has not occurred. Document provenance.
 
-## Persistent progress and comparison evidence — owner decision, 2026-11-04
+## Persistent progress and comparison evidence â€” owner decision, 2026-11-04
 
 Read docs/progress-tracking.md on every resume, together with the active goal,
 Git state, docs/dashboard/data.json and docs/local/progress-checkpoint.md.
@@ -98,7 +114,7 @@ God Hand (USA).iso, extraction/, GH-Prototype/, ghidra/, PS2Recomp/, recomp/, to
 downloads/, pcsx2-v2.8.2-windows-x64-Qt/ and .zcode/ are ignored. Never modify original
 discs or extractions. Before prototype/diff work, read unpublished local
 docs/prototype-tcrf-notes.md. Keep that research separate from implementation.
-Historical prompts 01–05 do not describe the public-engine workflow.
+Historical prompts 01â€“05 do not describe the public-engine workflow.
 
 God Hand and Bevy use **Y as height**. Both ELFs are stripped. An MCP entry in
 .zcode/config.json does not guarantee availability in Codex; inspect session tools.

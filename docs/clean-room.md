@@ -43,3 +43,13 @@ certification. Game imagery is not MIT. See [the protocol](progress-tracking.md)
 
 CI reduces disclosure risk; it does not determine code ownership.
 Every contribution declares provenance and preserves notices. See NOTICE.md.
+
+## Priority change and exposure boundary — 2026-11-05
+
+The independent Rust engine is paused, not achieved. The owner now authorizes
+separate source/build/runtime evaluation of recompilation and matching-decompilation
+projects for a faithful PC port/remaster. See port-evaluation-workflow.md. Viewing
+or adapting decompiled game code must be logged; affected future work cannot be
+represented as independently reconstructed. Existing original Rust sources remain
+separate; no third-party source is imported by this evaluation. Repository MIT/GPL
+licenses do not grant rights-holder permission to the original game.

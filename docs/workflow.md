@@ -1,5 +1,10 @@
 # Independent-engine workflow
 
+Current priority (2026-11-05): the independent engine is paused, not achieved.
+Evaluate the separate faithful PC-port/remaster route under
+[port-evaluation-workflow.md](port-evaluation-workflow.md). The original engine
+contracts below remain preserved; do not import third-party game/GPL source.
+
 Read clean-room.md, architecture.md and progress-tracking.md.
 On resume reconcile the goal, Git state, dashboard data and the ignored
 docs/local/progress-checkpoint.md; update that checkpoint at useful boundaries. Historical ghidra_analyze_retail.sh and

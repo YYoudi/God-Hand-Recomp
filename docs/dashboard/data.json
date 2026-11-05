@@ -3,10 +3,10 @@
   "updated": "2026-11-05",
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/god-hand-rs",
-  "engine": "Rust + Bevy 0.20.1",
-  "phase": "Autonomous native-rendering investigation",
+  "engine": "Independent Rust/Bevy lab (paused); separate third-party C++ evaluation",
+  "phase": "Faithful PC-port and remaster evaluation",
   "playable": false,
-  "next": "Corroborate transparent ground-layer ordering and texture/color/pass assignment at both poses. The observed gaps are fixed by preserving exact constants, but uniform state/storage order, full shading and scene activation are not recovered.",
+  "next": "Finish the isolated LasVola build, observe boot/first scene/combat/input and persistence, then prove an original external texture replacement at the same viewpoint. No runtime or remaster success is claimed yet.",
   "validation": {
     "tests": 81,
     "bevy_check": "pass",
@@ -183,14 +183,14 @@
         {
           "id": "R03",
           "title": "Textures and materials",
-          "status": "in_progress",
+          "status": "paused",
           "area": "graphics",
           "acceptance": "Verified texture/material behavior, including correct alpha/depth interaction. Raw color modulation and a CPU alpha-stage write-permission model exist; real full-resource depth controls expose host-pipeline errors. GPU write/discard paths, per-draw state, blending/filter/light/fog and complete material fidelity remain pending."
         },
         {
           "id": "R04",
           "title": "Geometry and scenes",
-          "status": "in_progress",
+          "status": "paused",
           "area": "graphics",
           "acceptance": "Load hierarchy, meshes, materials and positions from ISO. Two retail viewpoints support static unit-scale/zero-rotation placement with whole-resource holdouts. General transforms, hierarchy, active-resource selection, other rooms and runtime camera behavior remain pending."
         },
@@ -438,9 +438,77 @@
           "acceptance": "User guide, component provenance and reproducible reporting."
         }
       ]
+    },
+    {
+      "id": "M7",
+      "title": "Evaluate a faithful, remasterable PC base",
+      "goal": "Choose from reproduced builds and modification evidence, not language preference or author screenshots. Earlier independent-engine work is paused and preserved.",
+      "depends_on": [],
+      "tasks": [
+        {
+          "id": "PE01",
+          "title": "Preserve the independent lab and replace its priority",
+          "status": "done",
+          "area": "tooling",
+          "acceptance": "Record Git, old goal and owned processes; finish engaged checks; preserve source edits/tests/original evidence and prototype separately; explicitly state the old rendering goal was not achieved."
+        },
+        {
+          "id": "PE02",
+          "title": "Pin and build LasVola from the personal ISO",
+          "status": "in_progress",
+          "area": "tooling",
+          "acceptance": "Exact revision/dependency/license audit, recorded toolchain and actual local native executable built from the untouched original ISO; generated game code remains private."
+        },
+        {
+          "id": "PE03",
+          "title": "Reproduce playable and persistence gates",
+          "status": "planned",
+          "area": "validation",
+          "acceptance": "Actually observe boot, first scene, combat and controls; distinguish and test in-game memory-card saving/loading and separate runtime snapshots; retain defects and original captures."
+        },
+        {
+          "id": "PE04",
+          "title": "Demonstrate an original external texture modification",
+          "status": "planned",
+          "area": "rendering",
+          "acceptance": "Trace named resource/loading/rendering, load an original external test texture and show unchanged same-view before/after captures with exact revision/patch provenance, or reproduce a precise blocker. A boot is not remaster proof."
+        },
+        {
+          "id": "PE05",
+          "title": "Audit the matching-decompilation complement",
+          "status": "in_progress",
+          "area": "tooling",
+          "acceptance": "Pin LucasPicoli, distinguish matching C coverage from byte-identical ELF/assembly fallbacks, inventory dependencies/licenses and attempt appropriate tool/build tests without claiming it is a PC port."
+        },
+        {
+          "id": "PE06",
+          "title": "Choose direction and adapt the remaster roadmap",
+          "status": "planned",
+          "area": "core",
+          "acceptance": "Evidence-backed fidelity/stability/modification/asset/rendering/maintenance/license comparison and recommendation for upstream, separate fork, hybrid or independent work; publish verified findings without third-party code/assets."
+        }
+      ]
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-05",
+      "title": "Changing priority: evaluate an existing PC port first",
+      "summary": "The goal is now a faithful and modifiable PC port, not necessarily a new Rust engine. The independent lab is paused and preserved while two separate codebases are tested.",
+      "changes": [
+        "Pinned LasVola14e956a and LucasPicoli a2c98cb in ignored research checkouts. No third-party source or generated game code is added to this public MIT repository.",
+        "Installed a portable Microsoft toolchain, built the LasVola recompiler and generated the boot program plus81 overlay packs from the personal ISO. The native game executable is still compiling; boot/combat/save/load are not verified yet.",
+        "Reproduced setup friction instead of relying on the README: missing Visual Studio, incorrect extract option position and an implicit sibling-disc path. Commands and corrected generation gates are retained privately.",
+        "Prepared an original external checker texture and561 synthetic read-range overlap checks. This is preparation, not a demonstrated in-game replacement.",
+        "Lucas is a matching PS2 decompilation, not an existing PC port. Native Windows tooling tests stop with65 passes,5 skips and5 failures; no matching ELF has been rebuilt locally."
+      ],
+      "validation": "The prior engaged Rust Check/Build completed and pending edits remain preserved.26 original journal/publication Python tests pass. LasVola generation covers10600 boot C++ files and2460 overlay C++ files; generation diagnostics are retained. The full native build remains an open gate.",
+      "limits": "No recommendation is final before actual runtime and modification tests. No local LasVola gameplay, save/load, performance or remaster compatibility is claimed. Lucas progress percentages are checked-in upstream reports, not local build measurements. Game imagery/code/assets are not licensed by the repository license.",
+      "link": {
+        "label": "Evaluation workflow, evidence gates and provenance boundary",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/port-evaluation-workflow.md"
+      }
+    },
     {
       "date": "2026-11-05",
       "title": "The ground gaps came from constant-alpha drift",
@@ -791,6 +859,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-05-port-evaluation.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched actual local English journal screenshot, captured in a hidden browser; no new unreviewed game imagery",
+      "caption": "Priority change and explicitly unverified native runtime/modification gates"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-05-constant-channels.jpg",
       "date": "2026-11-05",
       "source": "Unretouched browser screenshot of the actual local English constant-channel journal; original reference/control pairs are registered separately",
@@ -948,15 +1023,15 @@
     }
   ],
   "progress": {
-    "goal": "Resolve full-resource sky overpainting with original evidence-supported native Rust/Bevy depth/alpha behavior, synthetic CPU/GPU checks and real comparisons at both established viewpoints.",
-    "baseline_revision": "c5340a749d275a9f0b4443d6a331dcc268e0ee49",
-    "last_verified": "81 distinct Rust tests (70 base +11 viewer-only),25 Python tests, locked viewer check/build pass. Invented clipping regression fails before the fix;11,440,128 constant-channel sample checks and prior GPU suites pass after. Four same-parameter retail controls from enginebefc14d remove the observed gaps; probes verify alpha128/positive ground depth where127/zero depth previously occurred. Original ISO unchanged.",
+    "goal": "Experimentally choose the best faithful and remasterable God Hand PC codebase: LasVola playable-base evaluation first, LucasPicoli matching-decompilation complement separately.",
+    "baseline_revision": "fc34d4a37b18f17746a490ac6ec902674e5bccd6",
+    "last_verified": "Prior Rust goal paused, NOT achieved. Engaged local Check/Build completed:85 Rust/25 Python before priority switch, preserved uncommitted diagnostic edits. Separate LasVola recompiler built with portable MSVC; boot and all81 overlay packs generated/gated. Native game build in progress, no boot observed yet. Lucas Windows-tooling test:65 passed/5 skipped/5 failed at bounded stop; no matching ELF reproduced. Journal tooling26 synthetic Python tests pass.",
     "open_questions": [
-      "The observed ground gaps in the two recorded controls are fixed; this is not proof of complete per-draw materials, active-resource assignment or native pass ordering.",
-      "Constant channels now survive clipping exactly without epsilon; varying channels still use the documented float path. Native RGBA trace, full fixed-point/GS precision, filtering/fog and color composition remain unverified.",
-      "Transparent ground-layer order, missing sky detail/shading, actors/HUD, camera motion, general transforms and gameplay remain incomplete. The normal interactive inspector has not been replaced by the ordered control."
+      "LasVola actual local startup, first combat/input, in-game memory-card saves and runtime snapshots remain unverified. Author playthrough/performance claims are not local results.",
+      "Original external checker payload and561 synthetic range tests are prepared only; no replacement has run in the game. Same-size payload experiments would not establish HD replacement or full remasterability.",
+      "Lucas checked-in progress is not a locally reproduced matching build. Windows-native tests expose portability failures; its documented Linux/WSL2 compiler environment is absent. Repository licenses do not grant game rights."
     ],
-    "next_experiment": "Corroborate transparent ground-layer ordering and texture/color/pass assignment at both poses. The observed gaps are fixed by preserving exact constants, but uniform state/storage order, full shading and scene activation are not recovered.",
+    "next_experiment": "Finish the isolated LasVola build, observe boot/first scene/combat/input and persistence, then prove an original external texture replacement at the same viewpoint. No runtime or remaster success is claimed yet.",
     "status": "active"
   },
   "comparisons": [

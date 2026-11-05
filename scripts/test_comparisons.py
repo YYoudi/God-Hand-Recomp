@@ -43,12 +43,25 @@ class ComparisonTests(unittest.TestCase):
         page = blog(dict(updates=[], captures=[], comparisons=[pair], repo='https://example.org/repo'))
         for item in (pair['reference'], pair['bevy']):
             self.assertIn(f'href="{item["path"]}" download', page)
-        self.assertIn('Reference / Bevy', page)
+        self.assertIn('<strong>Bevy</strong>', page)
         self.assertIn('Alignment: unmatched', page)
 
     def test_no_fabricated_gallery_when_empty(self):
         page = blog(dict(updates=[], captures=[], comparisons=[], repo='https://example.org/repo'))
         self.assertNotIn('id="comparisons"', page)
+
+    def test_third_party_labels_are_explicit_and_escaped(self):
+        pair, images = fixture()
+        pair['labels'] = {'reference': 'Before — external port', 'bevy': 'After <external>'}
+        validate_comparisons([pair], images.__getitem__)
+        page = blog(dict(updates=[], captures=[], comparisons=[pair], repo='https://example.org/repo'))
+        self.assertIn('<strong>After &lt;external&gt;</strong>', page)
+        self.assertNotIn('<strong>Bevy</strong>', page)
+        for labels in [{}, {'bevy': 'After'}, {'reference': '', 'bevy': 'After'},
+                       {'reference': 'Before', 'bevy': 'x' * 81}, 'not an object']:
+            pair['labels'] = labels
+            with self.subTest(labels=labels), self.assertRaises(ValueError):
+                validate_comparisons([pair], images.__getitem__)
 
     def test_html_text_escaped(self):
         pair, _ = fixture()

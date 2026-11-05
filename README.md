@@ -1,4 +1,20 @@
-# God Hand · Independent Engine Lab
+# God Hand Â· Independent Engine Lab
+
+## Current priority — owner decision, 2026-11-05
+
+The final objective is a faithful, modifiable PC port and later remaster, not
+necessarily Rust/Bevy. The independent-engine rendering goal is **paused, not
+achieved**. Preserve its source, pending edits, tests and original evidence; do
+not start new Rust features. Evaluate LasVola/godhand-recomp first through a real
+local build and modification experiment, then LucasPicoli/god-hand-decomp as a
+separate matching-decompilation/comprehension project. Follow
+[the evaluation workflow](docs/port-evaluation-workflow.md). Keep all third-party
+checkouts, generated game code, ELF/assets/dumps and GPL experiments in ignored
+research workspaces, never in the public MIT engine. Record exposure explicitly;
+any future component using decompiled code is not an independent reimplementation.
+No automatic republication of third-party content. No delegation. Public journal
+and resources stay English, factual and on free GitHub Pages.
+
 
 An independent **Rust + Bevy** engine reimplementation for **God Hand (USA, PS2)**.
 Original code is public under MIT. Each user must provide their own ISO.
@@ -11,16 +27,16 @@ The read-only ISO/FST/AFS readers can locate and decode a narrow TIM2 texture su
 The texture inspection view reads your ISO; the sandbox contains original primitives only.
 
 - [Development journal](https://yyoudi.github.io/god-hand-rs/)
-- [Roadmap](ROADMAP.md) · [Workflow](docs/workflow.md)
+- [Roadmap](ROADMAP.md) Â· [Workflow](docs/workflow.md)
 - [Progress tracking and original reference/Bevy comparisons](docs/progress-tracking.md)
 - [First Rust milestone and adaptive workflow](docs/initialization-plan.md)
 - [First game-data map and next fidelity experiments](docs/game-structure-2026-11-03.md)
 - [Room-container and node metadata findings](docs/room-containers-2026-11-03.md)
 - [First static mesh and texture-bank validation](docs/static-mesh-2026-11-03.md)
 - [Candidate placement experiments and unmatched reference comparison](docs/placement-2026-11-04.md)
-- [Clean-room method](docs/clean-room.md) · [Architecture](docs/architecture.md)
+- [Clean-room method](docs/clean-room.md) Â· [Architecture](docs/architecture.md)
 - [PS2 recompilation research](docs/research-2026-11-03.md)
-- [Contributing](CONTRIBUTING.md) · [Licensing and scope](NOTICE.md)
+- [Contributing](CONTRIBUTING.md) Â· [Licensing and scope](NOTICE.md)
 - [Native backend outputs and their use](docs/native-backend-outputs.md)
 
 ## Getting started

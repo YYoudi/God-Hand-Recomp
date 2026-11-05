@@ -1,12 +1,28 @@
-# Session context — independent engine
+# Session context â€” independent engine
+
+## Current priority — owner decision, 2026-11-05
+
+The final objective is a faithful, modifiable PC port and later remaster, not
+necessarily Rust/Bevy. The independent-engine rendering goal is **paused, not
+achieved**. Preserve its source, pending edits, tests and original evidence; do
+not start new Rust features. Evaluate LasVola/godhand-recomp first through a real
+local build and modification experiment, then LucasPicoli/god-hand-decomp as a
+separate matching-decompilation/comprehension project. Follow
+[the evaluation workflow](../docs/port-evaluation-workflow.md). Keep all third-party
+checkouts, generated game code, ELF/assets/dumps and GPL experiments in ignored
+research workspaces, never in the public MIT engine. Record exposure explicitly;
+any future component using decompiled code is not an independent reimplementation.
+No automatic republication of third-party content. No delegation. Public journal
+and resources stay English, factual and on free GitHub Pages.
+
 
 Reply to the owner in French; maintain public resources in English.
 God Hand USA / SLUS_215.03: **independent Rust + Bevy 0.20.1 engine**, MIT for
-original code. The user's 2026-11-03 decision is original public source without
+original code. The paused branch's 2026-11-03 decision was original public source without
 translated PS2 code. A personal ISO is required to launch.
 
 Read AGENTS.md, docs/workflow.md, docs/clean-room.md, docs/architecture.md and ROADMAP.md.
-Historical prompts 01–05 concern local research only.
+Historical prompts 01â€“05 concern local research only.
 
 First-milestone execution plan: docs/initialization-plan.md; adaptive decisions:
 docs/initialization-decisions.md. Use scripts/dev.ps1. Preserve the separate retail
