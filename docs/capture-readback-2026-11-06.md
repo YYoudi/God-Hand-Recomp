@@ -69,8 +69,17 @@ Normal retail inputs have progressed into the saloon and defeated a surviving
 regular enemy, after which a purple demon appeared. Later combat attempts failed;
 this is not an area-clear or playthrough result. Runtime snapshots are useful
 research checkpoints, not genuine game saves. The inter-area Map save/load
-round trip is still unverified. The current runtime uses directory-backed card
-roots; importing a different backend's raw-card filename would be incorrect.
+round trip is still unverified.
+
+**Card-path correction:** empty `mc0` / `mc1` folders in restored trials did not
+establish the retail persistence path. The host has directory-backed HLE roots
+**and** a separate lazy IOP SIO2 raw-card implementation. Our actual fresh boot
+created an 8,650,752-byte `Mcd001.ps2`; the raw-card path is in this runtime, not
+just a different backend. A snapshot does not contain that card file. Save/load
+validation must observe the backing actually used and copy that card into the
+new process, rather than inferring the format from empty restored-run folders.
+The earlier directory-only reading was incorrect; no card import was implemented
+from that assumption.
 
 The original Linux matching setup is still running. Its two-hour host observation
 timeout occurred, but the existing remote build process was checked alive after
