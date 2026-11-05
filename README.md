@@ -123,3 +123,9 @@ full rendering fidelity; previous original comparisons are retained.
 The [second-view check](docs/second-view-2026-11-04.md) supports unchanged static
 placement with whole-resource holdouts. Full-resource sky controls still fail;
 this is not completed scene reconstruction or general runtime transform parity.
+
+
+The [new autonomous rendering goal](docs/native-rendering-workflow.md)
+starts from the sky-overpainting failure. Its [first investigation](docs/render-pass-investigation-2026-11-05.md)
+adds original CPU alpha-stage write permissions; GPU integration remains pending.
+All-opaque diagnostic captures are rejected controls, not completed native rendering.

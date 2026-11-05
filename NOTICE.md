@@ -47,3 +47,9 @@ Hardware color arithmetic is informed by independent [ps2tek research](https://p
 Only functional formulas were used, not third-party implementation code. The
 Rust oracle and embedded inspection shader are original; source colors and
 screenshots from the game are not relicensed under MIT.
+
+
+The original CPU fragment-alpha permission model follows independently documented
+GS register semantics in [ps2tek](https://psi-rockin.github.io/ps2tek/). Its tests
+use original synthetic integers, not game traces or data fixtures. No original
+game program or third-party renderer implementation was copied into that model.

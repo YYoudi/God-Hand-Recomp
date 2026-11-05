@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-04",
+  "updated": "2026-11-05",
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/God-Hand-Recomp",
   "engine": "Rust + Bevy 0.20.1",
-  "phase": "Static placement checked from two retail viewpoints",
+  "phase": "Autonomous native-rendering investigation",
   "playable": false,
-  "next": "Investigate sky/resource activation and per-pass depth/alpha state before expanding the reconstructed scene. General rotations, nonuniform scales, hierarchy and camera motion remain separate unverified work.",
+  "next": "Specify and implement GPU alpha-stage write/discard paths, first with synthetic overlapping geometry, then both full-resource retail views. Do not ship the all-opaque control or infer per-draw state from source opacity alone.",
   "validation": {
-    "tests": 60,
+    "tests": 64,
     "bevy_check": "pass",
-    "viewer_runtime": "57 base Rust tests plus 3 additional viewer-only tests pass. An observation-derived inspection pose, explicit 4:3 projection and back-face culling render the static street. Previous default/off and new workflow replay are byte-repeatable. No gameplay or complete renderer.",
+    "viewer_runtime": "Production viewer unchanged. A private all-opaque control at both full-resource poses restores visible geometry but breaks shadows/cutouts and sky appearance; rejected as a material fix. The new CPU alpha-stage model is not connected to Bevy yet.",
     "gameplay": "Not implemented"
   },
   "milestones": [
@@ -185,7 +185,7 @@
           "title": "Textures and materials",
           "status": "in_progress",
           "area": "graphics",
-          "acceptance": "Indexed texture/bank decoding and raw MDB source colors are implemented. An opt-in byte-domain modulation shader passes synthetic GPU checks; per-resource state, dynamic light/fog, alpha tests/blends, filters and runtime parity remain open."
+          "acceptance": "Verified texture/material behavior, including correct alpha/depth interaction. Raw color modulation and a CPU alpha-stage write-permission model exist; real full-resource depth controls expose host-pipeline errors. GPU write/discard paths, per-draw state, blending/filter/light/fog and complete material fidelity remain pending."
         },
         {
           "id": "R04",
@@ -442,6 +442,23 @@
   ],
   "updates": [
     {
+      "date": "2026-11-05",
+      "title": "Starting the native rendering goal: separate alpha and depth",
+      "summary": "The new autonomous goal targets the full-resource sky failure. A rejected all-opaque control restores geometry but breaks other surfaces; the first original CPU model separates alpha-stage write permissions.",
+      "changes": [
+        "Recorded the resumable autonomous workflow and remaining GPU/reference acceptance gates.",
+        "Compared a private copy of our app with only its host alpha modes forced opaque, at both unchanged full-resource poses. No production visual change was shipped.",
+        "Joined existing geometry-consistent UV candidates to observed draw states; kept raw traces and per-buffer mappings private.",
+        "Implemented original GPU-free byte-alpha comparisons and separate RGB, framebuffer-alpha and depth permissions, including failure actions and depth masks."
+      ],
+      "validation": "64 distinct Rust tests (61 base plus3 viewer-only),25 Python tests and locked Bevy check pass. Alpha/reference pairs are exhaustively checked against an independent three-way truth table, with all failure actions and127/128 boundary coverage. The two private ten-second native Vulkan controls exit normally and use the public lockfile registry versions/checksums.",
+      "limits": "CPU model only: not wired into Bevy yet. All-opaque is a negative control, not a renderer or scene-activation fix. It changes blending/queue selection as well as depth behavior; cutouts, shadows and sky regress. Per-draw assignment, GPU tests, exact GS-vs-host blend arithmetic, full rendering and gameplay remain unfinished.",
+      "link": {
+        "label": "Depth-control evidence and autonomous workflow",
+        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/render-pass-investigation-2026-11-05.md"
+      }
+    },
+    {
       "date": "2026-11-04",
       "title": "Checking a second retail viewpoint",
       "summary": "The existing engine places the same retail resources consistently after the reference camera has turned and moved. No mesh or transform was adjusted for the new view.",
@@ -680,6 +697,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-05-render-goal.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched browser screenshot of the actual local journal; thumbnails use reviewed registered original reference and rejected-control renders",
+      "caption": "Native rendering goal and rejected all-opaque control"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-04-second-view.jpg",
       "date": "2026-11-04",
       "source": "Unretouched browser screenshot of the actual local journal; thumbnails use reviewed registered reference/Bevy originals",
@@ -788,17 +812,106 @@
     }
   ],
   "progress": {
-    "goal": "Establish SCR transform composition and compare actual retail room placement in the independent Rust/Bevy engine.",
-    "baseline_revision": "f83f07607d5e44d793a9f0521376982774227d08",
-    "last_verified": "Existing engine revision f83f076, no new engine code: second retail trace/control frame6203 is byte-identical. Same placement predicts147/147 candidate points from FOUR held-out resources within1px (median0.0255px); omitted/rescaled translations predict0/147. Actual Bevy smoke/replay agrees byte-for-byte. All three retail candidates re-inspected;60 distinct Rust and25 Python tests pass. Geometry residuals are not image-fidelity scores.",
+    "goal": "Resolve full-resource sky overpainting with original evidence-supported native Rust/Bevy depth/alpha behavior, synthetic CPU/GPU checks and real comparisons at both established viewpoints.",
+    "baseline_revision": "5d35247e42567c4ad2be282a572117a2bc065b81",
+    "last_verified": "Current development:64 distinct Rust and25 Python synthetic tests pass. CPU alpha comparisons exhaust byte alpha/reference pairs; all fail actions and depth-mask precedence tested. Two real-ISO ten-second all-opaque controls completed from a private copy of our app with root-pinned registry versions. This is a rejected experiment, not a production viewer fix.",
     "open_questions": [
-      "Both observed candidate sets still have unit scales and zero rotations; general Euler order, nonuniform scales, hierarchy and other rooms are not verified.",
-      "Full-resource control renders overpaint the street with sky layers. Manual27/28 exclusions are diagnostic, not runtime activation or a fix. Investigate material/depth/pass state rather than hiding the failure.",
-      "Camera-motion logic, dynamic actors/HUD, some props and full rendering remain absent or incorrect. No playable game."
+      "Host material alpha modes conflate blending, queue membership and depth writes; the all-opaque control does not isolate depth alone.",
+      "Existing candidate-state joins show alpha testing/blending/depth writes together, with different failure actions. Source opacity cannot identify every per-asset rule.",
+      "The CPU alpha-stage model is not wired to GPU passes. Sky activation, exact byte-domain blend math, alpha normalization, ordering and full rendering remain open. General transforms and gameplay are still incomplete."
     ],
-    "next_experiment": "Investigate sky/resource activation and per-pass depth/alpha state before expanding the reconstructed scene. General rotations, nonuniform scales, hierarchy and camera motion remain separate unverified work."
+    "next_experiment": "Specify and implement GPU alpha-stage write/discard paths, first with synthetic overlapping geometry, then both full-resource retail views. Do not ship the all-opaque control or infer per-draw state from source opacity alone."
   },
   "comparisons": [
+    {
+      "id": "2026-11-05-depth-control-opaque",
+      "date": "2026-11-05",
+      "feature": "R03",
+      "title": "All-opaque control — not a material fix",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "scenario": "Same second-view pose, all 156 r100 nodes, 512 × 448, explicit 4:3 projection, back-face culling and source colors. No resource exclusions or object/camera edits. The opaque control changes only both host material alpha modes, not source data.",
+      "reference": {
+        "caption": "Retail second viewpoint, capture frame 6203",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T20:40:24.377141+00:00",
+        "original": {
+          "path": "media/6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e.ppm",
+          "sha256": "6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e"
+        },
+        "path": "media/91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af.png",
+        "sha256": "91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "Private all-opaque diagnostic with unchanged geometry; not a renderer fix",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / private all-opaque control",
+        "revision": "uncommitted",
+        "captured_at": "2026-11-05T15:04:58.731710+00:00",
+        "path": "media/df212a5edd13285e5941c603dc0aecd51d025fc3383fc4691ec6af5af5b6d75f.png",
+        "sha256": "df212a5edd13285e5941c603dc0aecd51d025fc3383fc4691ec6af5af5b6d75f",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "The unchanged full-resource baseline overpaints the street. The all-opaque control exposes geometry but makes cutouts and shadows visibly wrong.",
+        "This compares a rejected diagnostic with a reference; it is not a new shipping renderer, recovered material policy or fidelity pass."
+      ],
+      "limits": [
+        "Reference is the existing original frame6203 from the unmodified native backend; its passive draw labels were6202. This is not console footage.",
+        "The control is our own private app-source copy with only AlphaMode::Blend changed to Opaque in the two material choices. Source/binary receipts remain private. Its code revision is honestly uncommitted.",
+        "The public CPU alpha-stage model is not connected to the GPU. Correct per-fragment write masks, ordering, byte-domain blending, sky activation, actors/HUD and general rendering remain incomplete.",
+        "The original RGBA control PNG retains fractional/zero alpha. Browser compositing may show pale or white regions where an opaque window looked dark. This is another control artifact, not an edited capture."
+      ]
+    },
+    {
+      "id": "2026-11-05-depth-control-baseline",
+      "date": "2026-11-05",
+      "feature": "R03",
+      "title": "Full-resource baseline: sky overpainting",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "scenario": "Same second-view pose, all 156 r100 nodes, 512 × 448, explicit 4:3 projection, back-face culling and source colors. No resource exclusions or object/camera edits. The opaque control changes only both host material alpha modes, not source data.",
+      "reference": {
+        "caption": "Retail second viewpoint, capture frame 6203",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T20:40:24.377141+00:00",
+        "original": {
+          "path": "media/6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e.ppm",
+          "sha256": "6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e"
+        },
+        "path": "media/91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af.png",
+        "sha256": "91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "Full resources, all-blend inspector; failed baseline",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / Windows Vulkan",
+        "revision": "f83f07607d5e44d793a9f0521376982774227d08",
+        "captured_at": "2026-11-04T20:42:56.400648+00:00",
+        "path": "media/d14c9554c493b040c7c76454da8e7358ccf80a2c83f4af2efbe8160333378e39.png",
+        "sha256": "d14c9554c493b040c7c76454da8e7358ccf80a2c83f4af2efbe8160333378e39",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "The unchanged full-resource baseline overpaints the street. The all-opaque control exposes geometry but makes cutouts and shadows visibly wrong.",
+        "This compares a rejected diagnostic with a reference; it is not a new shipping renderer, recovered material policy or fidelity pass."
+      ],
+      "limits": [
+        "Reference is the existing original frame6203 from the unmodified native backend; its passive draw labels were6202. This is not console footage.",
+        "The control is our own private app-source copy with only AlphaMode::Blend changed to Opaque in the two material choices. Source/binary receipts remain private. Its code revision is honestly uncommitted.",
+        "The public CPU alpha-stage model is not connected to the GPU. Correct per-fragment write masks, ordering, byte-domain blending, sky activation, actors/HUD and general rendering remain incomplete."
+      ]
+    },
     {
       "id": "2026-11-04-second-view",
       "date": "2026-11-04",

@@ -130,3 +130,17 @@ privately; inspect material/depth/alpha/pass semantics next. Sky, actors/HUD,
 complete rendering, camera motion and gameplay remain absent/incomplete.
 60 distinct Rust /25 Python synthetic tests. Public pairs have raw originals;
 no game data, dumps, translated code or trace labels enter CI/public engine.
+
+
+Native-rendering goal, 2026-11-05: baseline5d35247; follow
+docs/native-rendering-workflow.md and docs/render-pass-investigation-2026-11-05.md.
+Goal ACTIVE: GPU integration and both-view validation remain required. Do not
+mark complete after the CPU oracle or all-opaque control. specs/fragment-write-permissions-v1.md defines original byte-alpha comparisons and separate RGB/alpha/
+depth permissions; crates/engine/src/fragment_alpha.rs is NOT wired to Bevy yet.
+64 distinct Rust /25 Python tests. Private all-opaque controls restore geometry
+but break shadows/cutouts/sky; reject as shipping behavior. Mode changes also
+change queue/blending, not depth alone. Existing GS candidate states combine
+alpha test/blending/depth writes; per-asset failure actions remain unassigned.
+Next specify synthetic GPU discard/write paths and byte-vs-linear blend issues,
+then real full-resource comparisons at both fixed poses. Keep historical images,
+raw traces/mappings private, prototype separate, no delegation and no paid service.
