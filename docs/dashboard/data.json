@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-05",
+  "updated": "2026-11-06",
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/god-hand-rs",
   "engine": "Independent Rust/Bevy lab (paused); separate third-party C++ evaluation",
   "phase": "Faithful PC-port and remaster evaluation",
   "playable": false,
-  "next": "Reproduce a genuine inter-area Map save and load it in a new process; diagnose the physical-window margins and test real input/audio before broader playthrough and HD asset work.",
+  "next": "Reproduce the genuine inter-area Map save and fresh-process load; continue the existing Linux matching build without restarting it on an observer timeout. Physical-device/audio and broader presentation tests remain open.",
   "validation": {
     "tests": 81,
     "bevy_check": "pass",
@@ -492,6 +492,23 @@
   ],
   "updates": [
     {
+      "date": "2026-11-06",
+      "title": "Checking the screenshot before blaming the renderer",
+      "summary": "A game-free probe reproduced the black padding in our PNGs. The local native screenshot path now reads the actual framebuffer dimensions; this is not a game-rendering or fidelity improvement.",
+      "changes": [
+        "At 125% desktop scale, a normal 640 × 480 synthetic framebuffer was read as 800 × 600 by the old screenshot helper. Direct render-size readback fixes that case and remains byte-identical in the high-DPI 800 × 600 control.",
+        "Compiled the installed private GPL helper into the original synthetic probe; both normal and high-DPI cases pass. No game pixels or data are test fixtures.",
+        "Rebuilt the native runtime and restored the same paused retail state: new original PNGs are 640 × 480. Seven of eight shared captures have identical content-region pixels; the early transient difference is retained.",
+        "Retail combat progressed into the saloon and a regular-enemy defeat/demon emergence, but later attempts failed. Real game saving/loading is still open; runtime snapshots are separate."
+      ],
+      "validation": "Incremental native build completed; bounded 15-second hidden control exited normally. Two installed-helper synthetic configurations pass. Public documentation/publication tests are rerun separately. Existing originals are not rewritten or cropped.",
+      "limits": "Only the observed screenshot-readback configuration is addressed. No general DPI/presentation fix, console parity, full playthrough or game Save/Load claim. Desktop input was interrupted before keyboard navigation; it is not a passed test. The matching build remains alive after its host observer timeout, not an identical-ELF result.",
+      "link": {
+        "label": "Readback experiment, controls and limitations",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/capture-readback-2026-11-06.md"
+      }
+    },
+    {
       "date": "2026-11-05",
       "title": "Checking the controller path before changing it",
       "summary": "An apparent turn-input problem needed better observations. The actual input clock and IOP pad replies are now traced locally; no controller behavior was patched.",
@@ -911,6 +928,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-06-readback-journal.jpg",
+      "date": "2026-11-06",
+      "source": "Unretouched actual hidden-browser capture of the English readback-experiment journal. Browser-only preview; no desktop input or game imagery in this capture.",
+      "caption": "Synthetic screenshot-dimension controls and explicitly open persistence gates"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-05-input-evaluation-reviewed.jpg",
       "date": "2026-11-05",
       "source": "Unretouched actual hidden-browser capture of the English input-evaluation journal; no game pixels in this capture.",
@@ -1098,14 +1122,14 @@
   "progress": {
     "goal": "Experimentally choose the best faithful and remasterable God Hand PC codebase: LasVola playable-base evaluation first, LucasPicoli matching-decompilation complement separately.",
     "baseline_revision": "fc34d4a37b18f17746a490ac6ec902674e5bccd6",
-    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed.",
+    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed. Original game-free raylib probes reproduce screenshot padding at125% scale; actual render-size readback passes normal/high-DPI installed-helper controls. Private native capture-only change produces640×480 originals;7/8 common capture content regions equal, early transient retained. No gameplay Save/Load or complete rendering claim.",
     "open_questions": [
       "Real in-game saving on the inter-area Map and loading in a new process are not yet reproduced. Runtime snapshots are a separate successful test, not a replacement.",
       "Same-size texture replacement works; named-resource packs, true HD texture dimensions, hot reload and general remaster rendering remain unproven.",
       "Headless captures have top/right margins. Cause, normal visible-window behavior, audible audio, physical keyboard/controller and later-stage stability remain unverified.",
       "Lucas matching percentages remain upstream reports. Linux toolchain probes pass, but the actual retail build and post-setup test rerun are still pending. Dependency versions are recorded; source exposure remains logged."
     ],
-    "next_experiment": "Reproduce a genuine inter-area Map save and load it in a new process; diagnose the physical-window margins and test real input/audio before broader playthrough and HD asset work.",
+    "next_experiment": "Reproduce the genuine inter-area Map save and fresh-process load; continue the existing Linux matching build without restarting it on an observer timeout. Physical-device/audio and broader presentation tests remain open.",
     "status": "active"
   },
   "comparisons": [

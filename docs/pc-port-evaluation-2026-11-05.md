@@ -1,5 +1,11 @@
 # First PC-port evaluation and external texture proof
 
+
+Later observations: [supported Linux matching environment](matching-evaluation-2026-11-05.md),
+[actual input-path controls](input-evaluation-2026-11-05.md), and
+[screenshot readback diagnosis](capture-readback-2026-11-06.md).
+The tables below describe the initial evaluation, not a continuously revised test matrix.
+
 Date: 2026-11-05. **Provisional direction, not a complete-game compatibility claim.**
 The independent Rust/Bevy lab is paused and preserved. No new Rust feature was
 started. This report concerns separate third-party C++ research builds.
