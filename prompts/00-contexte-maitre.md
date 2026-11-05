@@ -197,3 +197,19 @@ or activation. Existingtrace hasSTQ/position but NO RGBA; cannotprove runtime
 vertexalpha from it. Next clipping-aware ground-fragment correspondence and
 texture/alpha/pass mapping; absence ofexactcornerUVmatches isNOTinactiveproof.
 No globalwindingflip/forcedalpha/deletingresources as guessedfixes. GoalACTIVE.
+
+Constant-channel increment, 2026-11-05: read specs/constant-vertex-channels-v1.md
+and docs/constant-channels-2026-11-05.md. This SUPERSEDES the current-gap claim
+for new ordered-control captures only: the observed blue bands disappear inBOTH
+unchanged fullresource poses. Rootcause was sourcealpha128 driftingto127 inour
+clipped float-to-byte path, failingGT127 andnotwritinggrounddepth; later sky
+thenoverpainted. Original isolatedRustprobe baseline wasbyte-identical before
+isolation; no originalgameinstructions/shadercode consulted. NewinventedGPU
+regression failsbeforefix andpassesafter. Per-triangle exact equalitymask+flat
+reference preserves ONLYconstantchannels; noepsilon/forcedalpha, varyingchannels
+unchanged. GPUvertexstride64; AlphaVertex publicinputsunchanged.81Rust
+(70base+11viewer-only),25Python;11,440,128actualGPUconstant checks+prior suitespass.
+Neworiginals from committedenginebefc14d, samecamera/resources/culling/order;
+ISOunchanged, oldfailuresretained. This isNOTcomplete materials/activation or
+fullGS precision; normalinteractiveinspector unchanged. Next nativegroundlayer
+order/texture-color-pass coverage, sky/shadows/filtering. GoalACTIVE/no delegation.

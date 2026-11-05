@@ -1,6 +1,6 @@
 # Preserve exact constant vertex channels, version 1
 
-Date: 5 November 2026. Status: CPU/GPU regression fixed; controlled retail comparison pending.
+Date: 5 November 2026. Status: CPU/GPU regression and both fixed retail controls validated; full rendering remains open.
 Provenance: original Rust/WGSL renderer, original synthetic fixtures and bounded
 read-only retail render diagnostics. No game instructions, translated functions,
 original shaders or third-party rasterizer code are implementation inputs.

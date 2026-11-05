@@ -6,11 +6,11 @@
   "engine": "Rust + Bevy 0.20.1",
   "phase": "Autonomous native-rendering investigation",
   "playable": false,
-  "next": "Investigate clipping-aware mapping of ground fragments and their texture/alpha/pass inputs. Repeat alone did not fix the gaps; removing culling occludes both views. Keep uniform-state and activation claims open.",
+  "next": "Corroborate transparent ground-layer ordering and texture/color/pass assignment at both poses. The observed gaps are fixed by preserving exact constants, but uniform state/storage order, full shading and scene activation are not recovered.",
   "validation": {
-    "tests": 80,
+    "tests": 81,
     "bevy_check": "pass",
-    "viewer_runtime": "Explicit Repeat restores texture detail at both full-resource poses, but blue ground gaps persist. Four unchanged default Clamp replays are byte-identical to prior originals; two no-cull controls occlude the street. Production viewer unchanged. Actual Vulkan address/alpha/blend component checks pass.",
+    "viewer_runtime": "The recorded blue ground bands are removed in both full-resource Repeat controls without changing cameras, geometry, resources, sampler, culling or order. A generic constant-channel fix keeps128 from drifting to127 and restores opaque ground depth. Four official controls and independent original-renderer pixel probes pass. Normal interactive inspector unchanged.",
     "gameplay": "Not implemented"
   },
   "milestones": [
@@ -443,6 +443,23 @@
   "updates": [
     {
       "date": "2026-11-05",
+      "title": "The ground gaps came from constant-alpha drift",
+      "summary": "A mathematically constant source alpha128 could become127 in our clipped float-to-byte path, preventing depth writes. Preserving exact per-triangle constants removes the recorded blue bands at both fixed poses.",
+      "changes": [
+        "Used an isolated original Rust renderer probe with the same pinned dependencies: full-frame output first matched both official originals byte-for-byte, then source selections separated ground coverage from later sky overwrite.",
+        "Added a new invented clipped-geometry regression that fails on the old implementation. No game geometry, textures or screenshots are test fixtures.",
+        "Preserved only exactly constant channels with per-triangle flat metadata. No global epsilon, forced alpha, pass reordering, resource removal or camera/object fitting.",
+        "Published original new reference/control pairs and retained failed before images. Four full-resource Keep/framebuffer-only controls render the same two poses; normal interactive viewer unchanged."
+      ],
+      "validation": "81 distinct Rust and25 Python tests pass. Actual Vulkan:11,440,128 constant-channel/clipping/threshold sample checks plus all prior alpha/blend/address suites. Deliberately subthreshold floats remain subthreshold and varying channels keep their original path. Probes confirm corrected alpha128 and positive ground depth; full probe PNGs match official fixed originals. Original ISO SHA-256 unchanged.",
+      "limits": "This resolves the observed gaps in these controls, not complete game rendering. Uniform state and storage order still lack full native material/activation coverage. Full GS interpolation/color precision, sky/shadows/filtering, camera behavior, actors/HUD and gameplay remain incomplete.",
+      "link": {
+        "label": "Constant-channel regression, causal controls and before/after originals",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/constant-channels-2026-11-05.md"
+      }
+    },
+    {
+      "date": "2026-11-05",
       "title": "Repeat restores texture detail, not all ground gaps",
       "summary": "An isolated addressing experiment restores facade, terrain and mountain texture detail. The blue gaps remain on both views, so Clamp was not their whole cause.",
       "changes": [
@@ -774,6 +791,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-05-constant-channels.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched browser screenshot of the actual local English constant-channel journal; original reference/control pairs are registered separately",
+      "caption": "Constant-alpha regression and observed ground-band correction"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-05-texture-addressing.jpg",
       "date": "2026-11-05",
       "source": "Unretouched browser screenshot of the actual local English Repeat addressing journal; original game/control pairs are registered separately",
@@ -925,17 +949,109 @@
   ],
   "progress": {
     "goal": "Resolve full-resource sky overpainting with original evidence-supported native Rust/Bevy depth/alpha behavior, synthetic CPU/GPU checks and real comparisons at both established viewpoints.",
-    "baseline_revision": "fb0f307d2c91d306459c08d1aa13286c1fcdfe93",
-    "last_verified": "80 distinct Rust tests (70 base +10 viewer-only),25 Python tests and locked check/build pass. GPU:147,456 address samples plus all previous alpha/blend checks. Four Clamp replays match old original PNG bytes exactly; four Repeat controls render both fixed poses. Two no-cull controls fail visibly. Original ISO unchanged. Source engine revision for new captures:bb7aedf2805822b550c5e84d0c116e02c348df99.",
+    "baseline_revision": "c5340a749d275a9f0b4443d6a331dcc268e0ee49",
+    "last_verified": "81 distinct Rust tests (70 base +11 viewer-only),25 Python tests, locked viewer check/build pass. Invented clipping regression fails before the fix;11,440,128 constant-channel sample checks and prior GPU suites pass after. Four same-parameter retail controls from enginebefc14d remove the observed gaps; probes verify alpha128/positive ground depth where127/zero depth previously occurred. Original ISO unchanged.",
     "open_questions": [
-      "Repeat matches observed wrap0/0 on the existing176/28 candidate-buffer joins, not every active material. Complete texture identity, activation and draw order remain unverified.",
-      "Addressing explains stretched edge samples, not all ground gaps. New source/trace correspondence must account for clipped triangles; absent exact-corner UV matches are not proof a resource is inactive.",
-      "No-cull controls occlude the street; forcing alpha, flipping winding globally or deleting resources is not supported. Wider GS color precision, filtering/fog, actors/HUD, general transforms, camera motion and gameplay remain incomplete."
+      "The observed ground gaps in the two recorded controls are fixed; this is not proof of complete per-draw materials, active-resource assignment or native pass ordering.",
+      "Constant channels now survive clipping exactly without epsilon; varying channels still use the documented float path. Native RGBA trace, full fixed-point/GS precision, filtering/fog and color composition remain unverified.",
+      "Transparent ground-layer order, missing sky detail/shading, actors/HUD, camera motion, general transforms and gameplay remain incomplete. The normal interactive inspector has not been replaced by the ordered control."
     ],
-    "next_experiment": "Investigate clipping-aware mapping of ground fragments and their texture/alpha/pass inputs. Repeat alone did not fix the gaps; removing culling occludes both views. Keep uniform-state and activation claims open.",
+    "next_experiment": "Corroborate transparent ground-layer ordering and texture/color/pass assignment at both poses. The observed gaps are fixed by preserving exact constants, but uniform state/storage order, full shading and scene activation are not recovered.",
     "status": "active"
   },
   "comparisons": [
+    {
+      "id": "2026-11-05-constant-channels-second",
+      "date": "2026-11-05",
+      "title": "Second view: constant alpha preserved, observed ground gap removed",
+      "feature": "R03",
+      "scenario": "Same full r100 static-resource control and camera as the retained Repeat iteration:156 nodes,353 buffers,23,686 triangles,67 images,512x448,4:3 projection, back-face culling, Repeat, source-over, GT127/framebuffer-only failure, unmasked GEQUAL depth and storage order. Only the generic per-triangle constant-channel numerical path changes; no exclusions, camera/object fitting or texture/color edits.",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "reference": {
+        "caption": "Retail second viewpoint, capture frame 6203",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T20:40:24.377141+00:00",
+        "original": {
+          "path": "media/6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e.ppm",
+          "sha256": "6b4e4957d85122eb5166a6d4e068a5a685314522ad03492008de9e229fd2a83e"
+        },
+        "path": "media/91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af.png",
+        "sha256": "91c07de4b15b05b38f9cd1b1e455edd4c2cef7815aff7e28d10a0a7796e1f2af",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "Exact constant channels preserve opaque ground depth; recorded blue gap removed, renderer still incomplete",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / Windows Vulkan / original ordered uniform-state control",
+        "revision": "befc14d444ba0446664f514192780efdd5f7a8c6",
+        "captured_at": "2026-11-05T18:16:36.077368+00:00",
+        "path": "media/acda57e361027f2f86607f3b73ffe7952c0be3caa29f75daab5b659f48f11062.png",
+        "sha256": "acda57e361027f2f86607f3b73ffe7952c0be3caa29f75daab5b659f48f11062",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "The recorded blue ground gap is absent at both unchanged poses, with every source resource still included. Original failed Repeat controls remain available for before/after comparison.",
+        "An isolated original-renderer probe found source texture/vertex alpha exactly128 becoming127 at failed pixels, so GT127 prevented depth writes. Per-triangle exact constants now survive clipping without epsilon or a forced alpha policy.",
+        "A new invented synthetic clipping regression fails on the old implementation and passes after the generic fix. Deliberately subthreshold fractional inputs remain subthreshold and varying channels keep their linear path."
+      ],
+      "limits": [
+        "This removes the observed gaps in these controls, not every possible ground/rendering defect or all scene-activation problems. The normal interactive inspector remains unchanged.",
+        "Uniform state/storage order, incomplete sky/shading/filtering and material/visibility coverage still differ from the reference. Original runtime RGBA is not present in the retained vertex trace.",
+        "Actors, HUD, camera motion, gameplay, general transforms and full GS color/interpolation precision remain absent/unverified. No overall image-fidelity score is claimed.",
+        "Reference is the third-party native backend, not hardware or PCSX2. Prototype is separate. Original512x448 renderer PNG and reference PPM are unchanged; reference PNG is a labeled lossless preview."
+      ]
+    },
+    {
+      "id": "2026-11-05-constant-channels-first",
+      "date": "2026-11-05",
+      "title": "First view: constant alpha preserved, observed ground gap removed",
+      "feature": "R03",
+      "scenario": "Same full r100 static-resource control and camera as the retained Repeat iteration:156 nodes,353 buffers,23,686 triangles,67 images,512x448,4:3 projection, back-face culling, Repeat, source-over, GT127/framebuffer-only failure, unmasked GEQUAL depth and storage order. Only the generic per-triangle constant-channel numerical path changes; no exclusions, camera/object fitting or texture/color edits.",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "reference": {
+        "caption": "Retail first fight, newly rendered capture frame 4503; traced/control pixels identical",
+        "profile": "retail-usa",
+        "runtime": "ps2-native-recomp, headless framebuffer",
+        "revision": "cba42f57913d181b3ff2fd3064ca48ab0cbeea11",
+        "captured_at": "2026-11-04T20:18:44.359477+00:00",
+        "original": {
+          "path": "media/033e25087ed4fe723f77b608804cb4af404c25c6e8671f4a743cbf18ad355dad.ppm",
+          "sha256": "033e25087ed4fe723f77b608804cb4af404c25c6e8671f4a743cbf18ad355dad"
+        },
+        "path": "media/edace008cb069c5c1a80cb803c1bf71aab90a7740ad57ee2cb3f91d3941cc9f5.png",
+        "sha256": "edace008cb069c5c1a80cb803c1bf71aab90a7740ad57ee2cb3f91d3941cc9f5",
+        "width": 512,
+        "height": 448
+      },
+      "bevy": {
+        "caption": "Exact constant channels preserve opaque ground depth; recorded blue gap removed, renderer still incomplete",
+        "profile": "retail-usa",
+        "runtime": "Bevy 0.20.1 / Windows Vulkan / original ordered uniform-state control",
+        "revision": "befc14d444ba0446664f514192780efdd5f7a8c6",
+        "captured_at": "2026-11-05T18:16:30.378671+00:00",
+        "path": "media/8660693e4cf764ca6886bc944aa7d9918cf1c82649ead6cdfa600004f24e429d.png",
+        "sha256": "8660693e4cf764ca6886bc944aa7d9918cf1c82649ead6cdfa600004f24e429d",
+        "width": 512,
+        "height": 448
+      },
+      "observations": [
+        "The recorded blue ground gap is absent at both unchanged poses, with every source resource still included. Original failed Repeat controls remain available for before/after comparison.",
+        "An isolated original-renderer probe found source texture/vertex alpha exactly128 becoming127 at failed pixels, so GT127 prevented depth writes. Per-triangle exact constants now survive clipping without epsilon or a forced alpha policy.",
+        "A new invented synthetic clipping regression fails on the old implementation and passes after the generic fix. Deliberately subthreshold fractional inputs remain subthreshold and varying channels keep their linear path."
+      ],
+      "limits": [
+        "This removes the observed gaps in these controls, not every possible ground/rendering defect or all scene-activation problems. The normal interactive inspector remains unchanged.",
+        "Uniform state/storage order, incomplete sky/shading/filtering and material/visibility coverage still differ from the reference. Original runtime RGBA is not present in the retained vertex trace.",
+        "Actors, HUD, camera motion, gameplay, general transforms and full GS color/interpolation precision remain absent/unverified. No overall image-fidelity score is claimed.",
+        "Reference is the third-party native backend, not hardware or PCSX2. Prototype is separate. Original512x448 renderer PNG and reference PPM are unchanged; reference PNG is a labeled lossless preview."
+      ]
+    },
     {
       "id": "2026-11-05-repeat-second",
       "date": "2026-11-05",

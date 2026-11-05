@@ -105,3 +105,10 @@ intermediate vertices. Source projections alone do not establish native culling.
 Retain the failed ground/no-cull controls. Complete material/ordering coverage,
 scene activation, full GS precision, general transforms, camera motion and gameplay
 remain open. The autonomous goal stays active, not complete.
+
+## Subsequent cause isolated
+
+The [constant-channel correction](constant-channels-2026-11-05.md) later removes
+these recorded bands at both poses without changing addressing or geometry.
+A constant128 interpolant was truncating to127 and skipping depth writes. The
+Repeat/Clamp images above remain unchanged historical evidence, not current output.

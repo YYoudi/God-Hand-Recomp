@@ -144,9 +144,15 @@ The bounded inspector reads personal ISO data without extracting assets.
 
 The [byte-blend control](docs/byte-source-over-2026-11-05.md) now renders all
 resources at both fixed inspection poses without a window. The street appears,
-but ground holes and material/sky errors remain. This is an explicit uniform-state
+but its original ground-gap controls exposed a numeric bug, now corrected below.
+Material/sky errors remain. This is an explicit uniform-state
 experiment, not recovered game materials, scene activation or playable content.
 
 [Explicit Repeat addressing](docs/texture-addressing-2026-11-05.md) restores
-texture detail in the all-resource control. The ground gaps persist; this is
-not yet recovered rendering. Previous Clamp outputs and defaults are preserved.
+texture detail in the all-resource control. Addressing alone did not fix the
+ground gaps; previous Clamp and Repeat originals remain preserved.
+
+The [constant-channel correction](docs/constant-channels-2026-11-05.md) removes
+the observed blue ground bands at both unchanged full-resource poses. It fixes
+our numeric input path, not complete material/scene activation. Sky/shadows,
+full precision, camera behavior and gameplay remain incomplete.

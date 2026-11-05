@@ -81,3 +81,9 @@ Extension, 5 November 2026: byte-source-over-v1.md adds explicit per-draw byte
 blending with safe previous-primitive RGB snapshots and explicit culling.
 Overwrite remains available with unchanged conformance results. The no-blend
 statements above describe the initial component, not the later optional subset.
+
+Numerical correction, 5 November 2026: constant-vertex-channels-v1.md preserves
+exactly equal per-triangle source channels through flat metadata, avoiding byte
+threshold drift during clipping. The internal GPU vertex stride is now64bytes;
+public inputs and nonconstant interpolation remain unchanged. Earlier failed
+render originals are retained rather than described as unchanged output.

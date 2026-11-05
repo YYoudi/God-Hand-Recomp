@@ -48,6 +48,11 @@ not old files/PIDs. Keep unrelated changes and historical captures untouched.
   texture-addressing-2026-11-05.md and pursue clipping-aware ground/pass evidence,
   not a guessed global alpha/culling change.
 
+- Subsequent constant-channel correction removes the observed ground bands in
+  both fixed full-resource controls. Read constant-channels-2026-11-05.md; do not
+  keep reporting the older gaps as current. Material/activation and native layer
+  order remain open; normal interactive inspection is unchanged.
+
 ## Execute and adjust
 
 1. Form one falsifiable rendering hypothesis; record alternative explanations.

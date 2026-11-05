@@ -7,7 +7,7 @@ Updated: 2026-11-05. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Investigate clipping-aware mapping of ground fragments and their texture/alpha/pass inputs. Repeat alone did not fix the gaps; removing culling occludes both views. Keep uniform-state and activation claims open.
+Next useful evidence: Corroborate transparent ground-layer ordering and texture/color/pass assignment at both poses. The observed gaps are fixed by preserving exact constants, but uniform state/storage order, full shading and scene activation are not recovered.
 
 ## M0 — Public foundations
 
