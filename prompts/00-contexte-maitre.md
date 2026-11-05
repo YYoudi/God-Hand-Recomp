@@ -1,4 +1,4 @@
-# Session context â€” independent engine
+# Session context — independent engine
 
 ## Current priority — owner decision, 2026-11-05
 
@@ -22,7 +22,7 @@ original code. The paused branch's 2026-11-03 decision was original public sourc
 translated PS2 code. A personal ISO is required to launch.
 
 Read AGENTS.md, docs/workflow.md, docs/clean-room.md, docs/architecture.md and ROADMAP.md.
-Historical prompts 01â€“05 concern local research only.
+Historical prompts 01–05 concern local research only.
 
 First-milestone execution plan: docs/initialization-plan.md; adaptive decisions:
 docs/initialization-decisions.md. Use scripts/dev.ps1. Preserve the separate retail

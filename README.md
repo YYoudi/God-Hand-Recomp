@@ -1,4 +1,4 @@
-# God Hand Â· Independent Engine Lab
+# God Hand · Independent Engine Lab
 
 ## Current priority — owner decision, 2026-11-05
 
@@ -27,16 +27,16 @@ The read-only ISO/FST/AFS readers can locate and decode a narrow TIM2 texture su
 The texture inspection view reads your ISO; the sandbox contains original primitives only.
 
 - [Development journal](https://yyoudi.github.io/god-hand-rs/)
-- [Roadmap](ROADMAP.md) Â· [Workflow](docs/workflow.md)
+- [Roadmap](ROADMAP.md) · [Workflow](docs/workflow.md)
 - [Progress tracking and original reference/Bevy comparisons](docs/progress-tracking.md)
 - [First Rust milestone and adaptive workflow](docs/initialization-plan.md)
 - [First game-data map and next fidelity experiments](docs/game-structure-2026-11-03.md)
 - [Room-container and node metadata findings](docs/room-containers-2026-11-03.md)
 - [First static mesh and texture-bank validation](docs/static-mesh-2026-11-03.md)
 - [Candidate placement experiments and unmatched reference comparison](docs/placement-2026-11-04.md)
-- [Clean-room method](docs/clean-room.md) Â· [Architecture](docs/architecture.md)
+- [Clean-room method](docs/clean-room.md) · [Architecture](docs/architecture.md)
 - [PS2 recompilation research](docs/research-2026-11-03.md)
-- [Contributing](CONTRIBUTING.md) Â· [Licensing and scope](NOTICE.md)
+- [Contributing](CONTRIBUTING.md) · [Licensing and scope](NOTICE.md)
 - [Native backend outputs and their use](docs/native-backend-outputs.md)
 
 ## Getting started

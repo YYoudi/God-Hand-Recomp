@@ -1,4 +1,4 @@
-# AGENTS.md â€” God Hand independent engine lab
+# AGENTS.md — God Hand independent engine lab
 
 ## Current priority — owner decision, 2026-11-05
 
@@ -36,7 +36,7 @@ translated C++ or incompatibly licensed code into the engine. Translation or ren
 does not make code clean room. Do not claim legal certification or a formal separation
 that has not occurred. Document provenance.
 
-## Persistent progress and comparison evidence â€” owner decision, 2026-11-04
+## Persistent progress and comparison evidence — owner decision, 2026-11-04
 
 Read docs/progress-tracking.md on every resume, together with the active goal,
 Git state, docs/dashboard/data.json and docs/local/progress-checkpoint.md.
@@ -114,7 +114,7 @@ God Hand (USA).iso, extraction/, GH-Prototype/, ghidra/, PS2Recomp/, recomp/, to
 downloads/, pcsx2-v2.8.2-windows-x64-Qt/ and .zcode/ are ignored. Never modify original
 discs or extractions. Before prototype/diff work, read unpublished local
 docs/prototype-tcrf-notes.md. Keep that research separate from implementation.
-Historical prompts 01â€“05 do not describe the public-engine workflow.
+Historical prompts 01–05 do not describe the public-engine workflow.
 
 God Hand and Bevy use **Y as height**. Both ELFs are stripped. An MCP entry in
 .zcode/config.json does not guarantee availability in Codex; inspect session tools.
