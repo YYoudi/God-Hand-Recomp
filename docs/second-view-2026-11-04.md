@@ -56,7 +56,7 @@ counts and all residuals were unchanged.
 
 ## Actual Bevy result and failed full-resource controls
 
-The [new reference / Bevy pair](https://yyoudi.github.io/God-Hand-Recomp/dashboard/#comparison-2026-11-04-second-view)
+The [new reference / Bevy pair](https://yyoudi.github.io/god-hand-rs/dashboard/#comparison-2026-11-04-second-view)
 contains the unchanged frame-6203 PPM, its clearly labeled lossless PNG preview,
 and the original Bevy framebuffer PNG. The background wall and near right
 masonry share the observed framing, without moving any object or editing images.

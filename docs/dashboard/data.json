@@ -2,11 +2,11 @@
   "schema_version": 1,
   "updated": "2026-11-05",
   "title": "God Hand PC — development journal",
-  "repo": "https://github.com/YYoudi/God-Hand-Recomp",
+  "repo": "https://github.com/YYoudi/god-hand-rs",
   "engine": "Rust + Bevy 0.20.1",
   "phase": "Autonomous native-rendering investigation",
   "playable": false,
-  "next": "Specify and implement GPU alpha-stage write/discard paths, first with synthetic overlapping geometry, then both full-resource retail views. Do not ship the all-opaque control or infer per-draw state from source opacity alone.",
+  "next": "Development goal paused by the owner; GPU integration remains pending explicit resume.",
   "validation": {
     "tests": 64,
     "bevy_check": "pass",
@@ -443,6 +443,17 @@
   "updates": [
     {
       "date": "2026-11-05",
+      "title": "Repository renamed to god-hand-rs",
+      "summary": "The public repository and journal now use the god-hand-rs address. The native-rendering development goal is paused at the owner’s request.",
+      "changes": [
+        "Renamed the existing repository without creating a replacement; updated origin and current repository/Pages links.",
+        "Preserved commits, source packages, comparison originals and the local workspace directory."
+      ],
+      "validation": "Verified the public repository identity, admin access and main:/docs Pages configuration. Publication guard and dashboard checks are run for this documentation-only change; no local Rust retest is needed because engine code is unchanged.",
+      "limits": "This is a repository rename, not new engine functionality. Historical screenshots retain their original pixels and may show the former address. Native-rendering work remains paused."
+    },
+    {
+      "date": "2026-11-05",
       "title": "Starting the native rendering goal: separate alpha and depth",
       "summary": "The new autonomous goal targets the full-resource sky failure. A rejected all-opaque control restores geometry but breaks other surfaces; the first original CPU model separates alpha-stage write permissions.",
       "changes": [
@@ -455,7 +466,7 @@
       "limits": "CPU model only: not wired into Bevy yet. All-opaque is a negative control, not a renderer or scene-activation fix. It changes blending/queue selection as well as depth behavior; cutouts, shadows and sky regress. Per-draw assignment, GPU tests, exact GS-vs-host blend arithmetic, full rendering and gameplay remain unfinished.",
       "link": {
         "label": "Depth-control evidence and autonomous workflow",
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/render-pass-investigation-2026-11-05.md"
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/render-pass-investigation-2026-11-05.md"
       }
     },
     {
@@ -472,7 +483,7 @@
       "limits": "19 candidate resources, all unit-scale/zero-rotation; only four are held out. An inherited private reporting label counted an absent saloon id as a fifth resource; corrected before publication, with point counts/residuals unchanged. No general Euler order, complete rendering, camera-motion behavior or gameplay is claimed. Sky, actors/HUD and full material/light/fog/alpha/filter/pass state remain missing or wrong.",
       "link": {
         "label": "Second-view evidence and remaining failures",
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/second-view-2026-11-04.md"
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/second-view-2026-11-04.md"
       }
     },
     {
@@ -489,7 +500,7 @@
       "limits": "Only one snapshot and unit-scale/zero-rotation matched resources. No general Euler order, camera motion, complete rendering or game logic. The first two-sided render was occluded; a texture-mirror identity test failed and was not used. Sky, actors/HUD, some props and exact lighting/fog/alpha/filter/passes remain missing or wrong.",
       "link": {
         "label": "Projection evidence, holdouts and failed trials",
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/observed-projection-2026-11-04.md"
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/observed-projection-2026-11-04.md"
       }
     },
     {
@@ -505,7 +516,7 @@
       "validation": "56 Rust and 25 Python synthetic tests pass. Two private no-disc GPU probes match seven expected RGB samples exactly, including a depth-varying triangle that distinguishes screen-linear interpolation. The harness uses registry versions/checksums from the public Cargo.lock. The real scene mode and scripted replay captured identical PNGs; default mode still matches its earlier PNG.",
       "limits": "This is not complete GS lighting or a quality score. Source colors differ from final lit draw colors; fog, filtering, alpha state and multiple passes remain unresolved. Some shadows are too dark. Reference draw observations were from nearby frames, not an exact draw map for the published frame. No game code or original instructions were used.",
       "link": {
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/source-colors-2026-11-04.md",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/source-colors-2026-11-04.md",
         "label": "Residency evidence, color experiment and before/after limits"
       }
     },
@@ -522,7 +533,7 @@
       "validation": "52 synthetic Rust tests and 24 Python tests pass; formatting and viewer compilation pass. Four linked Windows/Vulkan camera runs captured original PNGs and exited at their 10-second limits. Invalid, incomplete, nonfinite and oversized camera/viewport inputs were rejected before opening a disc. A fifth run through the scripted workflow repeated the final pose with byte-identical PNG output on this setup.",
       "limits": "The camera was manually fitted around one facade. Neighboring-wall parallax, colors, shadows, sky and actors still differ. Original game camera, complete scene activation and general transform/material parity remain unverified. No image-quality percentage or gameplay result is claimed.",
       "link": {
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/camera-landmark-2026-11-04.md",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/camera-landmark-2026-11-04.md",
         "label": "Camera contract, landmark evidence and remaining discrepancies"
       }
     },
@@ -539,7 +550,7 @@
       "validation": "48 synthetic Rust tests and 24 Python tests pass. The linked Windows/Vulkan viewer saved its own framebuffer and exited normally after 30 seconds. The reference run exited normally at its planned frame limit; local comparison verified that the PNG preview preserves every original PPM RGB sample.",
       "limits": "This is not a playable scene or a fidelity pass. Camera/scene alignment is unmatched, sky/material state is unresolved, and diagnostic exclusions are not game visibility rules. Rotation composition and units remain hypotheses. No actors, HUD, collision or gameplay are implemented.",
       "link": {
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/placement-2026-11-04.md",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/placement-2026-11-04.md",
         "label": "Placement experiments, failed attempts and next comparison"
       }
     },
@@ -555,7 +566,7 @@
       "validation": "22 synthetic Python tests pass, including pair preparation without source modification, hash/CRC/dimension checks, profile separation, review requirements, duplicate rejection and escaped HTML. The baseline Rust code is unchanged; its 38 tests and viewer compilation were rechecked.",
       "limits": "No new engine feature or fidelity result. The gallery has no pairs yet: the current isolated prop and first-fight screenshots are not a matched comparison. A same-subject reference capture is still required. The owner publication request does not license game imagery under MIT.",
       "link": {
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/progress-tracking.md",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/progress-tracking.md",
         "label": "Progress and comparison evidence protocol"
       }
     },
@@ -572,7 +583,7 @@
       "validation": "38 synthetic Rust tests pass. The linked Windows/Vulkan viewer was visually inspected and exited normally after 60 seconds. Full room placement, game lighting and reference-runtime visual parity are not established.",
       "limits": "The view uses nearest/repeat sampling, two-sided diagnostic rendering and alpha blending. Vertex colors, GS alpha tests, camera behavior and scene transforms remain future fidelity work. Static flag-zero and observed indexed-texture profiles only.",
       "link": {
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/static-mesh-2026-11-03.md",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/static-mesh-2026-11-03.md",
         "label": "Static-mesh evidence, scope and next comparison"
       }
     },
@@ -588,7 +599,7 @@
       "validation": "29 synthetic Rust tests pass. Python and Rust agree on catalog/node counts. Nested member reads are bounded; signatures, ranges, overlap and malformed metadata are checked.",
       "limits": "An MDB signature does not prove a valid mesh. Geometry, topology, UV/material association and transform composition are still unimplemented. Candidate room identity and prototype transfer remain unverified.",
       "link": {
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/room-containers-2026-11-03.md",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/room-containers-2026-11-03.md",
         "label": "Room-data findings, validation and next experiment"
       }
     },
@@ -605,7 +616,7 @@
       "validation": "22 synthetic Rust tests pass. Both reference catalogs validate. Real 4-bit/8-bit Bevy windows were visually inspected and exited at their 30/60-second deadlines. Game images and full inventories remain private.",
       "limits": "No room geometry, animation, collision or gameplay is implemented. Reference-runtime palette/blending parity and prototype debug access remain unverified. REA rejected FST as unsupported; format observations came from a read-only local probe, not successful REA analysis.",
       "link": {
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/game-structure-2026-11-03.md",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/game-structure-2026-11-03.md",
         "label": "Data map, evidence and next fidelity experiments"
       }
     },
@@ -622,7 +633,7 @@
       "validation": "14 Rust synthetic tests and 12 Python tests pass locally. The sandbox reached its 45/60-second smoke deadlines and exited normally. Retail catalog inspection reports 1,445 entries; the original ISO hash matches its earlier baseline.",
       "limits": "Original primitives only: no God Hand scene or game logic. FST/payload decoding and prototype debug-menu validation remain open. A Windows compiler crash was bypassed with one job and debug info disabled; its root cause is unknown.",
       "link": {
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/initialization-plan.md",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/initialization-plan.md",
         "label": "Read the first milestone and workflow"
       }
     },
@@ -637,7 +648,7 @@
       "validation": "Regenerated the roadmap and journal; checked the public file boundary and reviewed the English page.",
       "limits": "No engine behavior changed. Earlier French journal captures are retained as labeled historical records.",
       "link": {
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/native-backend-outputs.md",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/native-backend-outputs.md",
         "label": "What the native backend produces"
       }
     },
@@ -653,7 +664,7 @@
       "validation": "One windowed trial covered 7,200 frames in 122.44 seconds. A second checked normal multithreaded mode and state creation. Resume continued to its planned frame limit.",
       "limits": "Short trial only; casino and full game unverified. Pause, physical controller and native game saves remain untested. Gameplay captures, data and translations stay local.",
       "link": {
-        "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/native-evaluation-2026-11-03.md",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/native-evaluation-2026-11-03.md",
         "label": "Read the trial report"
       }
     },
@@ -695,6 +706,13 @@
     }
   ],
   "captures": [
+    {
+      "kind": "dashboard",
+      "path": "captures/2026-11-05-repository-rename.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched browser screenshot of the actual renamed local journal entry; no game imagery",
+      "caption": "Repository rename and paused development goal"
+    },
     {
       "kind": "dashboard",
       "path": "captures/2026-11-05-render-goal.jpg",
@@ -797,17 +815,17 @@
   "sources": [
     {
       "title": "PS2 recompilation research",
-      "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/research-2026-11-03.md",
+      "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/research-2026-11-03.md",
       "note": "Sources and limitations, 3 November 2026"
     },
     {
       "title": "Code and contributions",
-      "url": "https://github.com/YYoudi/God-Hand-Recomp",
+      "url": "https://github.com/YYoudi/god-hand-rs",
       "note": "Original implementation under MIT"
     },
     {
       "title": "Architecture and provenance",
-      "url": "https://github.com/YYoudi/God-Hand-Recomp/blob/main/docs/clean-room.md",
+      "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/clean-room.md",
       "note": "Contracts before implementation"
     }
   ],
@@ -820,7 +838,8 @@
       "Existing candidate-state joins show alpha testing/blending/depth writes together, with different failure actions. Source opacity cannot identify every per-asset rule.",
       "The CPU alpha-stage model is not wired to GPU passes. Sky activation, exact byte-domain blend math, alpha normalization, ordering and full rendering remain open. General transforms and gameplay are still incomplete."
     ],
-    "next_experiment": "Specify and implement GPU alpha-stage write/discard paths, first with synthetic overlapping geometry, then both full-resource retail views. Do not ship the all-opaque control or infer per-draw state from source opacity alone."
+    "next_experiment": "Paused by the owner. On explicit resume: Specify and implement GPU alpha-stage write/discard paths, first with synthetic overlapping geometry, then both full-resource retail views. Do not ship the all-opaque control or infer per-draw state from source opacity alone.",
+    "status": "paused"
   },
   "comparisons": [
     {

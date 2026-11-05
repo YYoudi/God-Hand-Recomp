@@ -86,7 +86,7 @@ of Bevy image quality or proof of the game's unit convention.
 
 ## Actual unchanged images
 
-The [new Reference / Bevy comparison](https://yyoudi.github.io/God-Hand-Recomp/dashboard/#comparison-2026-11-04-observed-projection)
+The [new Reference / Bevy comparison](https://yyoudi.github.io/god-hand-rs/dashboard/#comparison-2026-11-04-observed-projection)
 publishes the unchanged frame-4503 PPM, labeled lossless PNG preview and Bevy PNG.
 The near left facade, distant saloon and right storefront now share one camera.
 No crop, warp, repainting or generated substitute was used.

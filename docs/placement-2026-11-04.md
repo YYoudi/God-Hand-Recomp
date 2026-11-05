@@ -57,7 +57,7 @@ comparison retains the unchanged raw PPM and provides an explicitly labeled
 lossless PNG preview; a local pixel-by-pixel conversion check passed. Bevy's PNG
 is its original framebuffer capture. Neither image is an extracted texture sheet.
 
-The pair in the [journal](https://yyoudi.github.io/God-Hand-Recomp/dashboard/#comparison-2026-11-04-retail-street-candidate-layout)
+The pair in the [journal](https://yyoudi.github.io/god-hand-rs/dashboard/#comparison-2026-11-04-retail-street-candidate-layout)
 is **unmatched**: street-level reference versus candidate overhead inspection.
 Exact camera alignment and scene association remain unverified. The reference
 is a third-party renderer, not hardware or an independent PCSX2 cross-check.

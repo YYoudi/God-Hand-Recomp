@@ -144,3 +144,9 @@ alpha test/blending/depth writes; per-asset failure actions remain unassigned.
 Next specify synthetic GPU discard/write paths and byte-vs-linear blend issues,
 then real full-resource comparisons at both fixed poses. Keep historical images,
 raw traces/mappings private, prototype separate, no delegation and no paid service.
+
+
+Repository rename, 2026-11-05: public repository is now YYoudi/god-hand-rs;
+Pages uses https://yyoudi.github.io/god-hand-rs/. Local workspace directory is
+unchanged. Native-rendering goal is PAUSED by the owner; do not execute that
+workflow until explicitly resumed. Preserve historical screenshot originals.

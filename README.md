@@ -10,7 +10,7 @@ remains owned by its rights holders and is not covered by MIT.
 The read-only ISO/FST/AFS readers can locate and decode a narrow TIM2 texture subset.
 The texture inspection view reads your ISO; the sandbox contains original primitives only.
 
-- [Development journal](https://yyoudi.github.io/God-Hand-Recomp/)
+- [Development journal](https://yyoudi.github.io/god-hand-rs/)
 - [Roadmap](ROADMAP.md) · [Workflow](docs/workflow.md)
 - [Progress tracking and original reference/Bevy comparisons](docs/progress-tracking.md)
 - [First Rust milestone and adaptive workflow](docs/initialization-plan.md)
@@ -129,3 +129,5 @@ The [new autonomous rendering goal](docs/native-rendering-workflow.md)
 starts from the sky-overpainting failure. Its [first investigation](docs/render-pass-investigation-2026-11-05.md)
 adds original CPU alpha-stage write permissions; GPU integration remains pending.
 All-opaque diagnostic captures are rejected controls, not completed native rendering.
+
+Repository: [god-hand-rs](https://github.com/YYoudi/god-hand-rs). The native-rendering goal is currently paused by the owner.

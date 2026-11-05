@@ -62,7 +62,7 @@ No camera, geometry, crop, warp or image retouching was used to improve alignmen
 | --- | --- |
 | [![Default view](dashboard/media/0e6227cdd89dd24278e93b91e18aec206b7666db5875fbbc08177c8fcfd51860.png)](dashboard/media/0e6227cdd89dd24278e93b91e18aec206b7666db5875fbbc08177c8fcfd51860.png) | [![Source-color experiment](dashboard/media/a66e16783e72e42734cc0e0290f1fe09b3f6bdf83fc004abd9e302c6c8c5736d.png)](dashboard/media/a66e16783e72e42734cc0e0290f1fe09b3f6bdf83fc004abd9e302c6c8c5736d.png) |
 
-The [reference / color-mode pair](https://yyoudi.github.io/God-Hand-Recomp/dashboard/#comparison-2026-11-04-source-colors)
+The [reference / color-mode pair](https://yyoudi.github.io/god-hand-rs/dashboard/#comparison-2026-11-04-source-colors)
 retains the unchanged original reference PPM and its labeled lossless PNG preview.
 The previous plain and overhead iterations also remain available.
 

@@ -1,5 +1,8 @@
 # Autonomous native-rendering workflow
 
+Current status, 5 November 2026: **paused by the owner**. The workflow below
+describes remaining work; do not execute it until explicitly resumed.
+
 Date: 5 November 2026. Owner requested autonomous work and GitHub/journal updates.
 This is an independent Rust + Bevy engine, not execution/translation of the game.
 No artificial overnight deadline or completion percentage is assigned here.

@@ -50,7 +50,7 @@ dimensions does not establish the PS2 display pixel aspect or original FOV.
 
 ## What the comparison establishes
 
-The [new pair](https://yyoudi.github.io/God-Hand-Recomp/dashboard/#comparison-2026-11-04-saloon-landmark)
+The [new pair](https://yyoudi.github.io/god-hand-rs/dashboard/#comparison-2026-11-04-saloon-landmark)
 is labeled **same-landmark**, not same-frame. The reference remains the original
 retail frame 4501 from ps2-native-recomp at cba42f57: it is a third-party rendering,
 not hardware or PCSX2. Its raw original PPM remains downloadable, with a labeled

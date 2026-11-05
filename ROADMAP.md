@@ -7,7 +7,7 @@ Updated: 2026-11-05. **Foundations; game not playable in this engine.**
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Specify and implement GPU alpha-stage write/discard paths, first with synthetic overlapping geometry, then both full-resource retail views. Do not ship the all-opaque control or infer per-draw state from source opacity alone.
+Next useful evidence: Development goal paused by the owner; GPU integration remains pending explicit resume.
 
 ## M0 — Public foundations
 
