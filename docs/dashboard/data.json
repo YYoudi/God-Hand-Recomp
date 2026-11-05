@@ -493,6 +493,23 @@
   "updates": [
     {
       "date": "2026-11-05",
+      "title": "Checking the controller path before changing it",
+      "summary": "An apparent turn-input problem needed better observations. The actual input clock and IOP pad replies are now traced locally; no controller behavior was patched.",
+      "changes": [
+        "The initially inspected EE HLE pad callback was not used by this retail trial. Observed the actual IOP SIO2 / DualShock reply instead of assuming the source path.",
+        "A restored-state script records the requested 1, 12 and 120 L1-active fields. The actual pad reply carries L1, and dense originals show view changes after longer presses.",
+        "Compared the same executable with tracing enabled and disabled: 54 of 56 common original captures match byte-for-byte, including late paused controls. Two transient differences are retained, not hidden.",
+        "Continued actual retail attacks, walking, backing away and menu navigation. The inter-area save screen is still not reached; runtime snapshots remain a separate facility."
+      ],
+      "validation": "Private GPL diagnostic build and four original synthetic logger cases pass. Exact revisions, executable identity, capture hashes and raw traces stay in local receipts. The existing public journal/publication tests are rerun; no game pixels or data become CI fixtures.",
+      "limits": "No controller behavior fix, exact console turn-angle/timing proof, physical-device validation or genuine in-game memory-card save/load round trip. The Linux matching build remains a separate running experiment, not a verified matching ELF. No new Rust feature or third-party source is published.",
+      "link": {
+        "label": "Input observations, controls and rejected hypotheses",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/input-evaluation-2026-11-05.md"
+      }
+    },
+    {
+      "date": "2026-11-05",
       "title": "Trying the matching build in Linux",
       "summary": "The LucasPicoli evaluation now uses a real Linux guest rather than stopping at the Windows tooling failures. Its compiler probes pass; the retail matching build is still running.",
       "changes": [
@@ -894,6 +911,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-05-input-evaluation-reviewed.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched actual hidden-browser capture of the English input-evaluation journal; no game pixels in this capture.",
+      "caption": "Observed input path and trace controls, without a speculative controller fix"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-05-linux-matching-journal.jpg",
       "date": "2026-11-05",
       "source": "Unretouched actual hidden-browser capture of the English Linux toolchain evaluation journal; no game pixels in this capture.",
@@ -1074,7 +1098,7 @@
   "progress": {
     "goal": "Experimentally choose the best faithful and remasterable God Hand PC codebase: LasVola playable-base evaluation first, LucasPicoli matching-decompilation complement separately.",
     "baseline_revision": "fc34d4a37b18f17746a490ac6ec902674e5bccd6",
-    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet.",
+    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed.",
     "open_questions": [
       "Real in-game saving on the inter-area Map and loading in a new process are not yet reproduced. Runtime snapshots are a separate successful test, not a replacement.",
       "Same-size texture replacement works; named-resource packs, true HD texture dimensions, hot reload and general remaster rendering remain unproven.",
