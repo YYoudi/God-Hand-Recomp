@@ -7,7 +7,7 @@ Updated: 2026-11-05. **Independent engine paused; third-party PC-port evaluation
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Finish the isolated LasVola build, observe boot/first scene/combat/input and persistence, then prove an original external texture replacement at the same viewpoint. No runtime or remaster success is claimed yet.
+Next useful evidence: Reproduce a genuine inter-area Map save and load it in a new process; diagnose the physical-window margins and test real input/audio before broader playthrough and HD asset work.
 
 ## M0 — Public foundations
 
@@ -132,11 +132,11 @@ Dependencies: none.
 | ID | Feature | Status | Acceptance criteria |
 | --- | --- | --- | --- |
 | PE01 | Preserve the independent lab and replace its priority | Done | Record Git, old goal and owned processes; finish engaged checks; preserve source edits/tests/original evidence and prototype separately; explicitly state the old rendering goal was not achieved. |
-| PE02 | Pin and build LasVola from the personal ISO | In progress | Exact revision/dependency/license audit, recorded toolchain and actual local native executable built from the untouched original ISO; generated game code remains private. |
-| PE03 | Reproduce playable and persistence gates | Planned | Actually observe boot, first scene, combat and controls; distinguish and test in-game memory-card saving/loading and separate runtime snapshots; retain defects and original captures. |
-| PE04 | Demonstrate an original external texture modification | Planned | Trace named resource/loading/rendering, load an original external test texture and show unchanged same-view before/after captures with exact revision/patch provenance, or reproduce a precise blocker. A boot is not remaster proof. |
+| PE02 | Pin and build LasVola from the personal ISO | Done | Exact revision/dependency/license audit, recorded toolchain and actual local native executable built from the untouched original ISO; generated game code remains private. |
+| PE03 | Reproduce playable and persistence gates | In progress | Actually observe boot, first scene, combat and controls; distinguish and test in-game memory-card saving/loading and separate runtime snapshots; retain defects and original captures. |
+| PE04 | Demonstrate an original external texture modification | Done | Trace the room texture through resource metadata, loading and rendering; demonstrate an original external same-size test payload with reviewed unchanged same-view control/replacement captures and exact private GPL revision. Named-resource packs and HD-size replacement remain separate future gates. |
 | PE05 | Audit the matching-decompilation complement | In progress | Pin LucasPicoli, distinguish matching C coverage from byte-identical ELF/assembly fallbacks, inventory dependencies/licenses and attempt appropriate tool/build tests without claiming it is a PC port. |
-| PE06 | Choose direction and adapt the remaster roadmap | Planned | Evidence-backed fidelity/stability/modification/asset/rendering/maintenance/license comparison and recommendation for upstream, separate fork, hybrid or independent work; publish verified findings without third-party code/assets. |
+| PE06 | Choose direction and adapt the remaster roadmap | In progress | Evidence-backed fidelity/stability/modification/asset/rendering/maintenance/license comparison and recommendation for upstream, separate fork, hybrid or independent work; publish verified findings without third-party code/assets. |
 
 ## Outside the public repository
 

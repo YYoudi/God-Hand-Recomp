@@ -6,7 +6,7 @@
   "engine": "Independent Rust/Bevy lab (paused); separate third-party C++ evaluation",
   "phase": "Faithful PC-port and remaster evaluation",
   "playable": false,
-  "next": "Finish the isolated LasVola build, observe boot/first scene/combat/input and persistence, then prove an original external texture replacement at the same viewpoint. No runtime or remaster success is claimed yet.",
+  "next": "Reproduce a genuine inter-area Map save and load it in a new process; diagnose the physical-window margins and test real input/audio before broader playthrough and HD asset work.",
   "validation": {
     "tests": 81,
     "bevy_check": "pass",
@@ -455,23 +455,23 @@
         {
           "id": "PE02",
           "title": "Pin and build LasVola from the personal ISO",
-          "status": "in_progress",
+          "status": "done",
           "area": "tooling",
           "acceptance": "Exact revision/dependency/license audit, recorded toolchain and actual local native executable built from the untouched original ISO; generated game code remains private."
         },
         {
           "id": "PE03",
           "title": "Reproduce playable and persistence gates",
-          "status": "planned",
+          "status": "in_progress",
           "area": "validation",
           "acceptance": "Actually observe boot, first scene, combat and controls; distinguish and test in-game memory-card saving/loading and separate runtime snapshots; retain defects and original captures."
         },
         {
           "id": "PE04",
           "title": "Demonstrate an original external texture modification",
-          "status": "planned",
+          "status": "done",
           "area": "rendering",
-          "acceptance": "Trace named resource/loading/rendering, load an original external test texture and show unchanged same-view before/after captures with exact revision/patch provenance, or reproduce a precise blocker. A boot is not remaster proof."
+          "acceptance": "Trace the room texture through resource metadata, loading and rendering; demonstrate an original external same-size test payload with reviewed unchanged same-view control/replacement captures and exact private GPL revision. Named-resource packs and HD-size replacement remain separate future gates."
         },
         {
           "id": "PE05",
@@ -483,7 +483,7 @@
         {
           "id": "PE06",
           "title": "Choose direction and adapt the remaster roadmap",
-          "status": "planned",
+          "status": "in_progress",
           "area": "core",
           "acceptance": "Evidence-backed fidelity/stability/modification/asset/rendering/maintenance/license comparison and recommendation for upstream, separate fork, hybrid or independent work; publish verified findings without third-party code/assets."
         }
@@ -491,6 +491,24 @@
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-05",
+      "title": "A local PC build and a small external texture proof",
+      "summary": "LasVola now runs the retail opening and first fight locally. An original external file changes the ground texture, with a matched restoration control. This is a first modification proof, not a finished remaster.",
+      "changes": [
+        "Built the native Windows executable from the personal USA ISO at upstream 14e956a. The ISO hash is unchanged; generated game code, assets and binaries remain private.",
+        "Observed first-fight attacks and enemy reactions, death/Continue, pause/options controls and runtime snapshots loaded in new processes. Real memory-card save/load is still open; the fresh card correctly reports no game save.",
+        "Added a small original data-read extension only in a separate local GPL checkout. The first two reader hooks failed in the game; covering the actual EE HLE read path produced the external magenta ground.",
+        "Published both unchanged 800x600 control/replacement PNGs in the comparison gallery. Three unaffected facade regions match exactly; all changed pixels are in the visible ground band. Existing black margins are retained.",
+        "Recommend LasVola provisionally as the playable base, preferably through upstream work or a distinct GPL fork. Lucas provides matching-decompilation understanding, not an already reproduced PC port. The independent Rust lab stays preserved and paused."
+      ],
+      "validation": "Native build and bounded runtime trials completed. Same executable and local GPL revision d3a018a for both modification modes; 29,050 unchanged landmark pixels match exactly and 38,301 pixels change in the ground band. Installed helpers pass 561 original synthetic overlap cases plus configuration/file checks. 26 public journal/publication Python tests pass. No game pixels or game code are CI fixtures.",
+      "limits": "Same-size replacement only, not true HD texture support. No game save/load round trip, later-stage playthrough, audible audio or physical-device validation yet. Headless viewport margins remain unexplained. Lucas matching percentages are upstream reports; native Windows tests stop at 65 passes / 5 skips / 5 failures. Game imagery is not MIT; the private GPL extension is not imported here.",
+      "link": {
+        "label": "Build audit, modification evidence, limits and adapted roadmap",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/pc-port-evaluation-2026-11-05.md"
+      }
+    },
     {
       "date": "2026-11-05",
       "title": "Changing priority: evaluate an existing PC port first",
@@ -859,6 +877,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-05-native-build-journal-selected.jpg",
+      "date": "2026-11-05",
+      "source": "Unretouched actual hidden-browser capture of the English native-build and texture-proof journal; taken before a minor directional wording correction. Original gameplay PNGs are registered separately.",
+      "caption": "Locally built PC runtime and original external-texture proof, with open persistence gates"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-05-port-evaluation.jpg",
       "date": "2026-11-05",
       "source": "Unretouched actual local English journal screenshot, captured in a hidden browser; no new unreviewed game imagery",
@@ -1025,16 +1050,65 @@
   "progress": {
     "goal": "Experimentally choose the best faithful and remasterable God Hand PC codebase: LasVola playable-base evaluation first, LucasPicoli matching-decompilation complement separately.",
     "baseline_revision": "fc34d4a37b18f17746a490ac6ec902674e5bccd6",
-    "last_verified": "Prior Rust goal paused, NOT achieved. Engaged local Check/Build completed:85 Rust/25 Python before priority switch, preserved uncommitted diagnostic edits. Separate LasVola recompiler built with portable MSVC; boot and all81 overlay packs generated/gated. Native game build in progress, no boot observed yet. Lucas Windows-tooling test:65 passed/5 skipped/5 failed at bounded stop; no matching ELF reproduced. Journal tooling26 synthetic Python tests pass.",
+    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass.",
     "open_questions": [
-      "LasVola actual local startup, first combat/input, in-game memory-card saves and runtime snapshots remain unverified. Author playthrough/performance claims are not local results.",
-      "Original external checker payload and561 synthetic range tests are prepared only; no replacement has run in the game. Same-size payload experiments would not establish HD replacement or full remasterability.",
-      "Lucas checked-in progress is not a locally reproduced matching build. Windows-native tests expose portability failures; its documented Linux/WSL2 compiler environment is absent. Repository licenses do not grant game rights."
+      "Real in-game saving on the inter-area Map and loading in a new process are not yet reproduced. Runtime snapshots are a separate successful test, not a replacement.",
+      "Same-size texture replacement works; named-resource packs, true HD texture dimensions, hot reload and general remaster rendering remain unproven.",
+      "Headless captures have top/right margins. Cause, normal visible-window behavior, audible audio, physical keyboard/controller and later-stage stability remain unverified.",
+      "Lucas checked-in matching figures are upstream reports, not locally rebuilt measurements. Its supported matching environment still needs provisioning. Decompiled camera source exposure is logged; affected future logic cannot claim independent provenance."
     ],
-    "next_experiment": "Finish the isolated LasVola build, observe boot/first scene/combat/input and persistence, then prove an original external texture replacement at the same viewpoint. No runtime or remaster success is claimed yet.",
+    "next_experiment": "Reproduce a genuine inter-area Map save and load it in a new process; diagnose the physical-window margins and test real input/audio before broader playthrough and HD asset work.",
     "status": "active"
   },
   "comparisons": [
+    {
+      "id": "2026-11-05-lasvola-external-texture",
+      "date": "2026-11-05",
+      "title": "An original external file changes the retail ground texture",
+      "feature": "PE04",
+      "scenario": "Fresh retail opening street, same local GPL extension executable and default native OpenGL/3x settings. Original assets versus one opt-in original 8256-byte indexed pixel/palette file. The control was captured after the enabled trial to verify restoration; labels identify modes, not chronological capture order.",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "labels": {
+        "reference": "Original assets — control",
+        "bevy": "External original test texture"
+      },
+      "observations": [
+        "The final EE HLE read hook logs an 8,256-byte intersection with the named room texture payload. This is resource replacement before loading/rendering, not a framebuffer recolor.",
+        "Three fixed, depth-separated unmodified facade/door regions match byte-for-byte: 29,050 pixels / 87,150 RGB samples. No image warp, cropping, camera fitting or object movement was used.",
+        "38,301 RGB pixels change, all inside the visible ground band (x 0..639, y 535..599). The remaining original frontbuffer is unchanged. Disabling the replacement returns the ordinary retail ground.",
+        "The magenta file and palette were generated from scratch, without game pixels. It is a diagnostic texture, not a proposed remaster art direction."
+      ],
+      "limits": [
+        "Third-party LasVola/godhand-recomp GPL research fork, based on 14e956a1274332440273845fbab2c1f1e30c4a5a, local-only extension revision d3a018a. NOT the independent Rust/Bevy engine, physical hardware or PCSX2. The GPL source/binary and generated game code are not published in this MIT repository.",
+        "Same-size/same-format texture replacement only: no claim of HD asset replacement, full texture-pack support or general remaster fidelity. Four captured VU1 AOT programs are enabled; other programs can still fall back to interpretation.",
+        "Original 800x600 frontbuffer PNGs include the observed top/right black margins. Suspected DPI/viewport mismatch is not yet diagnosed; the images have not been cropped or corrected.",
+        "Global VSYNC fields differ (control 3089, enabled 2520). Frames were selected by unchanged static image correspondence, not by claiming that equal global fields imply equal camera state.",
+        "Startup/first fight, menu controls, attack/impact behavior, death/Continue and runtime snapshots have been observed. Actual gameplay memory-card save/load round trip, later stages, audible audio and physical keyboard/controller validation remain open."
+      ],
+      "reference": {
+        "caption": "Unchanged restoration control; original assets, runtime field 3089. Actual full frontbuffer, unretouched.",
+        "profile": "retail-usa",
+        "runtime": "LasVola native OpenGL, local GPL extension disabled, four VU1 AOT programs",
+        "revision": "d3a018a6952608ebfa8b22bcf9a90bcb137c20a7",
+        "captured_at": "2026-11-05T20:38:44.884322+00:00",
+        "path": "media/e080502ff878d0d13abcf39dc6c0359d1a1c0e4868b3209684211b6ad67062fe.png",
+        "sha256": "e080502ff878d0d13abcf39dc6c0359d1a1c0e4868b3209684211b6ad67062fe",
+        "width": 800,
+        "height": 600
+      },
+      "bevy": {
+        "caption": "Same opening camera with original external magenta pixels/palette; runtime field 2520. Actual full frontbuffer, unretouched.",
+        "profile": "retail-usa",
+        "runtime": "LasVola native OpenGL, local GPL extension enabled, four VU1 AOT programs",
+        "revision": "d3a018a6952608ebfa8b22bcf9a90bcb137c20a7",
+        "captured_at": "2026-11-05T20:33:26.264622+00:00",
+        "path": "media/7107cd89a0276f3b2e3d6d86c79afc231c6d85ff05842b8961bae488187fac6c.png",
+        "sha256": "7107cd89a0276f3b2e3d6d86c79afc231c6d85ff05842b8961bae488187fac6c",
+        "width": 800,
+        "height": 600
+      }
+    },
     {
       "id": "2026-11-05-constant-channels-second",
       "date": "2026-11-05",
