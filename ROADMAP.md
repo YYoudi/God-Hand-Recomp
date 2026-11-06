@@ -7,7 +7,7 @@ Updated: 2026-11-06. **Independent engine paused; third-party PC-port evaluation
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Prepare a separate GPL LasVola continuation and named external asset replacement; evaluate prototype-native generation/debug tools separately. No autonomous level-completion loops.
+Next useful evidence: Package the retail build and named-pack runtime bridge. Prototype native executable links, but startup/debug access remains blocked by unsupported kernel behavior.
 
 ## M0 — Public foundations
 

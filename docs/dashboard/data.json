@@ -6,7 +6,7 @@
   "engine": "Independent Rust/Bevy lab (paused); separate third-party C++ evaluation",
   "phase": "LasVola continuation and separate prototype-native feasibility",
   "playable": false,
-  "next": "Prepare a separate GPL LasVola continuation and named external asset replacement; evaluate prototype-native generation/debug tools separately. No autonomous level-completion loops.",
+  "next": "Package the retail build and named-pack runtime bridge. Prototype native executable links, but startup/debug access remains blocked by unsupported kernel behavior.",
   "validation": {
     "tests": 81,
     "bevy_check": "pass",
@@ -514,6 +514,23 @@
   "updates": [
     {
       "date": "2026-11-06",
+      "title": "A named path reaches the native renderer",
+      "summary": "The separate GPL tooling can resolve one texture from a verified personal ISO. Two fresh native runs show the original diagnostic replacement and restoration.",
+      "changes": [
+        "Implemented the original resource-plan metadata command with47 game-free synthetic tests. Public continuation CI passes. Packs name a resource and explicit container ordinals, not a hardcoded disc offset.",
+        "Verified st1/r100.dat / SCP section3 / bank0 / image0 against the previously proven8256-byte payload. A wrong section is refused rather than guessed.",
+        "Passed the named plan through the evaluated private read adapter. Two bounded100-second fresh boots produce49 original captures each. The selected field4740 pair has identical camera, actors and HUD above the ground; original assets return when the override is absent.",
+        "The resumed prototype native build now links successfully. An actual60-second hidden run loads the original prototype ELF but repeatedly reports unsupported kernel syscall0x7a; no framebuffer/title/debug menu is validated. This is a startup blocker, not a playable prototype."
+      ],
+      "validation": "47 original continuation tests and publicCI pass. Full retail disc hash unchanged; actual replacement read logged and both original640x480 captures reviewed.191360 top-region pixels match exactly;74845 image pixels change. Public journal checks are separate.",
+      "limits": "The public command is a metadata planner, not yet a complete launcher or fresh-disc build pipeline. Runtime bridge remains private. Same-size native payload only, no HD/hot reload/automatic fallback. Genuine game Save/Load remains open; prototype startup stops on unsupported kernel behavior despite successful linking.",
+      "link": {
+        "label": "Named-resource experiment, unchanged originals and boundaries",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/named-resource-plans-2026-11-06.md"
+      }
+    },
+    {
+      "date": "2026-11-06",
       "title": "A separate prototype generation experiment",
       "summary": "The next direction is a separate GPL continuation of the tested PC base, not more autonomous combat attempts. The prototype debug tools are a separate research lead.",
       "changes": [
@@ -966,6 +983,20 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-06-named-plan-comparison.jpg",
+      "date": "2026-11-06",
+      "source": "Unretouched actual hidden-browser capture; reviewed native original screenshots are separately registered with provenance.",
+      "caption": "Original assets and named-plan diagnostic replacement"
+    },
+    {
+      "kind": "dashboard",
+      "path": "captures/2026-11-06-named-plan-journal.jpg",
+      "date": "2026-11-06",
+      "source": "Unretouched actual hidden-browser capture; reviewed native original screenshots are separately registered with provenance.",
+      "caption": "Named-resource journal introduction"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-06-continuation-prototype-journal.jpg",
       "date": "2026-11-06",
       "source": "Unretouched actual hidden-browser journal capture. Original tooling and explicitly unverified prototype build stages; no game imagery or private desktop data.",
@@ -1167,17 +1198,64 @@
   "progress": {
     "goal": "Continue the tested LasVola PC base in a separate GPL project, with reproducible local-disc builds and external asset replacement; evaluate a separate prototype-native/debug workflow without substituting it for retail.",
     "baseline_revision": "fc34d4a37b18f17746a490ac6ec902674e5bccd6",
-    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed. Original game-free raylib probes reproduce screenshot padding at125% scale; actual render-size readback passes normal/high-DPI installed-helper controls. Private native capture-only change produces640×480 originals;7/8 common capture content regions equal, early transient retained. No gameplay Save/Load or complete rendering claim. Separate public GPL continuation tooling created with15 game-free synthetic tests and successful public CI; pinned source adoption and original retail ISO read-only verification actually run. Prototype original ELF/profile verified; initial2998 diagnostics reduced to1 through metadata-only analysis-copy flags; two sampled C++ objects compile. Generic native prototype harness build underway, no executable/boot/debug-menu validation yet.",
+    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed. Original game-free raylib probes reproduce screenshot padding at125% scale; actual render-size readback passes normal/high-DPI installed-helper controls. Private native capture-only change produces640×480 originals;7/8 common capture content regions equal, early transient retained. No gameplay Save/Load or complete rendering claim. Separate public GPL continuation tooling created with15 game-free synthetic tests and successful public CI; pinned source adoption and original retail ISO read-only verification actually run. Prototype original ELF/profile verified; initial2998 diagnostics reduced to1 through metadata-only analysis-copy flags; two sampled C++ objects compile. Generic native prototype harness build underway, no executable/boot/debug-menu validation yet. New original GPL named-resource planner:47 synthetic tests and CI pass. Exact retail metadata resolves the previously proven8256-byte ground payload; mechanically bridged fresh native run visibly replaces it and a second fresh process restores original assets. Selected field4740 original640x480 pair reviewed. Host reboot interrupted earlier build jobs; Linux matching ELF/map remain zero bytes, prototype native build resumed, no boot/debug proof. Prototype full native link exits0; original ELF/BIN bounded60-second native attempt initializes host graphics but loops on unsupported syscall0x7a. Watchdog shutdown returns0 and no framebuffer capture is produced. No title/debug-menu validation.",
     "open_questions": [
       "Real in-game saving on the inter-area Map and loading in a new process are not yet reproduced. Runtime snapshots are a separate successful test, not a replacement.",
-      "Same-size texture replacement works; named-resource packs, true HD texture dimensions, hot reload and general remaster rendering remain unproven.",
-      "Headless captures have top/right margins. Cause, normal visible-window behavior, audible audio, physical keyboard/controller and later-stage stability remain unverified.",
-      "Lucas matching percentages remain upstream reports. Linux toolchain probes pass, but the actual retail build and post-setup test rerun are still pending. Dependency versions are recorded; source exposure remains logged."
+      "Same-size named-resource metadata planning and a private runtime bridge work; public launcher/build integration, true HD dimensions, hot reload and automatic fallback remain open.",
+      "Screenshot readback dimensions are fixed in the evaluated private configuration. Audible audio, physical input and later-stage stability remain unverified.",
+      "Linux compiler probes/sample object pass, but final matching ELF/map are unfinished zero-byte outputs after host reboot. No matching rebuild or complete decompilation claim."
     ],
-    "next_experiment": "Audit public continuation inputs and build an original named-resource extension; compile the prototype-specific discovery output only after resolving its remaining diagnostic and entry/runtime requirements.",
+    "next_experiment": "Package reproducible retail setup and a public named-pack runtime bridge. Prototype follow-up: establish generic kernel ABI/support for observed syscall0x7a using licensed primary sources and synthetic tests, without retail function maps or guessed success returns.",
     "status": "active"
   },
   "comparisons": [
+    {
+      "id": "2026-11-06-named-texture-plan",
+      "date": "2026-11-06",
+      "title": "A named texture plan reaches the native renderer",
+      "feature": "PC02",
+      "scenario": "Two separate fresh retail boots, identical executable and scripted title/start inputs; runtime field4740. Named-resource plan enabled, then original-assets restoration control. No gameplay attack script or snapshot with preloaded textures.",
+      "alignment": "same-frame",
+      "reviewed": true,
+      "labels": {
+        "reference": "Original assets — restoration control",
+        "bevy": "Named plan — original diagnostic texture"
+      },
+      "observations": [
+        "Both original captures show the same opening viewpoint, actors and HUD. All 191,360 pixels in the top299 rows are byte-identical.",
+        "The named plan selects st1/r100.dat, outer SCP section3, inner bank0, image0. No absolute disc offset is supplied by the pack.",
+        "The evaluated private read adapter logs applying8256bytes. The original magenta pixel/palette payload replaces the ground; a later fresh boot without the override restores it.",
+        "74,845 of307,200 RGB pixels differ. This is a modification proof, not a remaster artwork or fidelity claim."
+      ],
+      "limits": [
+        "Both images are from the third-party native C++ runtime, NOT Bevy, console hardware or PCSX2. Registry side names are historical; visible labels identify the actual modes.",
+        "Same native128x128 indexed4 stored layout only. No HD resizing, general asset API, hot reload or automatic invalid-pack fallback.",
+        "Public god-hand-pc revisiondfe7ecb implements metadata planning; the conversion to the previously tested private runtime adapter is not yet a public launcher/build integration.",
+        "Full playthrough, later-stage stability, physical controllers and genuine game Save/Load remain open. Prototype is unrelated to this retail pair."
+      ],
+      "reference": {
+        "caption": "Unmodified assets restored in a fresh process; field4740.",
+        "profile": "retail-usa",
+        "runtime": "LasVola native OpenGL, evaluated private read-overlay adapter; unretouched direct framebuffer",
+        "revision": "1646d8854e1c3e16e5ec9bb7aeddebe0fe0fa14a",
+        "captured_at": "2026-11-06T17:48:49.019858+00:00",
+        "path": "media/9bd97cff522321767ad5e101e11989751131ca32c2a2a7e76d55d6e80ab6e5be.png",
+        "sha256": "9bd97cff522321767ad5e101e11989751131ca32c2a2a7e76d55d6e80ab6e5be",
+        "width": 640,
+        "height": 480
+      },
+      "bevy": {
+        "caption": "Original diagnostic magenta ground from named plan; field4740.",
+        "profile": "retail-usa",
+        "runtime": "LasVola native OpenGL, evaluated private read-overlay adapter; unretouched direct framebuffer",
+        "revision": "1646d8854e1c3e16e5ec9bb7aeddebe0fe0fa14a",
+        "captured_at": "2026-11-06T17:47:00.765683+00:00",
+        "path": "media/14c2afdd449d1a78473bbb39564385eee53c7a324931fb5aae1cd44bb5e11a65.png",
+        "sha256": "14c2afdd449d1a78473bbb39564385eee53c7a324931fb5aae1cd44bb5e11a65",
+        "width": 640,
+        "height": 480
+      }
+    },
     {
       "id": "2026-11-05-lasvola-external-texture",
       "date": "2026-11-05",
