@@ -10,6 +10,8 @@ ISO-required setup and named external asset replacement. Do not spend autonomous
 work attempting to beat levels. Use targeted states/controls and legitimate
 owner-provided saves when needed; open persistence gates remain explicit.
 
+The isolated personal-disc setup is under actual fresh-build validation; see ../docs/retail-setup-2026-11-06.md and god-hand-pc/SETUP.md. Preserve diagnostics even with exit0, and do not call a linked binary a verified installer or faithful runtime. The prototype native executable links but startup is blocked on unsupported kernel behavior (0x7a); no debug menu is validated.
+
 A separate private prototype-native experiment is authorized. Read the saved HTML
 under GH-Prototype, record the exact disc/ELF profile and attempt generation/build
 without reusing retail function maps, relocations or HLE addresses blindly.

@@ -6,7 +6,7 @@
   "engine": "Independent Rust/Bevy lab (paused); separate third-party C++ evaluation",
   "phase": "LasVola continuation and separate prototype-native feasibility",
   "playable": false,
-  "next": "Package the retail build and named-pack runtime bridge. Prototype native executable links, but startup/debug access remains blocked by unsupported kernel behavior.",
+  "next": "Finish and test the same fresh retail build; then package the public named-pack runtime bridge. Prototype feasibility is documented as a startup blocker, not a working debug menu.",
   "validation": {
     "tests": 81,
     "bevy_check": "pass",
@@ -490,28 +490,52 @@
         {
           "id": "PC01",
           "title": "Prepare the separate GPL continuation",
-          "status": "in_progress",
+          "status": "done",
           "area": "tooling",
           "acceptance": "Pinned upstream/build provenance, original continuation tooling, public allowlist and no ISO/ELF/assets/generated game code; MIT lab preserved."
         },
         {
           "id": "PC02",
           "title": "Replace named resources from original external files",
-          "status": "planned",
+          "status": "in_progress",
           "area": "rendering",
           "acceptance": "Stable bounded identity, original synthetic tests, safe original-asset fallback and reproduced same-view replacement/restoration; no untested HD claims."
         },
         {
           "id": "PT01",
           "title": "Evaluate a separate native prototype/debug build",
-          "status": "in_progress",
+          "status": "done",
           "area": "validation",
           "acceptance": "Read saved HTML; verify untouched prototype disc/ELF; attempt version-specific generation/build/boot and reported debug menu, or record a precise reproduced blocker. No retail equivalence claim."
+        },
+        {
+          "id": "PC03",
+          "title": "Verify the fresh personal-disc setup",
+          "status": "in_progress",
+          "area": "tooling",
+          "acceptance": "Fetch pinned upstream/dependencies into an isolated workspace; preserve the original disc; actually generate boot and all 81 overlays, link the executable and observe a bounded fresh boot. Retain failed trials and generation diagnostics; no game outputs in public or CI."
         }
       ]
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-06",
+      "title": "Trying the setup in a fresh workspace",
+      "summary": "The separate GPL tooling now runs the personal-disc build sequence with exact dependency pins. An actual fresh trial exposed a stale build-graph problem; the corrected trial has reached native compilation.",
+      "changes": [
+        "Fetched a fresh pinned upstream and eight exact dependency revisions. A prepare-only run verified their license receipts and a separate read-only ISO copy; the original disc and evaluated executable are preserved.",
+        "The first full trial generated the boot program and all 81 overlay packs, then failed because its old Ninja graph did not contain the game target. An invented CMake regression reproduces that failure.",
+        "Added an explicit configure after generation, then started another entirely fresh workspace. All generation gates and the game configure now succeed; the same native compilation is still running, not yet a completed executable.",
+        "Retained the recompiler diagnostics: the old tested retail log and the fresh run both report one unresolved error despite exit zero. The new recipe warns rather than claiming a clean translation."
+      ],
+      "validation": "62 original synthetic tests and continuation CI pass. Actual fresh acquisition, ISO verification, boot/81-overlay generation and corrected configure are observed. The complete fresh executable and runtime boot remain separate pending gates. No game data is used in CI.",
+      "limits": "Windows/MSVC setup with explicit path/tool requirements; not yet a verified installer. The public named-pack runtime bridge, genuine game Save/Load and later-stage stability remain open. Prototype feasibility produced a linked executable and a reproduced startup blocker, not a working debug menu.",
+      "link": {
+        "label": "Fresh trials, failed target and remaining setup checks",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/retail-setup-2026-11-06.md"
+      }
+    },
     {
       "date": "2026-11-06",
       "title": "A named path reaches the native renderer",
@@ -983,6 +1007,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-06-fresh-setup-journal.jpg",
+      "date": "2026-11-06",
+      "source": "Unretouched actual hidden-browser capture of the English fresh-setup trial entry. No game imagery, generated code or private desktop pixels.",
+      "caption": "Fresh setup trials, reproduced build-graph failure and explicitly pending native build"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-06-named-plan-comparison.jpg",
       "date": "2026-11-06",
       "source": "Unretouched actual hidden-browser capture; reviewed native original screenshots are separately registered with provenance.",
@@ -1198,14 +1229,14 @@
   "progress": {
     "goal": "Continue the tested LasVola PC base in a separate GPL project, with reproducible local-disc builds and external asset replacement; evaluate a separate prototype-native/debug workflow without substituting it for retail.",
     "baseline_revision": "fc34d4a37b18f17746a490ac6ec902674e5bccd6",
-    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed. Original game-free raylib probes reproduce screenshot padding at125% scale; actual render-size readback passes normal/high-DPI installed-helper controls. Private native capture-only change produces640×480 originals;7/8 common capture content regions equal, early transient retained. No gameplay Save/Load or complete rendering claim. Separate public GPL continuation tooling created with15 game-free synthetic tests and successful public CI; pinned source adoption and original retail ISO read-only verification actually run. Prototype original ELF/profile verified; initial2998 diagnostics reduced to1 through metadata-only analysis-copy flags; two sampled C++ objects compile. Generic native prototype harness build underway, no executable/boot/debug-menu validation yet. New original GPL named-resource planner:47 synthetic tests and CI pass. Exact retail metadata resolves the previously proven8256-byte ground payload; mechanically bridged fresh native run visibly replaces it and a second fresh process restores original assets. Selected field4740 original640x480 pair reviewed. Host reboot interrupted earlier build jobs; Linux matching ELF/map remain zero bytes, prototype native build resumed, no boot/debug proof. Prototype full native link exits0; original ELF/BIN bounded60-second native attempt initializes host graphics but loops on unsupported syscall0x7a. Watchdog shutdown returns0 and no framebuffer capture is produced. No title/debug-menu validation.",
+    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed. Original game-free raylib probes reproduce screenshot padding at125% scale; actual render-size readback passes normal/high-DPI installed-helper controls. Private native capture-only change produces640×480 originals;7/8 common capture content regions equal, early transient retained. No gameplay Save/Load or complete rendering claim. Separate public GPL continuation tooling created with15 game-free synthetic tests and successful public CI; pinned source adoption and original retail ISO read-only verification actually run. Prototype original ELF/profile verified; initial2998 diagnostics reduced to1 through metadata-only analysis-copy flags; two sampled C++ objects compile. Generic native prototype harness build underway, no executable/boot/debug-menu validation yet. New original GPL named-resource planner:47 synthetic tests and CI pass. Exact retail metadata resolves the previously proven8256-byte ground payload; mechanically bridged fresh native run visibly replaces it and a second fresh process restores original assets. Selected field4740 original640x480 pair reviewed. Host reboot interrupted earlier build jobs; Linux matching ELF/map remain zero bytes, prototype native build resumed, no boot/debug proof. Prototype full native link exits0; original ELF/BIN bounded60-second native attempt initializes host graphics but loops on unsupported syscall0x7a. Watchdog shutdown returns0 and no framebuffer capture is produced. No title/debug-menu validation. Separate public setup recipe 3bc0f7a: 62 invented synthetic checks and CI pass. Actual fresh source/eight pinned dependency acquisitions and private ISO copy verification pass. First full trial generated boot and81overlay packs but failed on missing Ninja game target; invented CMake regression and explicit reconfigure address it. A second fresh trial reaches live native compilation; no executable/boot claim yet.",
     "open_questions": [
       "Real in-game saving on the inter-area Map and loading in a new process are not yet reproduced. Runtime snapshots are a separate successful test, not a replacement.",
       "Same-size named-resource metadata planning and a private runtime bridge work; public launcher/build integration, true HD dimensions, hot reload and automatic fallback remain open.",
       "Screenshot readback dimensions are fixed in the evaluated private configuration. Audible audio, physical input and later-stage stability remain unverified.",
       "Linux compiler probes/sample object pass, but final matching ELF/map are unfinished zero-byte outputs after host reboot. No matching rebuild or complete decompilation claim."
     ],
-    "next_experiment": "Package reproducible retail setup and a public named-pack runtime bridge. Prototype follow-up: establish generic kernel ABI/support for observed syscall0x7a using licensed primary sources and synthetic tests, without retail function maps or guessed success returns.",
+    "next_experiment": "Observe the current corrected fresh retail build to terminal status, preserve the old failed trial, then test its actual executable in a bounded hidden run. Do not change live source/dependency/recipe inputs or restart on timeout. Public named-pack runtime integration follows separately.",
     "status": "active"
   },
   "comparisons": [

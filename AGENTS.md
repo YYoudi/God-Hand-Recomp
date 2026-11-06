@@ -10,6 +10,17 @@ ISO-required setup and named external asset replacement. Do not spend autonomous
 work attempting to beat levels. Use targeted states/controls and legitimate
 owner-provided saves when needed; open persistence gates remain explicit.
 
+The original GPL setup command and dependency lock now live in god-hand-pc;
+read its SETUP.md before using it. Keep fresh-setup trials distinct from the
+adopted evaluated checkout. A first actual trial generated all retail inputs but
+failed on a stale CMake target graph; the corrected recipe reconfigures after
+generation and has a synthetic regression. Do not call it a verified installer
+until its fresh executable is built and observed. Preserve generation diagnostics
+even with exit0: one unresolved retail error is recorded. See
+docs/retail-setup-2026-11-06.md. Prototype feasibility has an actual linked native
+executable but a reproduced startup syscall0x7a blocker, not a working debug menu;
+see docs/prototype-native-feasibility-2026-11-06.md.
+
 A separate private prototype-native experiment is authorized. Read the saved HTML
 under GH-Prototype, record the exact disc/ELF profile and attempt generation/build
 without reusing retail function maps, relocations or HLE addresses blindly.

@@ -79,10 +79,12 @@ A precise blocker is an acceptable prototype experiment result, not a playable c
 [YYoudi/god-hand-pc](https://github.com/YYoudi/god-hand-pc) contains original GPL
 bootstrap tooling, not a mirror of upstream or generated game code. It fetches a
 pinned dependency into ignored local storage, can register an existing clean
-checkout and verifies the retail ISO read-only. Its 47 original synthetic tests
+checkout and verifies the retail ISO read-only. Its 62 original synthetic tests
 and public CI pass. The named-resource metadata planner was tested with the
 personal retail disc and bridged to the evaluated private adapter: replacement
 and restoration were observed in separate fresh native boots. The public runtime
 bridge and full fresh-disc build pipeline remain pending; this is not a finished
 installer or remaster. See the named-resource experiment report. The journal
 stays on this existing free Pages site.
+
+The isolated personal-disc setup is now undergoing a separate fresh-build check; see [fresh setup trials](retail-setup-2026-11-06.md). Preparation and generation pass; the first stale-target failure is preserved, and the corrected workflow explicitly reconfigures after generation. Do not substitute those gates for a linked executable or observed fresh boot.

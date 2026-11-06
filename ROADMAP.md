@@ -7,7 +7,7 @@ Updated: 2026-11-06. **Independent engine paused; third-party PC-port evaluation
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Package the retail build and named-pack runtime bridge. Prototype native executable links, but startup/debug access remains blocked by unsupported kernel behavior.
+Next useful evidence: Finish and test the same fresh retail build; then package the public named-pack runtime bridge. Prototype feasibility is documented as a startup blocker, not a working debug menu.
 
 ## M0 — Public foundations
 
@@ -137,9 +137,10 @@ Dependencies: none.
 | PE04 | Demonstrate an original external texture modification | Done | Trace the room texture through resource metadata, loading and rendering; demonstrate an original external same-size test payload with reviewed unchanged same-view control/replacement captures and exact private GPL revision. Named-resource packs and HD-size replacement remain separate future gates. |
 | PE05 | Audit the matching-decompilation complement | In progress | Pin LucasPicoli, distinguish matching C coverage from byte-identical ELF/assembly fallbacks, inventory dependencies/licenses and attempt appropriate tool/build tests without claiming it is a PC port. |
 | PE06 | Choose direction and adapt the remaster roadmap | In progress | Evidence-backed fidelity/stability/modification/asset/rendering/maintenance/license comparison and recommendation for upstream, separate fork, hybrid or independent work; publish verified findings without third-party code/assets. |
-| PC01 | Prepare the separate GPL continuation | In progress | Pinned upstream/build provenance, original continuation tooling, public allowlist and no ISO/ELF/assets/generated game code; MIT lab preserved. |
-| PC02 | Replace named resources from original external files | Planned | Stable bounded identity, original synthetic tests, safe original-asset fallback and reproduced same-view replacement/restoration; no untested HD claims. |
-| PT01 | Evaluate a separate native prototype/debug build | In progress | Read saved HTML; verify untouched prototype disc/ELF; attempt version-specific generation/build/boot and reported debug menu, or record a precise reproduced blocker. No retail equivalence claim. |
+| PC01 | Prepare the separate GPL continuation | Done | Pinned upstream/build provenance, original continuation tooling, public allowlist and no ISO/ELF/assets/generated game code; MIT lab preserved. |
+| PC02 | Replace named resources from original external files | In progress | Stable bounded identity, original synthetic tests, safe original-asset fallback and reproduced same-view replacement/restoration; no untested HD claims. |
+| PT01 | Evaluate a separate native prototype/debug build | Done | Read saved HTML; verify untouched prototype disc/ELF; attempt version-specific generation/build/boot and reported debug menu, or record a precise reproduced blocker. No retail equivalence claim. |
+| PC03 | Verify the fresh personal-disc setup | In progress | Fetch pinned upstream/dependencies into an isolated workspace; preserve the original disc; actually generate boot and all 81 overlays, link the executable and observe a bounded fresh boot. Retain failed trials and generation diagnostics; no game outputs in public or CI. |
 
 ## Outside the public repository
 
