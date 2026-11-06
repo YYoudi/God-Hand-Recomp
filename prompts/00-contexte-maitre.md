@@ -1,5 +1,24 @@
 # Session context — independent engine
 
+## Execution direction — owner decision, 2026-11-06
+
+The separate GPL continuation tooling is [god-hand-pc](https://github.com/YYoudi/god-hand-pc).
+It fetches pinned upstream privately; it is not a mirror or a finished remaster.
+Proceed with this continuation of the tested LasVola PC base; preserve
+this MIT independent lab without new Rust features. Prioritize a reproducible
+ISO-required setup and named external asset replacement. Do not spend autonomous
+work attempting to beat levels. Use targeted states/controls and legitimate
+owner-provided saves when needed; open persistence gates remain explicit.
+
+A separate private prototype-native experiment is authorized. Read the saved HTML
+under GH-Prototype, record the exact disc/ELF profile and attempt generation/build
+without reusing retail function maps, relocations or HLE addresses blindly.
+Prototype debug-menu claims are leads until observed. Keep prototype and retail
+binaries, generated code, assets, states and fidelity claims strictly separate.
+A generation exit code alone is not a clean translation, linked PC executable,
+working debug menu or retail-fidelity result. Do not publish third-party content
+automatically; audit a distinct continuation's public file allowlist first.
+
 ## Current priority — owner decision, 2026-11-05
 
 The final objective is a faithful, modifiable PC port and later remaster, not

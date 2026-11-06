@@ -4,9 +4,9 @@
   "title": "God Hand PC — development journal",
   "repo": "https://github.com/YYoudi/god-hand-rs",
   "engine": "Independent Rust/Bevy lab (paused); separate third-party C++ evaluation",
-  "phase": "Faithful PC-port and remaster evaluation",
+  "phase": "LasVola continuation and separate prototype-native feasibility",
   "playable": false,
-  "next": "Reproduce the genuine inter-area Map save and fresh-process load; continue the existing Linux matching build without restarting it on an observer timeout. Physical-device/audio and broader presentation tests remain open.",
+  "next": "Prepare a separate GPL LasVola continuation and named external asset replacement; evaluate prototype-native generation/debug tools separately. No autonomous level-completion loops.",
   "validation": {
     "tests": 81,
     "bevy_check": "pass",
@@ -486,11 +486,49 @@
           "status": "in_progress",
           "area": "core",
           "acceptance": "Evidence-backed fidelity/stability/modification/asset/rendering/maintenance/license comparison and recommendation for upstream, separate fork, hybrid or independent work; publish verified findings without third-party code/assets."
+        },
+        {
+          "id": "PC01",
+          "title": "Prepare the separate GPL continuation",
+          "status": "in_progress",
+          "area": "tooling",
+          "acceptance": "Pinned upstream/build provenance, original continuation tooling, public allowlist and no ISO/ELF/assets/generated game code; MIT lab preserved."
+        },
+        {
+          "id": "PC02",
+          "title": "Replace named resources from original external files",
+          "status": "planned",
+          "area": "rendering",
+          "acceptance": "Stable bounded identity, original synthetic tests, safe original-asset fallback and reproduced same-view replacement/restoration; no untested HD claims."
+        },
+        {
+          "id": "PT01",
+          "title": "Evaluate a separate native prototype/debug build",
+          "status": "in_progress",
+          "area": "validation",
+          "acceptance": "Read saved HTML; verify untouched prototype disc/ELF; attempt version-specific generation/build/boot and reported debug menu, or record a precise reproduced blocker. No retail equivalence claim."
         }
       ]
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-06",
+      "title": "A separate prototype generation experiment",
+      "summary": "The next direction is a separate GPL continuation of the tested PC base, not more autonomous combat attempts. The prototype debug tools are a separate research lead.",
+      "changes": [
+        "Created public god-hand-pc GPL continuation tooling: pinned private upstream acquisition, clean-checkout registration and read-only retail-disc verification. Fifteen original synthetic tests and initial public CI pass; a fresh one-command game rebuild is still pending.",
+        "Read the saved prototype HTML and verified the actual disc/ELF separately. The reported L2 + R3 debug menu, room jump and warp tools are not yet locally observed. Original BIN/CUE files remain untouched.",
+        "Actually generated prototype C++: the initial success exit concealed 2,998 diagnostics. Changing only non-text executable-section metadata in a separate analysis copy reduces this to one diagnostic, with all mapped guest bytes unchanged. Boundary warnings remain.",
+        "Two sampled generated C++ objects compile. The separate native-harness build is now running without retail HLE addresses or retail game-code libraries. No linked executable, boot, working debug menu or retail equivalence is claimed."
+      ],
+      "validation": "Prototype ELF read from the disc matches the earlier extraction; metadata-only analysis-copy changes are outside every mapped load segment. Two sampled C++ objects compile. Fifteen continuation-tooling synthetic tests and its public CI pass. The full prototype build is pending, not validated; no game data goes to CI.",
+      "limits": "Function discovery still has warnings and an unresolved diagnostic. Prototype build/boot/debug-menu operation remain unverified. The retail continuation, named external resources and separate prototype experiment have explicit roadmap tasks; no public fork has yet been mirrored.",
+      "link": {
+        "label": "Continuation repository, workflow and experiment boundaries",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/port-evaluation-workflow.md"
+      }
+    },
     {
       "date": "2026-11-06",
       "title": "Checking the screenshot before blaming the renderer",
@@ -928,6 +966,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-06-continuation-prototype-journal.jpg",
+      "date": "2026-11-06",
+      "source": "Unretouched actual hidden-browser journal capture. Original tooling and explicitly unverified prototype build stages; no game imagery or private desktop data.",
+      "caption": "Separate GPL continuation and prototype generation/build experiment"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-06-readback-journal.jpg",
       "date": "2026-11-06",
       "source": "Unretouched actual hidden-browser capture of the English readback-experiment journal. Browser-only preview; no desktop input or game imagery in this capture.",
@@ -1120,16 +1165,16 @@
     }
   ],
   "progress": {
-    "goal": "Experimentally choose the best faithful and remasterable God Hand PC codebase: LasVola playable-base evaluation first, LucasPicoli matching-decompilation complement separately.",
+    "goal": "Continue the tested LasVola PC base in a separate GPL project, with reproducible local-disc builds and external asset replacement; evaluate a separate prototype-native/debug workflow without substituting it for retail.",
     "baseline_revision": "fc34d4a37b18f17746a490ac6ec902674e5bccd6",
-    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed. Original game-free raylib probes reproduce screenshot padding at125% scale; actual render-size readback passes normal/high-DPI installed-helper controls. Private native capture-only change produces640×480 originals;7/8 common capture content regions equal, early transient retained. No gameplay Save/Load or complete rendering claim.",
+    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed. Original game-free raylib probes reproduce screenshot padding at125% scale; actual render-size readback passes normal/high-DPI installed-helper controls. Private native capture-only change produces640×480 originals;7/8 common capture content regions equal, early transient retained. No gameplay Save/Load or complete rendering claim. Separate public GPL continuation tooling created with15 game-free synthetic tests and successful public CI; pinned source adoption and original retail ISO read-only verification actually run. Prototype original ELF/profile verified; initial2998 diagnostics reduced to1 through metadata-only analysis-copy flags; two sampled C++ objects compile. Generic native prototype harness build underway, no executable/boot/debug-menu validation yet.",
     "open_questions": [
       "Real in-game saving on the inter-area Map and loading in a new process are not yet reproduced. Runtime snapshots are a separate successful test, not a replacement.",
       "Same-size texture replacement works; named-resource packs, true HD texture dimensions, hot reload and general remaster rendering remain unproven.",
       "Headless captures have top/right margins. Cause, normal visible-window behavior, audible audio, physical keyboard/controller and later-stage stability remain unverified.",
       "Lucas matching percentages remain upstream reports. Linux toolchain probes pass, but the actual retail build and post-setup test rerun are still pending. Dependency versions are recorded; source exposure remains logged."
     ],
-    "next_experiment": "Reproduce the genuine inter-area Map save and fresh-process load; continue the existing Linux matching build without restarting it on an observer timeout. Physical-device/audio and broader presentation tests remain open.",
+    "next_experiment": "Audit public continuation inputs and build an original named-resource extension; compile the prototype-specific discovery output only after resolving its remaining diagnostic and entry/runtime requirements.",
     "status": "active"
   },
   "comparisons": [

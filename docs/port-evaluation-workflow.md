@@ -52,3 +52,34 @@ An actually evaluated local build plus a reproducible original modification (or
 precisely evidenced blocker), exact pinned dependencies/licenses, and an adapted
 roadmap. Unknown/unreproduced gates stay open; screenshots and authors' README
 claims are not substitutes for builds, input tests or persistence checks.
+
+## Continuation direction — 2026-11-06
+
+The owner accepted LasVola as the PC continuation base, not another Rust rewrite.
+Prepare a distinct GPL continuation with a publication allowlist, pinned upstream
+source acquisition and no generated game material. Audit tracked upstream files
+before choosing a public fork/mirror; a dependency-driven original tooling repo
+is preferable to accidentally republishing excluded material. Keep this MIT lab
+intact. First extension: named external resources with original synthetic tests,
+retail restoration controls and explicit resolution/format limits.
+
+Stop autonomous attempts to finish combat stages. Persistence can use a legitimate
+owner-provided save when available; a prototype debug shortcut may assist prototype
+research but cannot establish retail saving, progression or fidelity.
+
+Prototype work is a separate experiment: read the owner's saved HTML, identify the
+actual MODE1/2048 disc/boot ELF, preserve originals and test generation/build with
+prototype-specific metadata. Never bypass retail hash checks and run retail code
+against the prototype disc. Distinguish discovery errors, generated C++, successful
+object compilation, linked executable, actual boot and debug-menu operation.
+A precise blocker is an acceptable prototype experiment result, not a playable claim.
+
+### Separate public continuation tooling
+
+[YYoudi/god-hand-pc](https://github.com/YYoudi/god-hand-pc) contains original GPL
+bootstrap tooling, not a mirror of upstream or generated game code. It fetches a
+pinned dependency into ignored local storage, can register an existing clean
+checkout and verifies the retail ISO read-only. Its 15 original synthetic tests
+and initial public CI pass. The full fresh-disc build pipeline and named-resource
+extension are still pending; the new repository does not yet replace the tested
+private build. The journal stays on this existing free Pages site.

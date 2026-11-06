@@ -7,7 +7,7 @@ Updated: 2026-11-06. **Independent engine paused; third-party PC-port evaluation
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Reproduce the genuine inter-area Map save and fresh-process load; continue the existing Linux matching build without restarting it on an observer timeout. Physical-device/audio and broader presentation tests remain open.
+Next useful evidence: Prepare a separate GPL LasVola continuation and named external asset replacement; evaluate prototype-native generation/debug tools separately. No autonomous level-completion loops.
 
 ## M0 — Public foundations
 
@@ -137,6 +137,9 @@ Dependencies: none.
 | PE04 | Demonstrate an original external texture modification | Done | Trace the room texture through resource metadata, loading and rendering; demonstrate an original external same-size test payload with reviewed unchanged same-view control/replacement captures and exact private GPL revision. Named-resource packs and HD-size replacement remain separate future gates. |
 | PE05 | Audit the matching-decompilation complement | In progress | Pin LucasPicoli, distinguish matching C coverage from byte-identical ELF/assembly fallbacks, inventory dependencies/licenses and attempt appropriate tool/build tests without claiming it is a PC port. |
 | PE06 | Choose direction and adapt the remaster roadmap | In progress | Evidence-backed fidelity/stability/modification/asset/rendering/maintenance/license comparison and recommendation for upstream, separate fork, hybrid or independent work; publish verified findings without third-party code/assets. |
+| PC01 | Prepare the separate GPL continuation | In progress | Pinned upstream/build provenance, original continuation tooling, public allowlist and no ISO/ELF/assets/generated game code; MIT lab preserved. |
+| PC02 | Replace named resources from original external files | Planned | Stable bounded identity, original synthetic tests, safe original-asset fallback and reproduced same-view replacement/restoration; no untested HD claims. |
+| PT01 | Evaluate a separate native prototype/debug build | In progress | Read saved HTML; verify untouched prototype disc/ELF; attempt version-specific generation/build/boot and reported debug menu, or record a precise reproduced blocker. No retail equivalence claim. |
 
 ## Outside the public repository
 
