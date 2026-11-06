@@ -6,7 +6,7 @@
   "engine": "Independent Rust/Bevy lab (paused); separate third-party C++ evaluation",
   "phase": "LasVola continuation and separate prototype-native feasibility",
   "playable": false,
-  "next": "Finish and test the same fresh retail build; then package the public named-pack runtime bridge. Prototype feasibility is documented as a startup blocker, not a working debug menu.",
+  "next": "Integrate the public named-resource runtime bridge with safe original-asset fallback; keep the verified fresh baseline and prototype blocker separate.",
   "validation": {
     "tests": 81,
     "bevy_check": "pass",
@@ -511,7 +511,7 @@
         {
           "id": "PC03",
           "title": "Verify the fresh personal-disc setup",
-          "status": "in_progress",
+          "status": "done",
           "area": "tooling",
           "acceptance": "Fetch pinned upstream/dependencies into an isolated workspace; preserve the original disc; actually generate boot and all 81 overlays, link the executable and observe a bounded fresh boot. Retain failed trials and generation diagnostics; no game outputs in public or CI."
         }
@@ -519,6 +519,23 @@
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-06",
+      "title": "The fresh ISO build reaches the opening scene",
+      "summary": "The corrected personal-disc recipe now completes in a fresh workspace. Its actual executable reaches the opening and first-fight scene; a selected capture reproduces the earlier evaluated image content.",
+      "changes": [
+        "Fetched pinned upstream and eight exact dependencies, generated the boot program and 81 overlays, reconfigured and linked the executable. All six steps return zero; source and original ISO hashes remain unchanged.",
+        "Ran separate hidden 100/220-second probes with fresh private cards and no old runtime snapshot. The opening and first-fight scene are observed; both probes stop at their intended deadlines.",
+        "Published both unretouched comparison originals. All 307,200 pixels of visible image content match after accounting for the known capture padding. Full original dimensions and the padding remain visible and downloadable.",
+        "Backed up the new baseline executable before any resource-adapter work. The earlier evaluated build, failed fresh trial, original discs and paused Rust work are preserved."
+      ],
+      "validation": "62 synthetic continuation tests and CI pass. Actual complete local build and two bounded native runs are recorded. The sampled image equality is a read-only measurement, not a crop, FPS claim or general fidelity score. Public journal checks remain separate.",
+      "limits": "Generation still reports one unresolved error. The fresh baseline lacks the private asset adapter and capture-readback fix; no VU1 AOT captures from the earlier build are imported. Public named-pack integration, real game Save/Load, physical input, audible audio and later-stage stability remain open. The additional pause-input attempt was not verified as a pause menu.",
+      "link": {
+        "label": "Complete fresh-build result, controls and remaining work",
+        "url": "https://github.com/YYoudi/god-hand-rs/blob/main/docs/retail-setup-2026-11-06.md"
+      }
+    },
     {
       "date": "2026-11-06",
       "title": "Trying the setup in a fresh workspace",
@@ -1007,6 +1024,13 @@
   "captures": [
     {
       "kind": "dashboard",
+      "path": "captures/2026-11-06-fresh-build-result.jpg",
+      "date": "2026-11-06",
+      "source": "Unretouched actual hidden-browser capture of the fresh-build comparison. Thumbnails come only from the reviewed original native screenshots registered in comparisons; no private desktop pixels or game-code output.",
+      "caption": "Fresh ISO build and earlier evaluated native scene, with screenshot padding retained"
+    },
+    {
+      "kind": "dashboard",
       "path": "captures/2026-11-06-fresh-setup-journal.jpg",
       "date": "2026-11-06",
       "source": "Unretouched actual hidden-browser capture of the English fresh-setup trial entry. No game imagery, generated code or private desktop pixels.",
@@ -1229,17 +1253,65 @@
   "progress": {
     "goal": "Continue the tested LasVola PC base in a separate GPL project, with reproducible local-disc builds and external asset replacement; evaluate a separate prototype-native/debug workflow without substituting it for retail.",
     "baseline_revision": "fc34d4a37b18f17746a490ac6ec902674e5bccd6",
-    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed. Original game-free raylib probes reproduce screenshot padding at125% scale; actual render-size readback passes normal/high-DPI installed-helper controls. Private native capture-only change produces640×480 originals;7/8 common capture content regions equal, early transient retained. No gameplay Save/Load or complete rendering claim. Separate public GPL continuation tooling created with15 game-free synthetic tests and successful public CI; pinned source adoption and original retail ISO read-only verification actually run. Prototype original ELF/profile verified; initial2998 diagnostics reduced to1 through metadata-only analysis-copy flags; two sampled C++ objects compile. Generic native prototype harness build underway, no executable/boot/debug-menu validation yet. New original GPL named-resource planner:47 synthetic tests and CI pass. Exact retail metadata resolves the previously proven8256-byte ground payload; mechanically bridged fresh native run visibly replaces it and a second fresh process restores original assets. Selected field4740 original640x480 pair reviewed. Host reboot interrupted earlier build jobs; Linux matching ELF/map remain zero bytes, prototype native build resumed, no boot/debug proof. Prototype full native link exits0; original ELF/BIN bounded60-second native attempt initializes host graphics but loops on unsupported syscall0x7a. Watchdog shutdown returns0 and no framebuffer capture is produced. No title/debug-menu validation. Separate public setup recipe 3bc0f7a: 62 invented synthetic checks and CI pass. Actual fresh source/eight pinned dependency acquisitions and private ISO copy verification pass. First full trial generated boot and81overlay packs but failed on missing Ninja game target; invented CMake regression and explicit reconfigure address it. A second fresh trial reaches live native compilation; no executable/boot claim yet.",
+    "last_verified": "Separate LasVola native executable built from the unchanged personal ISO. Retail opening and first fight, scripted attacks/menu input, death/Continue and cross-process runtime snapshots observed. A local GPL-only extension replaces one ground texture using an original external 8,256-byte file; restoration and same-view original captures verified. In-game save/load round trip remains open. Lucas Windows tests: 65 passed / 5 skipped / 5 failed; no matching ELF reproduced. Rust remains paused, not achieved; old pending edits preserved. 26 journal/publication Python tests pass. Supported Linux guest now provisioned for Lucas: both compiler smoke tests pass; full initial tooling suite 529 passed / 21 skipped / 1 prerequisite failure. Actual retail matching split/build underway, no local matching ELF yet. Private observation-only pad trace confirms scripted clock/state and actual IOP button reply; trace on/off 54/56 common captures identical, two transient differences retained. No controller behavior fix or game save/load success claimed. Original game-free raylib probes reproduce screenshot padding at125% scale; actual render-size readback passes normal/high-DPI installed-helper controls. Private native capture-only change produces640×480 originals;7/8 common capture content regions equal, early transient retained. No gameplay Save/Load or complete rendering claim. Separate public GPL continuation tooling created with15 game-free synthetic tests and successful public CI; pinned source adoption and original retail ISO read-only verification actually run. Prototype original ELF/profile verified; initial2998 diagnostics reduced to1 through metadata-only analysis-copy flags; two sampled C++ objects compile. Generic native prototype harness build underway, no executable/boot/debug-menu validation yet. New original GPL named-resource planner:47 synthetic tests and CI pass. Exact retail metadata resolves the previously proven8256-byte ground payload; mechanically bridged fresh native run visibly replaces it and a second fresh process restores original assets. Selected field4740 original640x480 pair reviewed. Host reboot interrupted earlier build jobs; Linux matching ELF/map remain zero bytes, prototype native build resumed, no boot/debug proof. Prototype full native link exits0; original ELF/BIN bounded60-second native attempt initializes host graphics but loops on unsupported syscall0x7a. Watchdog shutdown returns0 and no framebuffer capture is produced. No title/debug-menu validation. Separate public setup recipe 3bc0f7a: 62 invented synthetic checks and CI pass. Actual fresh source/eight pinned dependency acquisitions and private ISO copy verification pass. First full trial generated boot and81overlay packs but failed on missing Ninja game target; invented CMake regression and explicit reconfigure address it. A second fresh trial reaches live native compilation; no executable/boot claim yet. Corrected fresh setup now terminal-success: all six generation/configure/build steps0, clean upstream source and unchanged originalISO. New executable SHA8220c547266025a94c33f8362f2cad0549094858c786e0e2a9ea8edf637706ad backed up privately. Independent hidden100/220s runs exit124 with30/40originalPNGs; opening/first-fight scene observed. Fresh original800x600visible640x480 content equals all307200pixels of earlier evaluated640x480control. Padding retained; no shadercoldness/FPS/fullgame or verifiedpauseclaim.",
     "open_questions": [
       "Real in-game saving on the inter-area Map and loading in a new process are not yet reproduced. Runtime snapshots are a separate successful test, not a replacement.",
       "Same-size named-resource metadata planning and a private runtime bridge work; public launcher/build integration, true HD dimensions, hot reload and automatic fallback remain open.",
       "Screenshot readback dimensions are fixed in the evaluated private configuration. Audible audio, physical input and later-stage stability remain unverified.",
       "Linux compiler probes/sample object pass, but final matching ELF/map are unfinished zero-byte outputs after host reboot. No matching rebuild or complete decompilation claim."
     ],
-    "next_experiment": "Observe the current corrected fresh retail build to terminal status, preserve the old failed trial, then test its actual executable in a bounded hidden run. Do not change live source/dependency/recipe inputs or restart on timeout. Public named-pack runtime integration follows separately.",
+    "next_experiment": "With all baseline build/startup jobs terminal, audit and integrate an original public named-resource read adapter in an isolated GPL continuation revision. Preserve the fresh executable before relinking. Test enabled, disabled and invalid-pack original-asset fallback with original synthetic cases and actual same-view captures.",
     "status": "active"
   },
   "comparisons": [
+    {
+      "id": "2026-11-06-fresh-build-first-scene",
+      "date": "2026-11-06",
+      "title": "The fresh ISO build reaches the same opening scene",
+      "feature": "PC03",
+      "scenario": "A new workspace fetches pinned source/dependencies, generates boot and 81 overlay packs from the verified personal retail ISO, then compiles. Fresh title/start progression with empty private cards, no old runtime snapshot. Earlier evaluated field 4740 versus fresh field 4741; original capture dimensions differ.",
+      "alignment": "same-landmark",
+      "reviewed": true,
+      "labels": {
+        "reference": "Earlier evaluated build — corrected capture",
+        "bevy": "Fresh ISO build — upstream capture"
+      },
+      "observations": [
+        "The fresh executable actually reaches the opening and first-fight scene after the complete corrected build recipe, not just successful generation or linking.",
+        "All 307,200 RGB pixels in the fresh original rectangle (x 0, y 120, width 640, height 480) equal the earlier evaluated 640x480 original. This is a read-only array measurement; neither original is cropped or edited.",
+        "The fresh baseline retains the known 800x600 screenshot padding. It does not include the private capture-readback fix, asset adapter or earlier VU1 AOT captures.",
+        "Two independent hidden 100/220-second startup runs exit at their intended deadlines. No autonomous combat-completion loop is used."
+      ],
+      "limits": [
+        "Both images are third-party native C++ runtime output, NOT Bevy, PS2 hardware or PCSX2. Registry side names are historical; visible labels identify the actual builds.",
+        "One opening view is reproduced, not full renderer/game fidelity, general instruction coverage or a full playthrough. Generation still reports one unresolved error; it is retained, not suppressed.",
+        "The two originals have different dimensions and global capture fields. Known readback padding is measured, not removed. No image warp, object/camera fit or derived cropped PNG was created.",
+        "No cold shader-cache or real-time-performance claim. Game Save/Load, physical input, audible audio and later-stage stability remain open. An extra pause-input attempt did not produce a verified pause menu in the last fresh capture.",
+        "The public named-resource runtime bridge remains separate unfinished work. No ISO, generated game source, asset, ELF, dump, save or executable is published."
+      ],
+      "reference": {
+        "caption": "Earlier native field 4740, original 640x480 direct framebuffer, unretouched.",
+        "profile": "retail-usa",
+        "runtime": "Earlier evaluated LasVola native OpenGL; private readback correction; texture override disabled",
+        "revision": "1646d8854e1c3e16e5ec9bb7aeddebe0fe0fa14a",
+        "captured_at": "2026-11-06T17:48:49.019858+00:00",
+        "path": "media/9bd97cff522321767ad5e101e11989751131ca32c2a2a7e76d55d6e80ab6e5be.png",
+        "sha256": "9bd97cff522321767ad5e101e11989751131ca32c2a2a7e76d55d6e80ab6e5be",
+        "width": 640,
+        "height": 480
+      },
+      "bevy": {
+        "caption": "Fresh native field 4741, original 800x600 readback with retained black padding, unretouched.",
+        "profile": "retail-usa",
+        "runtime": "Fresh pinned LasVola native OpenGL; public setup recipe 3bc0f7a; original upstream capture path",
+        "revision": "14e956a1274332440273845fbab2c1f1e30c4a5a",
+        "captured_at": "2026-11-06T19:07:42.219081+00:00",
+        "path": "media/fd53182e7a2982021e5c5008d2e5dbab4dbd907cf9dfe52edc520c9a5d02315e.png",
+        "sha256": "fd53182e7a2982021e5c5008d2e5dbab4dbd907cf9dfe52edc520c9a5d02315e",
+        "width": 800,
+        "height": 600
+      }
+    },
     {
       "id": "2026-11-06-named-texture-plan",
       "date": "2026-11-06",

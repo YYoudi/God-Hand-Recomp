@@ -87,4 +87,4 @@ bridge and full fresh-disc build pipeline remain pending; this is not a finished
 installer or remaster. See the named-resource experiment report. The journal
 stays on this existing free Pages site.
 
-The isolated personal-disc setup is now undergoing a separate fresh-build check; see [fresh setup trials](retail-setup-2026-11-06.md). Preparation and generation pass; the first stale-target failure is preserved, and the corrected workflow explicitly reconfigures after generation. Do not substitute those gates for a linked executable or observed fresh boot.
+The corrected isolated personal-disc setup now completes all six build stages and actual bounded opening/first-fight startup probes; see [fresh setup results](retail-setup-2026-11-06.md). The first stale-target failure and unresolved generation diagnostic are preserved. The new baseline is backed up before further runtime modification. Public named-pack integration and original-asset fallback remain separate open gates.

@@ -7,7 +7,7 @@ Updated: 2026-11-06. **Independent engine paused; third-party PC-port evaluation
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Finish and test the same fresh retail build; then package the public named-pack runtime bridge. Prototype feasibility is documented as a startup blocker, not a working debug menu.
+Next useful evidence: Integrate the public named-resource runtime bridge with safe original-asset fallback; keep the verified fresh baseline and prototype blocker separate.
 
 ## M0 — Public foundations
 
@@ -140,7 +140,7 @@ Dependencies: none.
 | PC01 | Prepare the separate GPL continuation | Done | Pinned upstream/build provenance, original continuation tooling, public allowlist and no ISO/ELF/assets/generated game code; MIT lab preserved. |
 | PC02 | Replace named resources from original external files | In progress | Stable bounded identity, original synthetic tests, safe original-asset fallback and reproduced same-view replacement/restoration; no untested HD claims. |
 | PT01 | Evaluate a separate native prototype/debug build | Done | Read saved HTML; verify untouched prototype disc/ELF; attempt version-specific generation/build/boot and reported debug menu, or record a precise reproduced blocker. No retail equivalence claim. |
-| PC03 | Verify the fresh personal-disc setup | In progress | Fetch pinned upstream/dependencies into an isolated workspace; preserve the original disc; actually generate boot and all 81 overlays, link the executable and observe a bounded fresh boot. Retain failed trials and generation diagnostics; no game outputs in public or CI. |
+| PC03 | Verify the fresh personal-disc setup | Done | Fetch pinned upstream/dependencies into an isolated workspace; preserve the original disc; actually generate boot and all 81 overlays, link the executable and observe a bounded fresh boot. Retain failed trials and generation diagnostics; no game outputs in public or CI. |
 
 ## Outside the public repository
 

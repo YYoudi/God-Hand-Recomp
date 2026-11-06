@@ -15,7 +15,10 @@ read its SETUP.md before using it. Keep fresh-setup trials distinct from the
 adopted evaluated checkout. A first actual trial generated all retail inputs but
 failed on a stale CMake target graph; the corrected recipe reconfigures after
 generation and has a synthetic regression. Do not call it a verified installer
-until its fresh executable is built and observed. Preserve generation diagnostics
+until its fresh executable is built and observed. That local build/startup gate
+now passes: all six steps return 0 and separate 100/220-second probes reach the opening
+and first-fight scene. Preserve the privately backed-up baseline before relinking;
+the public named-pack runtime bridge remains unfinished. Preserve generation diagnostics
 even with exit0: one unresolved retail error is recorded. See
 docs/retail-setup-2026-11-06.md. Prototype feasibility has an actual linked native
 executable but a reproduced startup syscall0x7a blocker, not a working debug menu;
