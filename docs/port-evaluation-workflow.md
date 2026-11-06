@@ -88,3 +88,14 @@ installer or remaster. See the named-resource experiment report. The journal
 stays on this existing free Pages site.
 
 The corrected isolated personal-disc setup now completes all six build stages and actual bounded opening/first-fight startup probes; see [fresh setup results](retail-setup-2026-11-06.md). The first stale-target failure and unresolved generation diagnostic are preserved. The new baseline is backed up before further runtime modification. Public named-pack integration and original-asset fallback remain separate open gates.
+
+
+### Public runtime bridge result — 6 November 2026
+
+The separate public bridge now actually builds and renders. Three fresh native
+runs verify named replacement, disabled restoration and invalid-pack fallback;
+selected disabled/fallback originals equal the preserved baseline PNG exactly.
+81 original synthetic tests pass; strict invalid-pack and wrong-disc checks
+actually refuse before launch. See [result and next gates](public-pack-bridge-2026-11-06.md).
+This supersedes the pending-bridge status above, not the historical observations.
+One same-size resource is not HD support or full-game/save-load validation.

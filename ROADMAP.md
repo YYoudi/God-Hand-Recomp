@@ -7,7 +7,7 @@ Updated: 2026-11-06. **Independent engine paused; third-party PC-port evaluation
 Each task is a verifiable deliverable, not an estimate of game coverage.
 Done applies only to the stated criteria. No release schedule is promised.
 
-Next useful evidence: Integrate the public named-resource runtime bridge with safe original-asset fallback; keep the verified fresh baseline and prototype blocker separate.
+Next useful evidence: Validate genuine in-game Save/Load with an owner-provided legitimate state/save; then broaden named-resource controls before designing a size-aware HD upload path. Prototype kernel 0x7a remains a separate blocker.
 
 ## M0 — Public foundations
 
@@ -138,9 +138,12 @@ Dependencies: none.
 | PE05 | Audit the matching-decompilation complement | In progress | Pin LucasPicoli, distinguish matching C coverage from byte-identical ELF/assembly fallbacks, inventory dependencies/licenses and attempt appropriate tool/build tests without claiming it is a PC port. |
 | PE06 | Choose direction and adapt the remaster roadmap | In progress | Evidence-backed fidelity/stability/modification/asset/rendering/maintenance/license comparison and recommendation for upstream, separate fork, hybrid or independent work; publish verified findings without third-party code/assets. |
 | PC01 | Prepare the separate GPL continuation | Done | Pinned upstream/build provenance, original continuation tooling, public allowlist and no ISO/ELF/assets/generated game code; MIT lab preserved. |
-| PC02 | Replace named resources from original external files | In progress | Stable bounded identity, original synthetic tests, safe original-asset fallback and reproduced same-view replacement/restoration; no untested HD claims. |
+| PC02 | Replace named resources from original external files | Done | Stable bounded identity, original synthetic tests, safe original-asset fallback and reproduced same-view replacement/restoration; no untested HD claims. |
 | PT01 | Evaluate a separate native prototype/debug build | Done | Read saved HTML; verify untouched prototype disc/ELF; attempt version-specific generation/build/boot and reported debug menu, or record a precise reproduced blocker. No retail equivalence claim. |
 | PC03 | Verify the fresh personal-disc setup | Done | Fetch pinned upstream/dependencies into an isolated workspace; preserve the original disc; actually generate boot and all 81 overlays, link the executable and observe a bounded fresh boot. Retain failed trials and generation diagnostics; no game outputs in public or CI. |
+| PC04 | Verify another named resource and restoration | Planned | A second named resource/scene, original authored payload, exact supported storage contract and actual enabled/disabled/fallback controls; no guessed offsets or expanded format claims. |
+| PC05 | Prove a size-aware HD asset upload boundary | Planned | Specify resource-to-host upload ownership; import an original larger texture without republishing game assets, actually render and compare from one viewpoint. Same-size replacement is not acceptance. |
+| PT02 | Investigate the prototype kernel startup blocker | Planned | Resolve or precisely narrow unsupported syscall0x7a through licensed primary runtime/SDK ABI and invented tests; fresh bounded boot evidence, no guessed return stub or retail bindings. Debug menu remains unverified. |
 
 ## Outside the public repository
 

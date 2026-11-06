@@ -12,6 +12,8 @@ owner-provided saves when needed; open persistence gates remain explicit.
 
 The corrected personal-disc setup now completes all build steps and a bounded opening/first-fight scene; see ../docs/retail-setup-2026-11-06.md and god-hand-pc/SETUP.md. Preserve diagnostics even with exit0, and do not call a linked binary a verified installer or faithful runtime. The prototype native executable links but startup is blocked on unsupported kernel behavior (0x7a); no debug menu is validated.
 
+The public GPL named-pack bridge now relinks and passes actual enabled/disabled/invalid-pack startup controls. Selected disabled/fallback original PNGs equal the preserved baseline byte-for-byte. See ../docs/public-pack-bridge-2026-11-06.md. Same-size replacement is not HD support; preserve the explicit Save/Load, hardware-input/audio, later-stage and prototype-kernel gates. No new Rust work.
+
 A separate private prototype-native experiment is authorized. Read the saved HTML
 under GH-Prototype, record the exact disc/ELF profile and attempt generation/build
 without reusing retail function maps, relocations or HLE addresses blindly.

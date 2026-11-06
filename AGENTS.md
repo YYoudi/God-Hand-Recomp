@@ -24,6 +24,8 @@ docs/retail-setup-2026-11-06.md. Prototype feasibility has an actual linked nati
 executable but a reproduced startup syscall0x7a blocker, not a working debug menu;
 see docs/prototype-native-feasibility-2026-11-06.md.
 
+The public GPL named-pack bridge now relinks and passes actual enabled/disabled/invalid-pack startup controls. Selected disabled/fallback original PNGs equal the preserved baseline byte-for-byte. See docs/public-pack-bridge-2026-11-06.md. Same-size replacement is not HD support; preserve the explicit Save/Load, hardware-input/audio, later-stage and prototype-kernel gates. No new Rust work.
+
 A separate private prototype-native experiment is authorized. Read the saved HTML
 under GH-Prototype, record the exact disc/ELF profile and attempt generation/build
 without reusing retail function maps, relocations or HLE addresses blindly.
